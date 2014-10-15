@@ -1,0 +1,5 @@
+-f	required	input_file	a fully qualified path/name for the input file
+-g	required	disease_group	the id or name of the disease group of the cohort being processed
+-t	required	document_type	the type of clinical documents being processsed (e.g. pathology reports)
+-o	required	output_file	a fully qualified path/name for the output file
+-a	not_required	tester_flag	this flag is only for testing purposes, it doesn't mean anything yet
