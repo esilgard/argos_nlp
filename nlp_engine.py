@@ -18,17 +18,18 @@
 '''initial script of the Argos/NLP engine do deal with command line parsing and module outputs '''
 '''author@esilgard'''
 '''last updated October 2014'''
-
+__version__='nlp_engine1.0'
 
 import sys
 import json
+from datetime import datetime
 
 ## path to file containing flags and descriptions ##
 ## in the format -char<tab>description<tab>verbose_description(for help and error messages) ##
 try:
     command_line_flag_file='command_line_flags.txt'
 except:
-    print '\nFATAL ERROR: command line flag file not found.  program aborted.';sys.exit()
+    output_errors(Exception,'\nFATAL ERROR: command line flag file not found.  program aborted.')
 
 
 ## set of required flags for program to run successfully ##
@@ -47,6 +48,7 @@ for line in open(command_line_flag_file,'r').readlines():
 
 args=sys.argv[1:]
 
+######################################################################################################
 def return_exec_code(x):
     '''
         helper method to retrieve the returned field value from each module
@@ -54,32 +56,65 @@ def return_exec_code(x):
     return x
 
 
+## output results to file ##
+## mostly empty template for results for now ##        
+def output_results(output):
+    try:
+        of=open(arguments.get('-o'),'w')
+    except:
+        sys.stderr.write('FATAL ERROR: path to output file '+arguments.get('-o')+' not found');sys.exit(1)
+    try:
+        with of as output_file:           
+            pretty_dump = json.dumps(output, sort_keys=True, indent=4, separators=(',', ': '))
+            output_file.write(pretty_dump)        
+    except:
+        sys.stderr.write('FATAL ERROR: problem with output filestream to file object "'+arguments.get('-o')+'" --- sys.exec_info = '+str(sys.exc_info()));sys.exit(1)
+
+##########################################################################################################################
+## build the dictionary for the json output ##
+output_dictionary={}
+output_dictionary["controlInfo"]={}
+output_dictionary["controlInfo"]["engineVersion"]= __version__
+output_dictionary["controlInfo"]["referenceId"]="123"
+output_dictionary["controlInfo"]["docVersion"]="document version"
+output_dictionary["controlInfo"]["source"]="document source"
+output_dictionary["controlInfo"]["docDate"]="doc date"
+output_dictionary["controlInfo"]["processDate"]=str(datetime.today())
+
+output_dictionary["errors"]=[]
+output_dictionary["reports"]=[]
+
 ## parse the arguments from arg1 on into a dictionary - notify user of unrecognized flags ##
 ## NOTE - this does assume that flags start in the first position and every other argument is a flag ##
 for index in range(0,len(args)-1,2):    
     if args[index] in command_line_flags:
         arguments[args[index]]=args[index+1]
     else:
-        print 'nonfatal error:  unrecognized flag: '+args[index]+' this flag will be excluded from the arguments\n\
-        refer to '+command_line_flag_file+' for a complete list and description of command line flags\n'
+        output_dictionary["errors"].append({'errorType':'Warning','errorString':'nonfatal error:  unrecognized flag: '+args[index]+' this flag will be excluded from the arguments\
+        refer to '+command_line_flag_file+' for a complete list and description of command line flags'})
+
+## add in flag info to the json output dictionary
+output_dictionary["controlInfo"]["docName"]=arguments.get('-f')
+output_dictionary["controlInfo"]["doctype"]=arguments.get('-t')
+output_dictionary["controlInfo"]["diseaseGroup"]=arguments.get('-g')
 
 ## ERR out for missing flags that are required ##    
 missing_flags=required_flags-set(arguments.keys())
 if len(missing_flags)>0:
+    error_string=''
     for each_flag in missing_flags:
-        print 'ERROR: missing required flag: "'+each_flag+'" '+command_line_flags[each_flag][1]
-    print '\nFATAL ERROR: cannot proceed without all required flags. program aborted.';sys.exit()
+        output_dictionary["errors"].append({'errorType':'Exception','errorString':'FATAL ERROR: missing required flag: '+each_flag+' '+command_line_flags[each_flag][1]})
+    output_results(output_dictionary)
 else:
-    ## import and call appropriate module ##
-    exec 'from fhcrc_'+arguments.get('-t')+' import process_'+arguments.get('-t')
-    exec ('output=return_exec_code(process_'+arguments.get('-t')+'.main(arguments))')
+
+    
     
 
-          
-## output results to file ##
-## this is just a template for now - will have to deal with appropriate data structure, etc - probably with a seperate "output" module ##        
-with open(arguments.get('-o'),'w') as output_file:
-    for accession in output:
-        output[accession]['PathNum']=accession        
-        output_file.write(json.dumps(output[accession])+'\n')
-print 'program run complete '+str(len(output))+' accessions processed successfully'
+    ## import and call appropriate module ##
+    exec 'from fhcrc_'+arguments.get('-t')+' import process_'+arguments.get('-t')
+    exec ('output,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments))')    
+    if return_type==list:
+        output_dictionary["reports"].append(output)       
+    else:
+        output_dictionary["errors"].append(output)
+    output_results(output_dictionary)
