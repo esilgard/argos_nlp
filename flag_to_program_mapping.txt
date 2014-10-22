@@ -1,1 +1,0 @@
--g=lung	-t=pathology	program=lung_pathology.py	
