@@ -9,8 +9,8 @@
 __version__='PathHistology1.0'
 
 import re
- 
-
+import os,sys
+path= os.path.dirname(os.path.realpath(__file__))+'/'
 
 
 #############################################################################################################################################################
@@ -34,8 +34,8 @@ def get(dictionary):
                        "startStops":[]}
 
     ## a list of histologies from the disease relevent histology_file
-    try:    histologies=sorted([x.strip().lower() for x in open('fhcrc_pathology/lung/lung_histologies.txt','r').readlines()],key=lambda x: len(x))
-    except: return ({'errorType':'Exception','errorString':'ERROR: could not access lung histology file at fhcrc_pathology/lung/lung_histologies.txt -- program aborted'},Exception)
+    try:    histologies=sorted([x.strip().lower() for x in open(path+'lung_histologies.txt','r').readlines()],key=lambda x: len(x))
+    except: return ({'errorType':'Exception','errorString':'ERROR: could not access lung histology file at '+path+'lung_histologies.txt -- PathHistology not completed'},Exception)
 
 
     ## dictionary= sorted dictionary ##
@@ -66,7 +66,7 @@ def get(dictionary):
         return_dictionary['value']=';'.join(histology_list)
         return_dictionary['confidence']=("%.2f" % .8)
         return_dictionary['startStops'].append({"startPosition":0,"stopPostion":0})
-    return return_dictionary         
+    return (return_dictionary,dict)        
                 
 
             

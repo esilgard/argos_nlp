@@ -40,4 +40,4 @@ def get(dictionary):
         return_dictionary["confidence"]=1.0
         return_dictionary["startStops"].append({"startPosition":date_match.start(1),"stopPosition":date_match.end(3)})
     
-    return return_dictionary
+    return (return_dictionary,dict) 

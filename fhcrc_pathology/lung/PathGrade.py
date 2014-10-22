@@ -43,11 +43,11 @@ def get(dictionary):
         if re.search('[\W]'+g+'[\W]',window):
             if 'grade:' in window:
                 return_dictionary["value"]=n
-                return return_dictionary
+                return (return_dictionary,dict)
             for h in histos:
                 if h in window:
                     return_dictionary["value"]=n
-                    return return_dictionary
+                    return (return_dictionary,dict)
             
       
     m=re.match('.*([123])[/of ]{1,6}3.{,20}fn[c]?l[c]?c.*',text)
@@ -59,4 +59,4 @@ def get(dictionary):
     if m:
         return_dictionary["value"]=grades[' '+m.group(1)+' ']
 
-    return return_dictionary
+    return (return_dictionary,dict) 

@@ -16,7 +16,7 @@
 
 ''' author @ esilgard '''
 ''' written 2013, last update Oct 2014 '''
-__version__='1.0'
+__version__='path_parser1.0'
 
 import re,sys
 

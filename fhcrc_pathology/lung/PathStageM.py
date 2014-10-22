@@ -24,4 +24,4 @@ def get(dictionary):
 
         
         text=' '.join([y for x in dictionary.keys() for y in sorted(dictionary[x].values())])   
-        return return_dictionary
+        return (return_dictionary,dict) 

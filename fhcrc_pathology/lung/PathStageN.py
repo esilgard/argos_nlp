@@ -21,4 +21,4 @@ def get(dictionary):
     '''
     return_dictionary={"name":"PathStageN","value":None,"confidence":0.0,"algorithmVersion":__version__,
                        "startStops":[]}
-    return return_dictionary
+    return (return_dictionary,dict) 

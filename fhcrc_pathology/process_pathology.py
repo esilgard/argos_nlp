@@ -15,10 +15,11 @@
 #
 
 import sys,path_parser
-
+import os
+path2= os.path.dirname(os.path.realpath(__file__))+'/'
 '''author@esilgard'''
 '''last updated October 2014'''
-__version__='1.0'
+__version__='process_pathology1.0'
 #################################################################################################################################################
 def return_exec_code(x):
     '''
@@ -35,19 +36,25 @@ def get_fields(disease_group,report_dictionary,data_dictionary):
         field_value_dictionary will hold the values for each of the fields in the data_dictionary
     '''
     report_field_list=[]
-    try:
-        for field in data_dictionary:
-            ## import the modules for the fields in the data dictionary       
-            exec ('from '+disease_group+' import '+field)
-            exec("field_value=return_exec_code("+field+".get(report_dictionary))")
+    error_list=[]
+    #try:
+    for field in data_dictionary:
+        ## import the modules for the fields in the data dictionary
+        
+        exec ('from '+disease_group+' import '+field)            
+        exec("field_value,return_type=return_exec_code("+field+".get(report_dictionary))")            
+        if return_type==dict:
             report_field_list.append(field_value)
-        return report_field_list,None
-    except:
-        return 'Exception',Exception
+        else:
+            error_list.append(field_value)
+        
+    return report_field_list,error_list,list
+    #except:
+        #return ({'errorType':'Exception','errorString':'trouble finding or importing '+field+' module from '+path2+' processing not completed'},Exception,Exception)
 
     
 ### MAIN CLASS ###
-def main(arguments):
+def main(arguments,path):
     '''
     current minimum required flags for the pathology parsing in the "arguments" dictionary are:
         -f input pathology file
@@ -56,14 +63,14 @@ def main(arguments):
     
     ## get dictionaries/gazeteers needed for processing
     try:
-        pathology_dictionary,return_type=path_parser.parse(arguments.get('-f'))
+        pathology_dictionary,return_type=path_parser.parse(path+arguments.get('-f'))
         if return_type!=dict: return (pathology_dictionary,return_type)
     except:
-        return({'errorType':'Exception','errorString':'FATAL ERROR: could not parse input pathology file '+arguments.get('-f')+' --- program aborted'},Exception)
+        return({'errorType':'Exception','errorString':'FATAL ERROR: could not parse input pathology file '+path2+'/'+arguments.get('-f')+' --- program aborted'},Exception,Exception)
   
    
-    try:    data_dictionary=dict((y.split('\t')[0],y.split('\t')[1].strip()) for y in open('fhcrc_pathology/'+arguments.get('-g')+'/data_dictionary.txt','r').readlines())
-    except: return ({'errorType':'Exception','errorString':'FATAL ERROR: could not access data dictionary at fhcrc_pathology/'+arguments.get('-g')+'/data_dictionary.txt --- program aborted'},Exception)
+    try:    data_dictionary=dict((y.split('\t')[0],y.split('\t')[1].strip()) for y in open(path2+'/'+arguments.get('-g')+'/data_dictionary.txt','r').readlines())
+    except: return ({'errorType':'Exception','errorString':'FATAL ERROR: could not access data dictionary at '+path2+'/'+arguments.get('-g')+'/data_dictionary.txt --- program aborted'},Exception,Exception)
 
     field_value_output=[]
     
@@ -75,11 +82,12 @@ def main(arguments):
             field_value_dictionary["mrn"]=mrn
             #dict.fromkeys(data_dictionary.keys(),None)
             
-            return_fields,return_type=get_fields(arguments.get('-g'),pathology_dictionary[mrn][accession],data_dictionary)
+            return_fields,return_errors,return_type=get_fields(arguments.get('-g'),pathology_dictionary[mrn][accession],data_dictionary)
+            
             if return_type!=Exception:
                 field_value_dictionary['fields']=return_fields
                 field_value_output.append(field_value_dictionary)
             else:
-                return ({'errorType':'Exception','errorString':'error in process_pathology.get(fields)'},Exception)
+                return (field_value_output,[{'errorType':'Exception','errorString':'FATAL ERROR in process_pathology.get(fields) unknown number of fields completed'}],list)
     #field_value_dictionary,return_type=get_fields(arguments.get('-g'),pathology_dictionary,data_dictionary,field_value_dictionary)
-    return (field_value_output,list)
+    return (field_value_output,return_errors,list)

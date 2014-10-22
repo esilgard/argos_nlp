@@ -20,16 +20,18 @@
 '''last updated October 2014'''
 __version__='nlp_engine1.0'
 
-import sys
+import sys,os
 import json
 from datetime import datetime
+
+path= os.path.dirname(os.path.realpath(__file__))+'/'
 
 ## path to file containing flags and descriptions ##
 ## in the format -char<tab>description<tab>verbose_description(for help and error messages) ##
 try:
-    command_line_flag_file='command_line_flags.txt'
+    command_line_flag_file=path+'command_line_flags.txt'
 except:
-    output_errors(Exception,'\nFATAL ERROR: command line flag file not found.  program aborted.')
+    output_results(Exception,'\nFATAL ERROR: command line flag file not found.  program aborted.')
 
 
 ## set of required flags for program to run successfully ##
@@ -60,15 +62,19 @@ def return_exec_code(x):
 ## mostly empty template for results for now ##        
 def output_results(output):
     try:
-        of=open(arguments.get('-o'),'w')
+        of=open(path+arguments.get('-o'),'w')
     except:
-        sys.stderr.write('FATAL ERROR: path to output file '+arguments.get('-o')+' not found');sys.exit(1)
+        sys.stderr.write('FATAL ERROR: path to output file '+path+arguments.get('-o')+' not found');sys.exit(1)
     try:
         with of as output_file:           
-            pretty_dump = json.dumps(output, sort_keys=True, indent=4, separators=(',', ': '))
+            with open('json_error.txt','w')as o:
+                for k,v in output.items():
+                    o.write(k+'\t'+str(v)+'\n\n')
+            pretty_dump = json.dumps(output, sort_keys=True, indent=4, separators=(',', ': '))           
             output_file.write(pretty_dump)        
     except:
-        sys.stderr.write('FATAL ERROR: problem with output filestream to file object "'+arguments.get('-o')+'" --- sys.exec_info = '+str(sys.exc_info()));sys.exit(1)
+        sys.stderr.write('FATAL ERROR: problem with output filestream to file object "'+path+arguments.get('-o')+'" --- sys.exec_info = '+str(sys.exc_info()));sys.exit(1)
+        
 
 ##########################################################################################################################
 ## build the dictionary for the json output ##
@@ -94,8 +100,8 @@ for index in range(0,len(args)-1,2):
         refer to '+command_line_flag_file+' for a complete list and description of command line flags'})
 
 ## add in flag info to the json output dictionary
-output_dictionary["controlInfo"]["docName"]=arguments.get('-f')
-output_dictionary["controlInfo"]["doctype"]=arguments.get('-t')
+output_dictionary["controlInfo"]["docName"]=path+arguments.get('-f')
+output_dictionary["controlInfo"]["docType"]=arguments.get('-t')
 output_dictionary["controlInfo"]["diseaseGroup"]=arguments.get('-g')
 
 ## ERR out for missing flags that are required ##    
@@ -106,15 +112,16 @@ if len(missing_flags)>0:
         output_dictionary["errors"].append({'errorType':'Exception','errorString':'FATAL ERROR: missing required flag: '+each_flag+' '+command_line_flags[each_flag][1]})
     output_results(output_dictionary)
 else:
-
-    
     
 
     ## import and call appropriate module ##
     exec 'from fhcrc_'+arguments.get('-t')+' import process_'+arguments.get('-t')
-    exec ('output,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments))')    
+    exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,path))')
+    
     if return_type==list:
-        output_dictionary["reports"].append(output)       
+        output_dictionary["reports"].append(output)
+        output_dictionary["errors"].append(errors)
     else:
         output_dictionary["errors"].append(output)
+    
     output_results(output_dictionary)
