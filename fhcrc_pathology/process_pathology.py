@@ -63,10 +63,10 @@ def main(arguments,path):
     
     ## get dictionaries/gazeteers needed for processing
     try:
-        pathology_dictionary,return_type=path_parser.parse(path+arguments.get('-f'))
-        if return_type!=dict: return (pathology_dictionary,return_type)
+        pathology_dictionary,return_type=path_parser.parse(arguments.get('-f'))
+        if return_type!=dict: return (pathology_dictionary,return_type,Exception)
     except:
-        return({'errorType':'Exception','errorString':'FATAL ERROR: could not parse input pathology file '+path2+'/'+arguments.get('-f')+' --- program aborted'},Exception,Exception)
+        return({'errorType':'Exception','errorString':'FATAL ERROR: could not parse input pathology file '+arguments.get('-f')+' --- program aborted'},Exception,Exception)
   
    
     try:    data_dictionary=dict((y.split('\t')[0],y.split('\t')[1].strip()) for y in open(path2+'/'+arguments.get('-g')+'/data_dictionary.txt','r').readlines())
