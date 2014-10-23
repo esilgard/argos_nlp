@@ -24,6 +24,7 @@ import sys,os
 import json
 from datetime import datetime
 
+cwd= os.getcwd()+'/'
 path= os.path.dirname(os.path.realpath(__file__))+'/'
 
 ## path to file containing flags and descriptions ##
@@ -61,19 +62,20 @@ def return_exec_code(x):
 ## output results to file ##
 ## mostly empty template for results for now ##        
 def output_results(output):
-    try:
-        of=open(path+arguments.get('-o'),'w')
+    try:        
+        of=open(cwd+arguments.get('-o'),'w')
+        
     except:
-        sys.stderr.write('FATAL ERROR: path to output file '+path+arguments.get('-o')+' not found');sys.exit(1)
+        sys.stderr.write('FATAL ERROR: path to output file '+cwd+arguments.get('-o')+' not found');sys.exit(1)
     try:
         with of as output_file:           
-            with open('json_error.txt','w')as o:
-                for k,v in output.items():
-                    o.write(k+'\t'+str(v)+'\n\n')
+            #with open('json_error.txt','w')as o:
+            #    for k,v in output.items():
+            #        o.write(k+'\t'+str(v)+'\n\n')
             pretty_dump = json.dumps(output, sort_keys=True, indent=4, separators=(',', ': '))           
             output_file.write(pretty_dump)        
     except:
-        sys.stderr.write('FATAL ERROR: problem with output filestream to file object "'+path+arguments.get('-o')+'" --- sys.exec_info = '+str(sys.exc_info()));sys.exit(1)
+        sys.stderr.write('FATAL ERROR: problem with output filestream/json dump to file object "'+cwd+arguments.get('-o')+'" --- sys.exec_info = '+str(sys.exc_info()));sys.exit(1)
         
 
 ##########################################################################################################################
