@@ -100,7 +100,7 @@ for index in range(0,len(args)-1,2):
         refer to '+command_line_flag_file+' for a complete list and description of command line flags'})
 
 ## add in flag info to the json output dictionary
-output_dictionary["controlInfo"]["docName"]=path+arguments.get('-f')
+output_dictionary["controlInfo"]["docName"]=arguments.get('-f')
 output_dictionary["controlInfo"]["docType"]=arguments.get('-t')
 output_dictionary["controlInfo"]["diseaseGroup"]=arguments.get('-g')
 
