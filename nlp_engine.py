@@ -15,16 +15,19 @@
 #
 
 
-'''initial script of the Argos/NLP engine do deal with command line parsing and module outputs '''
-'''author@esilgard'''
-'''last updated October 2014'''
+'''
+    initial script of the Argos/NLP engine do deal with command line parsing and module outputs
+    should exit with a non-zero status for any fatal errors and
+    output warnings and results in json format to CWD in the file provided in cmd line arguments
+    author@esilgard
+    last updated October 2014
+'''
 __version__='nlp_engine1.0'
 
 import sys,os
 import json
 from datetime import datetime
-
-cwd= os.getcwd()+'/'
+## path to the nlp_engine.py script ##
 path= os.path.dirname(os.path.realpath(__file__))+'/'
 
 ## path to file containing flags and descriptions ##
@@ -40,7 +43,6 @@ required_flags=set([])
 
 ## dictionary of actual flags:argument values ##
 arguments={}
-
 
 ## dictionary of flag:tuple(flag description,verbose flag description) ##
 command_line_flags={}
@@ -59,26 +61,24 @@ def return_exec_code(x):
     return x
 
 
-## output results to file ##
-## mostly empty template for results for now ##        
 def output_results(output):
-    try:        
-        of=open(cwd+arguments.get('-o'),'w')
-        
-    except:
-        sys.stderr.write('FATAL ERROR: path to output file '+cwd+arguments.get('-o')+' not found');sys.exit(1)
+    '''
+    output results to json file
+    '''
     try:
-        with of as output_file:           
-            #with open('json_error.txt','w')as o:
-            #    for k,v in output.items():
-            #        o.write(k+'\t'+str(v)+'\n\n')
+        of=open(path+arguments.get('-o'),'w')
+    except:
+        sys.stderr.write('FATAL ERROR: path to output file '+path+arguments.get('-o')+' not found');sys.exit(1)
+    try:
+        with of as output_file:
             pretty_dump = json.dumps(output, sort_keys=True, indent=4, separators=(',', ': '))           
             output_file.write(pretty_dump)        
     except:
-        sys.stderr.write('FATAL ERROR: problem with output filestream/json dump to file object "'+cwd+arguments.get('-o')+'" --- sys.exec_info = '+str(sys.exc_info()));sys.exit(1)
+        sys.stderr.write('FATAL ERROR: problem with output filestream to file object "'+path+arguments.get('-o')+'"\
+            --- sys.exec_info = '+str(sys.exc_info()));sys.exit(1)
         
 
-##########################################################################################################################
+#############################################################################################################
 ## build the dictionary for the json output ##
 output_dictionary={}
 output_dictionary["controlInfo"]={}
@@ -108,22 +108,32 @@ output_dictionary["controlInfo"]["diseaseGroup"]=arguments.get('-g')
 
 ## ERR out for missing flags that are required ##    
 missing_flags=required_flags-set(arguments.keys())
-if len(missing_flags)>0:
-    error_string=''
+if len(missing_flags)>0:    
     for each_flag in missing_flags:
-        output_dictionary["errors"].append({'errorType':'Exception','errorString':'FATAL ERROR: missing required flag: '+each_flag+' '+command_line_flags[each_flag][1]})
-    output_results(output_dictionary)
-else:
-    
+        sys.stderr.write('FATAL ERROR: missing required flag: '+each_flag+' '+command_line_flags[each_flag][1])    
+    sys.exit(1)
+else:    
 
     ## import and call appropriate module ##
-    exec 'from fhcrc_'+arguments.get('-t')+' import process_'+arguments.get('-t')
-    exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,path))')
+    try:
+        exec 'from fhcrc_'+arguments.get('-t')+' import process_'+arguments.get('-t')
+    except:
+        sys.stderr.write('FATAL ERROR:  could not import module process_'+arguments.get('-t'));sys.exit(1)
+    try:
+        exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,path))')
+    except:
+        sys.stderr.write('FATAL ERROR:  could not find main() method in module process_'+arguments.get('-t'));sys.exit(1)
     
     if return_type==list:
-        output_dictionary["reports"].append(output)
-        output_dictionary["errors"].append(errors)
+        output_dictionary["reports"]+=output
+        output_dictionary["errors"]+=errors
     else:
-        output_dictionary["errors"].append(output)
-    
+        output_dictionary["errors"].append(output)       
+    if output_dictionary["errors"]:       
+        crash=False
+        for error_dictionary in output_dictionary["errors"]:            
+            if error_dictionary['errorType']=='Exception':
+                crash=True
+                sys.stderr.write(error_dictionary['errorString'])
+        if crash==True:sys.exit(1)
     output_results(output_dictionary)
