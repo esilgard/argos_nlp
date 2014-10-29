@@ -19,10 +19,11 @@ def get(dictionary):
         "confidence": confidence_value,
         "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
     '''
-    return_dictionary={"name":"PathFindSide","value":None,"confidence":0.0,"algorithmVersion":__version__,
+    return_dictionary={"name":"PathSpecimenType","value":None,"confidence":0.0,"algorithmVersion":__version__,
                        "startStops":[]}
     
-    
+    if 'SpecimenSource' in dictionary:
+        return_dictionary["value"]=dictionary["SpecimenSource"].values()[0].strip()
     text='\n'.join([y for x in dictionary.keys()  for x,y in sorted(dictionary[x].items())])
     return (return_dictionary,dict) 
 

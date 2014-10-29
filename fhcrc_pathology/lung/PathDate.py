@@ -26,18 +26,19 @@ def get(dictionary):
                        "startStops":[]}
                        
 
-    
-    text=' '.join([y for x in dictionary.keys() for y in sorted(dictionary[x].values())])    
-    date_match=re.match('.*COLLECTED:[\s]+([A-Z][a-z]{2})[\s]+([\d]{1,2})[\s]+([\d]{4}).*',text)
-    
+    ignore_section=sorted([(x,y) for z in dictionary.keys() for x,y in dictionary[z].items()],key=lambda b:int(b[0]))    
+    text='\n'.join([a[1] for a in ignore_section])
+    #date_match=re.match('.*COLLECTED DATE:[\s]+([A-Z][a-z]{2})[\s]+([\d]{1,2})[\s]+([\d]{4}).*',text)
+    ## make this match non greedy so that the first date is picked out
+    date_match=re.match('.*?Electronically signed[ ]*([\d]{1,2})[\-/]([\d]{1,2})[\-/]([\d]{4}).*',text,re.DOTALL)
     if date_match:
         year=date_match.group(3)
         month=date_match.group(1)
         day=date_match.group(2)
         if len(date_match.group(2))==1:               
             day='0'+date_match.group(2)                
-        return_dictionary["value"]=str(datetime.strptime(year+','+month+','+day,'%Y,%b,%d'))
+        return_dictionary["value"]=str(datetime.strptime(year+','+month+','+day,'%Y,%m,%d'))
         return_dictionary["confidence"]=1.0
         return_dictionary["startStops"].append({"startPosition":date_match.start(1),"stopPosition":date_match.end(3)})
-    
+           
     return (return_dictionary,dict) 

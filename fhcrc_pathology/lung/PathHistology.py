@@ -9,7 +9,7 @@
 __version__='PathHistology1.0'
 
 import re
-import os,sys
+import os
 path= os.path.dirname(os.path.realpath(__file__))+'/'
 
 
@@ -34,10 +34,19 @@ def get(dictionary):
                        "startStops":[]}
 
     ## a list of histologies from the disease relevent histology_file
-    try:    histologies=sorted([x.strip().lower() for x in open(path+'lung_histologies.txt','r').readlines()],key=lambda x: len(x))
+    histologies=[]
+    standardizations={}
+    try:
+        for line in open(path+'lung_histologies.txt','r').readlines():
+            histos=line.split(';')
+            for h in histos:
+                h=h.strip().lower()
+                standardizations[h]=histos[0].strip()
+                histologies.append(h)
+        histologies=sorted(histologies,key=lambda x: len(x),reverse=True)        
     except: return ({'errorType':'Exception','errorString':'ERROR: could not access lung histology file at '+path+'lung_histologies.txt -- PathHistology not completed'},Exception)
 
-
+    
     ## dictionary= sorted dictionary ##
     text='\n'.join([y for x in dictionary.keys() for x,y in sorted(dictionary[x].items())])
     ##*** NEED TO DEAL WITH CHAR OFFSETS AND DIFF TEXTS ***##
@@ -50,21 +59,21 @@ def get(dictionary):
                 if re.search('[\d]{4};[\d]{1,4}:[\d\-]{1,6}',results):pass      ## weed out references to literature/papers - picking up pub. info like this: 2001;30:1-14.
                 else:                              
                     text=results.lower()
-                    textb=re.sub('[.,:;\\\/\-]',' ',text)
-                    textb=re.sub('[a-zA-Z]([\\\/\-])',' ',text)
+                    textb=re.sub('[.,:;\\\/]',' ',text)
+                    #textb=re.sub('[a-zA-Z]([\\\/\-])',' ',text)
                     histology=find_histology(textb,histologies)
                     if histology:
                         already_seen=False
                         for each in histology_list:
-                            if histology in each:
+                            if standardizations[histology] in each:
                                 already_seen=True
                         if not already_seen:
-                            histology_list.append(histology)
+                            histology_list.append(standardizations[histology])
     if not histology_list:
         return_dictionary['value']=None
     else:
         return_dictionary['value']=';'.join(histology_list)
-        return_dictionary['confidence']=("%.2f" % .8)
+        return_dictionary['confidence']=("%.2f" % .85)
         return_dictionary['startStops'].append({"startPosition":0,"stopPostion":0})
     return (return_dictionary,dict)        
                 

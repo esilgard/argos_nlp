@@ -37,7 +37,7 @@ def get_fields(disease_group,report_dictionary,data_dictionary):
     '''
     report_field_list=[]
     error_list=[]
-    #try:
+   
     for field in data_dictionary:
         ## import the modules for the fields in the data dictionary
         
@@ -49,10 +49,7 @@ def get_fields(disease_group,report_dictionary,data_dictionary):
             error_list.append(field_value)
         
     return report_field_list,error_list,list
-    #except:
-        #return ({'errorType':'Exception','errorString':'trouble finding or importing '+field+' module from '+path2+' processing not completed'},Exception,Exception)
-
-    
+        
 ### MAIN CLASS ###
 def main(arguments,path):
     '''
