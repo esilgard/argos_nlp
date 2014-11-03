@@ -66,15 +66,15 @@ def output_results(output):
     output results to json file
     '''
     try:
-        of=open(path+arguments.get('-o'),'w')
+        of=open(arguments.get('-o'),'w')
     except:
-        sys.stderr.write('FATAL ERROR: path to output file '+path+arguments.get('-o')+' not found');sys.exit(1)
+        sys.stderr.write('FATAL ERROR: path to output file '+arguments.get('-o')+' not found');sys.exit(1)
     try:
         with of as output_file:
             pretty_dump = json.dumps(output, sort_keys=True, indent=4, separators=(',', ': '))           
             output_file.write(pretty_dump)        
     except:
-        sys.stderr.write('FATAL ERROR: problem with output filestream to file object "'+path+arguments.get('-o')+'"\
+        sys.stderr.write('FATAL ERROR: problem with output filestream to file object "'+arguments.get('-o')+'"\
             --- sys.exec_info = '+str(sys.exc_info()));sys.exit(1)
         
 
@@ -119,10 +119,8 @@ else:
         exec 'from fhcrc_'+arguments.get('-t')+' import process_'+arguments.get('-t')
     except:
         sys.stderr.write('FATAL ERROR:  could not import module process_'+arguments.get('-t'));sys.exit(1)
-    try:
-        exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,path))')
-    except:
-        sys.stderr.write('FATAL ERROR:  could not find main() method in module process_'+arguments.get('-t'));sys.exit(1)
+    exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,path))')
+    #sys.stderr.write('FATAL ERROR:  could not find main() method in module process_'+arguments.get('-t'));sys.exit(1)
     
     if return_type==list:
         output_dictionary["reports"]+=output
