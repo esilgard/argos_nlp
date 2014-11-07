@@ -15,7 +15,13 @@
 #
 
 ''' author @ esilgard '''
-''' written 2013, last update Oct 2014 '''
+''' written 2013 '''
+
+''' last update Nov 2014
+    - added section order to to the section heading
+    - SpecimenSource column from OBR as section (first section, section order=0)
+    - stripped all NULL lines (to avoid character offset issues when interpreting NULL as a string
+'''
 __version__='path_parser1.0'
 
 import re,sys
@@ -31,39 +37,43 @@ def parse(obx_file):
     '''
     this is a basic parser and sectioner for  Amalga pathology reports
     input = "obx_file" = a tab delimited text version of an Amalga OBX table
-    output = "pathology_dictionary" = a dictionary of {unique mrns:{unique accession_nums:{section headings:{row nums/index:texts}}}}
+    output = "pathology_dictionary" = a dictionary of {unique mrns:{unique accession_nums:{(section order, section heading):{row num/index:texts}}}}
 
-    **to work correctly first line must contain headers**
+    **to work correctly first line must contain the expected headers**
 
     --returns a tuple of output, return_type
     '''
     
     pathology_dictionary={}
     section='NULL'
+    section_order=0
     try:
         OBX=open(obx_file,'r').readlines()
         if INDEX in OBX[0]:           
             headers=dict((k,v) for v,k in enumerate(OBX[0].strip().split('\t')))            
             try:
-                OBX=sorted(OBX[1:],key=lambda x: (x[headers.get(MRN)],x[headers.get(ACCESSION_NUM)],x[headers.get(INDEX)]))
+                OBX=sorted(OBX[1:],key=lambda x: (x[headers.get(MRN)],x[headers.get(ACCESSION_NUM)],int(x[headers.get(INDEX)])))
                 
-                for line in OBX:                    
-                    line=line.split('\t')
-                    mrn=line[headers.get(MRN)]                    
-                    accession=line[headers.get(ACCESSION_NUM)]                    
-                    if accession =='NULL' or ACCESSION_NUM in line:   pass                                           # ignore mrns with no accession and duplicate header lines
+                for line in OBX:
+                    
+                    line=line.split('\t')                    
+                    mrn=line[headers.get(MRN)].strip()                    
+                    accession=line[headers.get(ACCESSION_NUM)].strip()
+                    index=line[headers.get(INDEX)].strip()
+                    if index=='1':section_order=0
+                    text=line[headers.get(TEXT)].strip()
+                    
+                    if accession =='NULL' or ACCESSION_NUM in line or text=='NULL':pass # ignore mrns with no accession, duplicate header lines, and null text sections
                     else:                        
-                        pathology_dictionary[mrn]=pathology_dictionary.get(mrn,{})
-                        text=line[headers.get(TEXT)]
+                        pathology_dictionary[mrn]=pathology_dictionary.get(mrn,{})                        
                         pathology_dictionary[mrn][accession]=pathology_dictionary[mrn].get(accession,{})
-                        pathology_dictionary[mrn][accession]['SpecimenSource']={}
-                        pathology_dictionary[mrn][accession]['SpecimenSource']['1']=line[headers.get(SPECIMEN)]
+                        pathology_dictionary[mrn][accession][(0,'SpecimenSource')]={}
+                        pathology_dictionary[mrn][accession][(0,'SpecimenSource')]['0']=line[headers.get(SPECIMEN)].strip()
                         
                         section_header=re.match('[\*\" ]*([A-Z ]+)[\*:]+',text)                                      # match general section header patterns                       
-                        if section_header: section=section_header.group(1).strip()                                   # reassign the section variable if you find a section pattern match
-                        pathology_dictionary[mrn][accession][section]=pathology_dictionary[mrn][accession].get(section,{})                
-                        pathology_dictionary[mrn][accession][section][line[headers.get(INDEX)]]=text
-                        
+                        if section_header: section=section_header.group(1).strip();section_order+=1                  # reassign the section variable if you find a section pattern match
+                        pathology_dictionary[mrn][accession][(section_order,section)]=pathology_dictionary[mrn][accession].get((section_order,section),{})                
+                        pathology_dictionary[mrn][accession][(section_order,section)][index]=text                       
                 return pathology_dictionary,dict
             except:
                 return ({'errorType':'Exception','errorString':"ERROR: trouble parsing "+str(obx_file)+" -- program aborted"},Exception)

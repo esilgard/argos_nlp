@@ -17,8 +17,8 @@ path= os.path.dirname(os.path.realpath(__file__))+'/'
 
 #############################################################################################################################################################
 
-
 def get(dictionary):
+    
    
     '''
     extract the histology from the lower cased text of the pathology report   
@@ -47,44 +47,65 @@ def get(dictionary):
     except: return ({'errorType':'Exception','errorString':'ERROR: could not access lung histology file at '+path+'lung_histologies.txt -- PathHistology not completed'},Exception)
 
     
-    ## dictionary= sorted dictionary ##
-    text='\n'.join([y for x in dictionary.keys() for x,y in sorted(dictionary[x].items())])
-    ##*** NEED TO DEAL WITH CHAR OFFSETS AND DIFF TEXTS ***##
+    ## sort the dictionary, first by section order, then by text result and create a full, reconstituted version of the text ##
+    ignore_section=sorted([(x,y) for z in sorted(dictionary.keys()) for x,y in dictionary[z].items()],key=lambda b:int(b[0]))    
+    full_text='\n'.join([a[1] for a in ignore_section])
+    
+    ## character counter for highlighting string matches ##
+    chars_up_to_this_point=0
     histology_list=[]
-    for section in dictionary:
-        ##starting_index=
-        if 'CYTOLOGIC IMPRESSION' in section or 'FINAL DIAGNOSIS' in section or 'COMMENT' in section:
-            ## GET CHAR OFFSETS for sections? ##
-            for index,results in dictionary[section].items():
-                if re.search('[\d]{4};[\d]{1,4}:[\d\-]{1,6}',results):pass      ## weed out references to literature/papers - picking up pub. info like this: 2001;30:1-14.
+    for section in sorted(dictionary):
+        for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):          
+            
+            if 'CYTOLOGIC IMPRESSION' in section[1] or 'FINAL DIAGNOSIS' in section[1] or 'COMMENT' in section[1]:
+               
+                ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
+                ## these can contain confusing general statements about the cancer and/or patients in general ##
+                if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',results):pass
+               
                 else:                              
                     text=results.lower()
-                    textb=re.sub('[.,:;\\\/]',' ',text)
-                    #textb=re.sub('[a-zA-Z]([\\\/\-])',' ',text)
-                    histology=find_histology(textb,histologies)
+                    text=re.sub('[.,:;\\\/\-]',' ',text)                    
+                    histology,onset,offset=find_histology(text,histologies)                    
                     if histology:
+                        return_dictionary['startStops'].append({"startPosition":chars_up_to_this_point+onset,"stopPostion":chars_up_to_this_point+offset})                        
                         already_seen=False
                         for each in histology_list:
                             if standardizations[histology] in each:
                                 already_seen=True
                         if not already_seen:
                             histology_list.append(standardizations[histology])
+        
+            ## update the character count for each section, in order
+            chars_up_to_this_point+=len(results)+1
     if not histology_list:
         return_dictionary['value']=None
     else:
         return_dictionary['value']=';'.join(histology_list)
         return_dictionary['confidence']=("%.2f" % .85)
-        return_dictionary['startStops'].append({"startPosition":0,"stopPostion":0})
+    ##print out to file to double check char offsets ##
+    '''
+    if 'SU-11-32011' in full_text:
+        offsets=sorted(return_dictionary['startStops'],key=lambda x: x['startPosition'])
+        offset_list=[y.values() for y in offsets]
+        print 'OFFSET LIST',offset_list
+        print return_dictionary['value']
+        for start,end in reversed(offset_list):            
+            full_text=full_text[:end]+']*]'+full_text[end:]
+            full_text=full_text[:start]+'[*['+full_text[start:]
+        with open('H:/NLP/offset_tester.txt','w') as output:
+         output.write(full_text)
+    '''
     return (return_dictionary,dict)        
                 
 
             
-
-def find_histology(text,histologies):      
-    for h in histologies:        
-        if re.search(r'([\W]|^)'+h+r'([\W]|$)',text):            
-            if not re.search(r'( no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+h+r'([\W]|$)',text) and \
-               not re.search(r'([\W]|^)'+h+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',text):               
-                return h   
-    return None
+## check for the presence of a non-negated string ##
+def find_histology(short_text,histologies):      
+    for histo in histologies:        
+        if re.search(r'([\W]|^)'+histo+r'([\W]|$)',short_text):            
+            if not re.search(r'( no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+histo+r'([\W]|$)',short_text) and \
+               not re.search(r'([\W]|^)'+histo+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',short_text):                
+                return (histo,short_text.find(histo),short_text.find(histo)+len(histo))
+    return None,None,None
                       

@@ -25,10 +25,10 @@ def get(dictionary):
     return_dictionary={"name":"PathDate","value":None,"confidence":0.0,"algorithmVersion":__version__,
                        "startStops":[]}
                        
-
+    ## sort the dictionary and create a full, reconstituted version of the text ##
     ignore_section=sorted([(x,y) for z in dictionary.keys() for x,y in dictionary[z].items()],key=lambda b:int(b[0]))    
     text='\n'.join([a[1] for a in ignore_section])
-    #date_match=re.match('.*COLLECTED DATE:[\s]+([A-Z][a-z]{2})[\s]+([\d]{1,2})[\s]+([\d]{4}).*',text)
+    
     ## make this match non greedy so that the first date is picked out
     date_match=re.match('.*?Electronically signed[ ]*([\d]{1,2})[\-/]([\d]{1,2})[\-/]([\d]{4}).*',text,re.DOTALL)
     if date_match:

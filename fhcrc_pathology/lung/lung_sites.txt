@@ -1,60 +1,13 @@
-Liver nodule
-Skin
-Supraclavicular lymph node
-Subpectoralis lymph node
-Abdomen
-Heart
-Frontal
-Ileum
-Oropharynx
-Parietal
-Lung, upper lobe
-Mediastinum
-L3 Spine
-Bladder
-Bone/Spine
-Pelvis
-Brain
-Frontoparietal
-Upper Lobe
+Upper Lobe;Upper Lobes
+Mediastinum;mediastinal
 Hilar
-Right
-Lower Lobe
-Liver
-Middle/Lower Lobes
-Left
-Bronchi
-Pleura
-Spleen
-Tonsil, Nasopharynx
-Chest
-Lymph Node
-Diaphragm
-Acetabulum
-Liver Segment III
-Mouth
-Bronchus
-Bone Marrow
-6th Rib
-Retroperitoneum
-Neck
-Middle Lobe
-Chest Wall
-Back
-Lymph Nodes
-Adrenal
-Liver Segment VI
-Mandible
-Spine
-Iliac Bone
-Tongue
-Pericardium
-Bile Duct
-Bone
-Pelvic 
-Lung
-Upper/Middle Lobes
-Rib
-Thigh
-Anterior Abdominal Wall
-Sacrum
+Lower Lobe;Lower Lobe
+Middle Lobe;Middle Lobes
+Middle/Lower Lobe;lower/middle lobes;Middle/Lower Lobes;lower/middle lobe
+Bronchi;bronchial;bronchus
+Pleura;pleurum;pleural
+Retroperitoneum;retroperitoneal
+Upper/Middle Lobes;Upper/Middle Lobe;middle/upper lobes;middle/upper lobe
+Lymph Node;nodes;nodal;1l;1r;2l;2r;3l;3r;4l;4r;5l;5r;6l;6r;7l;7r;8l;8r;9l;9r;10l;10r;11l;11r;12l;12r
+
+
