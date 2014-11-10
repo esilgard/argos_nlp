@@ -65,6 +65,7 @@ def output_results(output):
     '''
     output results to json file
     '''
+    print 'output file',arguments.get('-o')
     try:
         of=open(arguments.get('-o'),'w')
     except:

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2014 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2014 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -48,7 +48,7 @@ def get(dictionary):
     ## a list of general sites and their standardized forms from a general sites file ##
     general_sites=[]
     general_standardizations={}
-    try:
+    try:        
         for line in open('/'.join(dirs[:-1])+'/general_sites.txt','r').readlines():
             site_list=line.split(';')
             for h in site_list:
