@@ -47,18 +47,15 @@ def get(dictionary):
     except: return ({'errorType':'Exception','errorString':'ERROR: could not access lung histology file at '+path+'lung_histologies.txt -- PathHistology not completed'},Exception)
 
     
-    ## sort the dictionary, first by section order, then by text result and create a full, reconstituted version of the text ##
-    ignore_section=sorted([(x,y) for z in sorted(dictionary.keys()) for x,y in dictionary[z].items()],key=lambda b:int(b[0]))    
-    full_text='\n'.join([a[1] for a in ignore_section])
+    full_text=text=dictionary[(-1,'FullText',0)]
+   
     
-    ## character counter for highlighting string matches ##
-    chars_up_to_this_point=0
     histology_list=[]
     for section in sorted(dictionary):
-        for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):          
-            
-            if 'CYTOLOGIC IMPRESSION' in section[1] or 'FINAL DIAGNOSIS' in section[1] or 'COMMENT' in section[1]:
-               
+        section_onset=section[2]
+        header=section[1]
+        if 'CYTOLOGIC IMPRESSION' in header or 'FINAL DIAGNOSIS' in header or 'COMMENT' in header:            
+            for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):               
                 ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                 ## these can contain confusing general statements about the cancer and/or patients in general ##
                 if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',results):pass
@@ -68,7 +65,7 @@ def get(dictionary):
                     text=re.sub('[.,:;\\\/\-]',' ',text)                    
                     histology,onset,offset=find_histology(text,histologies)                    
                     if histology:
-                        return_dictionary['startStops'].append({"startPosition":chars_up_to_this_point+onset,"stopPostion":chars_up_to_this_point+offset})                        
+                        return_dictionary['startStops'].append({"startPosition":section_onset+onset,"stopPostion":section_onset+offset})                        
                         already_seen=False
                         for each in histology_list:
                             if standardizations[histology] in each:
@@ -76,8 +73,7 @@ def get(dictionary):
                         if not already_seen:
                             histology_list.append(standardizations[histology])
         
-            ## update the character count for each section, in order
-            chars_up_to_this_point+=len(results)+1
+                      
     if not histology_list:
         return_dictionary['value']=None
     else:
@@ -95,10 +91,9 @@ def get(dictionary):
             full_text=full_text[:start]+'[*['+full_text[start:]
         with open('H:/NLP/offset_tester.txt','w') as output:
          output.write(full_text)
-    '''
+    '''   
     return (return_dictionary,dict)        
                 
-
             
 ## check for the presence of a non-negated string ##
 def find_histology(short_text,histologies):      

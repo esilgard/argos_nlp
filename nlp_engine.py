@@ -27,6 +27,7 @@ __version__='nlp_engine1.0'
 import sys,os
 import json
 from datetime import datetime
+begin=datetime.today()
 ## path to the nlp_engine.py script ##
 path= os.path.dirname(os.path.realpath(__file__))+'/'
 
@@ -65,7 +66,6 @@ def output_results(output):
     '''
     output results to json file
     '''
-    print 'output file',arguments.get('-o')
     try:
         of=open(arguments.get('-o'),'w')
     except:
@@ -136,3 +136,5 @@ else:
                 sys.stderr.write(error_dictionary['errorString'])
         if crash==True:sys.exit(1)
     output_results(output_dictionary)
+
+print (datetime.today()-begin).days * 86400 + (datetime.today()-begin).seconds

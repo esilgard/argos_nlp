@@ -59,24 +59,22 @@ def get(dictionary):
     except: return ({'errorType':'Exception','errorString':'ERROR: could not access general site file at '+'/'.join(dirs[:-1])+'/general_sites.txt -- PathSite not completed'},Exception)
 
 
-    ignore_section=sorted([(x,y) for z in sorted(dictionary.keys(), key=lambda c: c[0]) for x,y in dictionary[z].items()],key=lambda b:int(b[0]))
-    full_text='\n'.join([a[1] for a in ignore_section])    
+    full_text=dictionary[(-1,'FullText',0)]   
     
     def get_site(site_list,standardizations):
-        site=set([])
-        chars_up_to_this_point=0
+        site=set([])        
         for section in sorted(dictionary):
-            for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):
-                if 'CYTOLOGIC IMPRESSION' in section[1] or 'DIAGNOSIS' in section[1] or 'Specimen' in section[1] or 'SPECIMEN' in section[1]:                    
-                    text=results.lower()
-                    text=re.sub('[.,:;\\\/\-\)\(]',' ',text)                     
-                    for each_site in site_list:                        
-                        for each_match in re.finditer('.*( |^)'+each_site+'( |$).*',text):
-                            if standardizations[each_site] not in site:
-                                site.add(standardizations[each_site])                            
-                            return_dictionary["startStops"].append({'startPosition':each_match.start(2)+chars_up_to_this_point,'stopPosition':each_match.end(2)+chars_up_to_this_point})
-                chars_up_to_this_point+=len(results)+1
+            if 'CYTOLOGIC IMPRESSION' in section[1] or 'DIAGNOSIS' in section[1] or 'Specimen' in section[1] or 'SPECIMEN' in section[1]:                 
+                section_onset=section[2]              
+                text='\n'.join(results.lower() for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])))
+                text=re.sub('[.,:;\\\/\-\)\(]',' ',text)                     
+                for each_site in site_list:                        
+                    for each_match in re.finditer('.*( |^)'+each_site+'( |$).*',text,re.DOTALL):
+                        if standardizations[each_site] not in site:
+                            site.add(standardizations[each_site])                            
+                        return_dictionary["startStops"].append({'startPosition':each_match.start(2)+section_onset,'stopPosition':each_match.end(2)+section_onset})           
         return site
+                               
     site=get_site(disease_group_sites,disease_group_standardizations)
     if not site:    site=get_site(general_sites,general_standardizations)    
     return_dictionary['value']=';'.join(site)                

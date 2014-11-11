@@ -23,5 +23,5 @@ def get(dictionary):
     return_dictionary={"name":"PathNotes","value":None,"confidence":0.0,"algorithmVersion":__version__,
                        "startStops":[]}
     
-    text='\n'.join([y for x in dictionary.keys() for x,y in sorted(dictionary[x].items())])
+    full_text=dictionary[(-1,'FullText',0)]
     return (return_dictionary,dict) 

@@ -12,6 +12,10 @@ import re
 def get(dictionary):
     '''
     extract the PathSide (laterality)from normal cased text of the pathology report
+
+    dictionary = {unique mrns:{unique accession_nums:{(section order, section heading, character onset of section):{row num/index:texts}}}}
+    
+    
     return a dictionary of
         {"name":"PathSide",
         "value":datetime object/or None,
@@ -29,27 +33,21 @@ def get(dictionary):
                       '9l':'Left','10l':'Left','11l':'Left','12l':'Left'}
 
 
-    ignore_section=sorted([(x,y) for z in sorted(dictionary.keys(), key=lambda c: c[0]) for x,y in dictionary[z].items()],key=lambda b:int(b[0]))
-    full_text='\n'.join([a[1] for a in ignore_section])    
-    chars_up_to_this_point=0
+    full_text=dictionary[(-1,'FullText',0)]
     side=set([])
-    for section in sorted(dictionary):
-        for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):
-            if 'CYTOLOGIC IMPRESSION' in section[1] or 'DIAGNOSIS' in section[1] or 'Specimen' in section[1] or 'SPECIMEN' in section[1]:
-                
-                ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
-                ## these can contain confusing general statements about the cancer and/or patients in general ##
-                if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',results):pass
-                else:
-                    text=results.lower()
-                    text=re.sub('[.,:;\\\/\-\)\(]',' ',text) 
-                    match_list=['(rt|right)','([0-9]{1,2}[lr])','(lt|left)','(midline)','(bilateral)']
-                    for each_pattern in match_list:                       
-                        for each_match in re.finditer('.*( |^)'+each_pattern+'( |$).*',text):
-                            side.add(standardizations[each_match.group(2)])
-                            return_dictionary["startStops"].append({'startPosition':each_match.start(2)+chars_up_to_this_point,'stopPosition':each_match.end(2)+chars_up_to_this_point})
-                                     
-            chars_up_to_this_point+=len(results)+1
+    for section in sorted(dictionary):       
+        onset=section[2]
+        header=section[1]
+        if 'CYTOLOGIC IMPRESSION' in header or 'DIAGNOSIS' in header or 'Specimen' in header or 'SPECIMEN' in header:            
+            text='\n'.join(results.lower() for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])))
+            
+            text=re.sub('[.,:;\\\/\-\)\(]',' ',text) 
+            match_list=['(rt|right)','([0-9]{1,2}[lr])','(lt|left)','(midline)','(bilateral)']
+            for each_pattern in match_list:                       
+                for each_match in re.finditer('.*( |^)'+each_pattern+'( |$).*',text,re.DOTALL):
+                    side.add(standardizations[each_match.group(2)])
+                    return_dictionary["startStops"].append({'startPosition':each_match.start(2)+onset,'stopPosition':each_match.end(2)+onset})                             
+            
     return_dictionary['value']=';'.join(side)
     if ('Right' in side and 'Left' in side) or 'Bilateral' in side: return_dictionary['value']='Bilateral'
                 

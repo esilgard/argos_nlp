@@ -40,27 +40,21 @@ def get(dictionary):
         general_procedures=sorted(general_procedures,key=lambda x: len(x),reverse=True)        
     except: return ({'errorType':'Exception','errorString':'ERROR: could not access general procedures file at '+'/'.join(dirs[:-1])+'/general_procedures.txt -- PathSpecimenType not completed'},Exception)
 
-    ignore_section=sorted([(x,y) for z in sorted(dictionary.keys(), key=lambda c: c[0]) for x,y in dictionary[z].items()],key=lambda b:int(b[0]))
-    full_text='\n'.join([a[1] for a in ignore_section])    
+    full_text=dictionary[(-1,'FullText',0)]
     
-    if 'SpecimenSource' in dictionary:
-        return_dictionary["value"]=dictionary["SpecimenSource"].values()[0].strip()
-    text='\n'.join([y for x in dictionary.keys()  for x,y in sorted(dictionary[x].items())])
-
     def get_procedures(procedures_list,standardizations):
-            procedures=set([])
-            chars_up_to_this_point=0
+            procedures=set([])            
             for section in sorted(dictionary):
-                for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):
-                    if 'Specimen' in section[1] or 'SPECIMEN' in section[1]:                    
-                        text=results.lower()
-                        text=re.sub('[.,:;\\\/\-\)\(]',' ',text)                     
-                        for each_spec_type in procedures_list:                        
-                            for each_match in re.finditer('.*( |^)'+each_spec_type+'( |$).*',text):
-                                if standardizations[each_spec_type] not in procedures:
-                                    procedures.add(standardizations[each_spec_type])                            
-                                return_dictionary["startStops"].append({'startPosition':each_match.start(2)+chars_up_to_this_point,'stopPosition':each_match.end(2)+chars_up_to_this_point})
-                    chars_up_to_this_point+=len(results)+1
+                if 'Specimen' in section[1] or 'SPECIMEN' in section[1]:
+                    section_onset=section[2]                                                          
+                    text='\n'.join(results.lower() for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])))
+                    text=re.sub('[.,:;\\\/\-\)\(]',' ',text)                     
+                    for each_spec_type in procedures_list:                        
+                        for each_match in re.finditer('.*( |^)'+each_spec_type+'( |$).*',text,re.DOTALL):
+                            if standardizations[each_spec_type] not in procedures:
+                                procedures.add(standardizations[each_spec_type])                            
+                            return_dictionary["startStops"].append({'startPosition':each_match.start(2)+section_onset,'stopPosition':each_match.end(2)+section_onset})
+                    
             return procedures
     #print general_standardizations
     spec_type=get_procedures(general_procedures,general_standardizations)    

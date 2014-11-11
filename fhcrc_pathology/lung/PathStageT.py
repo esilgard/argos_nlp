@@ -20,4 +20,5 @@ def get(dictionary):
     '''
     return_dictionary={"name":"PathStageT","value":None,"confidence":0.0,"algorithmVersion":__version__,
                        "startStops":[]}
+    full_text=dictionary[(-1,'FullText',0)]
     return (return_dictionary,dict) 

@@ -23,5 +23,5 @@ def get(dictionary):
                            
 
         
-        text=' '.join([y for x in dictionary.keys() for y in sorted(dictionary[x].values())])   
+        text=dictionary[(-1,'FullText',0)]   
         return (return_dictionary,dict) 
