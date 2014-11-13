@@ -18,7 +18,7 @@ grades={'high':'high','low':'low','intermediate':'intermediate',
 histos=['carcinoma','cancer','sclc']
 
 
-def get(dictionary):
+def get(disease_group,dictionary):
     '''
     extract the histology from the lower cased text of the pathology report   
     
@@ -59,4 +59,4 @@ def get(dictionary):
     if m:
         return_dictionary["value"]=grades[' '+m.group(1)+' ']
 
-    return (return_dictionary,dict) 
+    return ([return_dictionary],list) 

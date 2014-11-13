@@ -10,10 +10,10 @@ __version__='PathSpecimenType1.0'
 
 import re
 import os
-path= os.path.dirname(os.path.realpath(__file__))
+path= os.path.dirname(os.path.realpath(__file__))+'/'
 dirs=path.split('\\')
 
-def get(dictionary):
+def get(disease_group,dictionary):
     '''
     extract the specimen type/procedure from the SpecimenSource   
     
@@ -31,21 +31,21 @@ def get(dictionary):
     general_standardizations={}
     
     try:
-        for line in open('/'.join(dirs[:-1])+'/general_procedures.txt','r').readlines():
+        for line in open(path+'procedures.txt','r').readlines():
             procedures_list=line.split(';')
             for h in procedures_list:
                 h=h.strip().lower()
                 general_standardizations[h]=procedures_list[0].strip()
                 general_procedures.append(h)
         general_procedures=sorted(general_procedures,key=lambda x: len(x),reverse=True)        
-    except: return ({'errorType':'Exception','errorString':'ERROR: could not access general procedures file at '+'/'.join(dirs[:-1])+'/general_procedures.txt -- PathSpecimenType not completed'},Exception)
+    except: return ([{'errorType':'Exception','errorString':'ERROR: could not access general procedures file at '+path+'procedures.txt -- PathSpecimenType not completed'}],Exception)
 
-    full_text=dictionary[(-1,'FullText',0)]
+    full_text=dictionary[(-1,'FullText',0,None)]
     
     def get_procedures(procedures_list,standardizations):
             procedures=set([])            
             for section in sorted(dictionary):
-                if 'Specimen' in section[1] or 'SPECIMEN' in section[1]:
+                if 'SPECIMEN' in section[1]:
                     section_onset=section[2]                                                          
                     text='\n'.join(results.lower() for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])))
                     text=re.sub('[.,:;\\\/\-\)\(]',' ',text)                     
@@ -60,4 +60,4 @@ def get(dictionary):
     spec_type=get_procedures(general_procedures,general_standardizations)    
     return_dictionary['value']=';'.join(spec_type)
     
-    return (return_dictionary,dict)
+    return ([return_dictionary],list)

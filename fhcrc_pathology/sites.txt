@@ -3,27 +3,23 @@ Skin
 Abdomen
 Stomach;gastric
 Lymph Node;nodes;nodal;lymph
-Heart
+Heart;coronary
 Pancreas;pancreatic
 Ampulla
 Pelvis;pelvic
 Brain
 Spleen
 Tonsil
-Nasopharynx
 Chest
-Mouth
 Marrow
 Neck
-Back
 Adrenal
-Head
-Spine
+Back;Spine
 Bile Duct
-Bone
+Bone;osteo
 Leg;thigh;calf
-Arm
-Torso
+Arm;ulna;ulnar
+Torso;thoracic
 Diaphragm
 Acetabulum
 Prostate;prostatic
@@ -36,13 +32,9 @@ Breast;mammary
 Kidney;renal
 Sacrum;sacral
 Spleen
-Tonsil
 Nasopharynx
 Bile Duct
-Brain;Frontoparietal;parietal;frontal
+Brain;Frontoparietal;parietal;frontal;temporal;occipital
 Bladder
-Oropharynx
 Adrenal
-Mandible
-Mouth
-Tongue
+Head;Mouth;Tongue;Mandible;Nasopharynx;pharynx;pharyngeal;Oropharynx

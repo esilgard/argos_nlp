@@ -8,7 +8,7 @@
 '''last update October 2014'''
 __version__='PathStageN1.0'
 
-def get(dictionary):
+def get(disease_group,dictionary):
     
     '''
     extract the PathStageT (size/location of tumor)from normal cased text of the pathology report
@@ -22,5 +22,5 @@ def get(dictionary):
     return_dictionary={"name":"PathStageN","value":None,"confidence":0.0,"algorithmVersion":__version__,
                        "startStops":[]}
 
-    full_text=dictionary[(-1,'FullText',0)]
-    return (return_dictionary,dict) 
+    full_text=dictionary[(-1,'FullText',0,None)]
+    return ([return_dictionary],list) 

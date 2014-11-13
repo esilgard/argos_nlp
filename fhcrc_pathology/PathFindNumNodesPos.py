@@ -6,22 +6,21 @@
 
 '''author@esilgard'''
 '''last update October 2014'''
-__version__='PathNotes1.0'
+__version__='PathFindNumNodesPos1.0'
 
-def get(dictionary):
-    
+def get(disease_group,dictionary):
     '''
-    extract the PathNotes from the normal cased text of the pathology report   
+    extract the PathFindNumNodesPos (number of positive lymph nodes) from the normal cased text of the pathology report   
     
     return a dictionary of
-        {"name":"PathNotes",
+        {"name":"PathFindNumNodesPos",
         "value":notes/or None,
         "algorithmVersion": __version__,
         "confidence": confidence_value,
         "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
     '''
-    return_dictionary={"name":"PathNotes","value":None,"confidence":0.0,"algorithmVersion":__version__,
+    return_dictionary={"name":"PathFindNumNodesPos","value":None,"confidence":0.0,"algorithmVersion":__version__,
                        "startStops":[]}
     
-    full_text=dictionary[(-1,'FullText',0)]
-    return (return_dictionary,dict) 
+    full_text=dictionary[(-1,'FullText',0,None)]
+    return ([return_dictionary],list) 

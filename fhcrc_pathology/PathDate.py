@@ -12,7 +12,7 @@ __version__='PathDate1.0'
 import re
 from datetime import datetime
 
-def get(dictionary):
+def get(disease_group,dictionary):
     '''
     extract the collection date (date of surgery)from normal cased text of the pathology report
     return a dictionary of
@@ -25,7 +25,7 @@ def get(dictionary):
     return_dictionary={"name":"PathDate","value":None,"confidence":0.0,"algorithmVersion":__version__,
                        "startStops":[]}
                        
-    full_text=dictionary[(-1,'FullText',0)]
+    full_text=dictionary[(-1,'FullText',0,None)]
     
     ## make this match non greedy so that the first date is picked out
     date_match=re.match('.*?Electronically signed[ ]*([\d]{1,2})[\-/]([\d]{1,2})[\-/]([\d]{4}).*',full_text,re.DOTALL)
@@ -39,4 +39,4 @@ def get(dictionary):
         return_dictionary["confidence"]=1.0
         return_dictionary["startStops"].append({"startPosition":date_match.start(1),"stopPosition":date_match.end(3)})
            
-    return (return_dictionary,dict) 
+    return ([return_dictionary],list) 

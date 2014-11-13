@@ -8,7 +8,7 @@
 '''last update October 2014'''
 __version__='PathTest1.0'
 
-def get(dictionary):
+def get(disease_group,dictionary):
     '''
     extract the pathology tests from normal cased text of the pathology report
     return a dictionary of
@@ -18,8 +18,8 @@ def get(dictionary):
         "confidence": confidence_value,
         "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
     '''
-    return_dictionary={"name":"PathTest","value":None,"confidence":0.0,"algorithmVersion":__version__,
-                       "startStops":[]}
+    return_dictionary_list=[]
+    
 
-    full_text=dictionary[(-1,'FullText',0)]
-    return (return_dictionary,dict) 
+    full_text=dictionary[(-1,'FullText',0,None)]
+    return (return_dictionary_list,list) 

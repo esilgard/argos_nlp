@@ -50,54 +50,59 @@ def parse(obx_file):
     section_order=0
     try:
         OBX=open(obx_file,'r').readlines()
-        header_set= set(OBX[0].strip().split('\t'))
+        OBX=[a.strip().split('\t') for a in OBX]
+        
+        header_set= set(OBX[0])
         
         if set(header_set)>=(required_header_set):           
-            headers=dict((k,v) for v,k in enumerate(OBX[0].strip().split('\t')))            
+            headers=dict((k,v) for v,k in enumerate(OBX[0]))
+            
             try:
-                OBX=sorted(OBX[1:],key=lambda x: (x[headers.get(MRN)],x[headers.get(ACCESSION_NUM)],int(x[headers.get(INDEX)])))
-                ###### THIS IS NOT SORTING CORRECTLY - INDICES OUT OF ORDER
+                # sort records by mrn, accession, and then setid - ignore null mrns, accessions, or setids
+                OBX=sorted([y for y in OBX[1:] if (y[headers.get(MRN)]!='NULL' and y[headers.get(ACCESSION_NUM)]!='NULL' and y[headers.get(INDEX)]!='NULL')],\
+                            key=lambda x: (x[headers.get(MRN)],x[headers.get(ACCESSION_NUM)],int(x[headers.get(INDEX)])))
+
                 chars_onset=0
                 specimen=''
-                for line in OBX:
-                    
-                    line=line.split('\t')                    
-                    mrn=line[headers.get(MRN)].strip()                    
-                    accession=line[headers.get(ACCESSION_NUM)].strip()
-                    index=line[headers.get(INDEX)].strip()
+                for line in OBX:       
+                    mrn=line[headers.get(MRN)]                   
+                    accession=line[headers.get(ACCESSION_NUM)]
+                    index=line[headers.get(INDEX)]
                     if index=='1':section_order=0;chars_onset=0
-                    text=line[headers.get(TEXT)].strip()                    
-                    print accession,index,specimen
-                    if accession =='NULL' or ACCESSION_NUM in line:
-                        pass                                                                  # ignore mrns with no accession, duplicate header lines
+                    text=line[headers.get(TEXT)] 
+                    if ACCESSION_NUM in line:
+                        pass                                                                  # ignore duplicate header lines
                     elif  text=='NULL':
+                        # maintain readability of fully constituted text by keeping empty 'NULL' lines 
                         pathology_dictionary[mrn]=pathology_dictionary.get(mrn,{})
                         pathology_dictionary[mrn][accession]=pathology_dictionary[mrn].get(accession,{})
-                        pathology_dictionary[mrn][accession][(-1,'FullText',0,'')]=pathology_dictionary[mrn][accession].get((-1,'FullText',0,''),'')+'\n'
+                        pathology_dictionary[mrn][accession][(-1,'FullText',0,None)]=pathology_dictionary[mrn][accession].get((-1,'FullText',0,None),'')+'\n'
                         chars_onset+=1                                                        # maintain readability of fully constituted text by keeping 'NULL' lines
-                    else:                        
+                    else:
+                        ## grab accession dictionary
                         pathology_dictionary[mrn]=pathology_dictionary.get(mrn,{})                        
                         pathology_dictionary[mrn][accession]=pathology_dictionary[mrn].get(accession,{})
                         if index=='1':
-                            specimen_dictionary=dict((x.split(')')[0],x.split(')')[1]) for x in  line[headers.get('SpecimenSource')].strip().split('~'))                            
-                            pathology_dictionary[mrn][accession][(0,'SpecimenSource',0,''.join(sorted(specimen_dictionary.keys())))]={}                            
-                            pathology_dictionary[mrn][accession][(0,'SpecimenSource',0,''.join(sorted(specimen_dictionary.keys())))][0]=specimen_dictionary
-                            print specimen_dictionary                        
+                            chars_onset=0                            
+                            specimen_dictionary=dict((x.split(')')[0],x.split(')')[1]) for x in  line[headers.get('SpecimenSource')].split('~'))
+                            #all_specimens=''.join(sorted(specimen_dictionary.keys()))
+                            pathology_dictionary[mrn][accession][(0,'SpecimenSource',0,None)]={}                            
+                            pathology_dictionary[mrn][accession][(0,'SpecimenSource',0,None)][0]=specimen_dictionary                                                  
+
                         section_header=re.match('[\*\" ]*([A-Z ]+)[\*:]+',text)              # match general section header patterns
                         # reassign the section variable if you find a section pattern match, reset specimen and increment section order
                         if section_header: section=section_header.group(1).strip();section_order+=1;specimen=''
                         specimen_header=re.match('[\s\"]*([,A-Z\- ]+)[\s]*[)].*',text)            
+
                         if specimen_header:                    
-                            M=specimen_header.group(1).replace(' ','')
-                            print M,text                        
-                            for each in  pathology_dictionary[mrn][accession][(0,'SpecimenSource',0,''.join(sorted(specimen_dictionary.keys())))][0].keys():
-                                print 'each',each
+                            M=specimen_header.group(1).replace(' ','')                                                    
+                            for each in  specimen_dictionary.keys():                                
                                 if re.search('['+M+']',each):
-                                    specimen+=each                                   
+                                    specimen+=each 
                         
                         pathology_dictionary[mrn][accession][(section_order,section,chars_onset,specimen)]=pathology_dictionary[mrn][accession].get((section_order,section,chars_onset,specimen),{})                
                         pathology_dictionary[mrn][accession][(section_order,section,chars_onset,specimen)][index]=text
-                        pathology_dictionary[mrn][accession][(-1,'FullText',0,'')]=pathology_dictionary[mrn][accession].get((-1,'FullText',0),'')+text+'\n'
+                        pathology_dictionary[mrn][accession][(-1,'FullText',0,None)]=pathology_dictionary[mrn][accession].get((-1,'FullText',0,None),'')+text+'\n'
                         chars_onset+=len(text)+1
                    
                 return pathology_dictionary,dict

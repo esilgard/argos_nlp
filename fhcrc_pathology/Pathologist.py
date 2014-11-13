@@ -10,7 +10,7 @@ __version__='Pathologist1.0'
 
 import re
 
-def get(dictionary):
+def get(disease_group,dictionary):
     '''
     extract the (first) pathologist's name from the end of the report    
     return a dictionary of
@@ -23,7 +23,7 @@ def get(dictionary):
     return_dictionary={"name":"Pathologist","value":None,"confidence":0.0,"algorithmVersion":__version__,
                        "startStops":[]}
     
-    full_text=dictionary[(-1,'FullText',0)]
+    full_text=dictionary[(-1,'FullText',0,None)]
     
     ## make this match non greedy so that the INITIAL pathologist signature is picked out
     name_match=re.match('.*?\n([A-Za-z\'\-,. ]+) MD[ A-Za-z, ]*\n[ ]*Pathologist[ ]*\n.*',full_text,re.DOTALL)    
@@ -32,4 +32,4 @@ def get(dictionary):
         return_dictionary["confidence"]=1.0
         return_dictionary["startStops"].append({"startPosition":name_match.start(1),"stopPosition":name_match.end(1)})
    
-    return (return_dictionary,dict)
+    return ([return_dictionary],list)
