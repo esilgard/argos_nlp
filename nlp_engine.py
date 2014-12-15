@@ -116,16 +116,15 @@ if len(missing_flags)>0:
 else:    
 
     ## import and call appropriate module ##
-    try:
-        exec 'from fhcrc_'+arguments.get('-t')+' import process_'+arguments.get('-t')
+    try:        
+        exec 'from fhcrc_'+arguments.get('-t')+' import process_'+arguments.get('-t')        
     except:
         sys.stderr.write('FATAL ERROR:  could not import module process_'+arguments.get('-t'));sys.exit(1)
     exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,path))')
     
     output_dictionary["reports"]=output
     output_dictionary["errors"]=errors
-    #else:
-    #    output_dictionary["errors"]+=output      
+         
     if output_dictionary["errors"]:
         print 'error output dictionary',output_dictionary["errors"]
         crash=False
