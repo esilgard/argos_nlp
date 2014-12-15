@@ -11,3 +11,9 @@ command_line_flags.txt
 nlp_engine.py
 	the primary script for the natural language processing engine.  it requires a set of flagged command line arguments, as well as the command_line_flag file which gives their mappings, and input document(s)
 (for not this is a tab delimited file in the format of the Amalga Import OBX table)
+
+__init__.py 
+	required for module imports
+
+fhcrc_pathology
+	directory of modules for processing pathology reports
