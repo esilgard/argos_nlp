@@ -8,7 +8,7 @@
 '''last update October 2014'''
 __version__='PathStageM1.0'
 
-def get(dictionary):
+def get(disease_group,dictionary):
         '''
         extract the pathological M Stage (evidence of metastasis)from normal cased text of the pathology report
         return a dictionary of
@@ -23,5 +23,5 @@ def get(dictionary):
                            
 
         
-        text=' '.join([y for x in dictionary.keys() for y in sorted(dictionary[x].values())])   
-        return (return_dictionary,dict) 
+        full_text=dictionary[(-1,'FullText',0,None)] 
+        return ([return_dictionary],list) 
