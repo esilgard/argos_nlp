@@ -27,6 +27,7 @@ __version__='nlp_engine1.0'
 import sys,os
 import json
 from datetime import datetime
+begin=datetime.today()
 ## path to the nlp_engine.py script ##
 path= os.path.dirname(os.path.realpath(__file__))+'/'
 
@@ -115,23 +116,23 @@ if len(missing_flags)>0:
 else:    
 
     ## import and call appropriate module ##
-    try:
-        exec 'from fhcrc_'+arguments.get('-t')+' import process_'+arguments.get('-t')
+    try:        
+        exec 'from fhcrc_'+arguments.get('-t')+' import process_'+arguments.get('-t')        
     except:
         sys.stderr.write('FATAL ERROR:  could not import module process_'+arguments.get('-t'));sys.exit(1)
     exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,path))')
-    #sys.stderr.write('FATAL ERROR:  could not find main() method in module process_'+arguments.get('-t'));sys.exit(1)
     
-    if return_type==list:
-        output_dictionary["reports"]+=output
-        output_dictionary["errors"]+=errors
-    else:
-        output_dictionary["errors"].append(output)       
-    if output_dictionary["errors"]:       
+    output_dictionary["reports"]=output
+    output_dictionary["errors"]=errors
+         
+    if output_dictionary["errors"]:
+        print 'error output dictionary',output_dictionary["errors"]
         crash=False
-        for error_dictionary in output_dictionary["errors"]:            
-            if error_dictionary['errorType']=='Exception':
-                crash=True
-                sys.stderr.write(error_dictionary['errorString'])
+        error_dictionary=output_dictionary["errors"]            
+        if error_dictionary['errorType']=='Exception':
+            crash=True
+            sys.stderr.write(error_dictionary['errorString'])
         if crash==True:sys.exit(1)
     output_results(output_dictionary)
+
+print (datetime.today()-begin).days * 86400 + (datetime.today()-begin).seconds,'seconds to process '+str(len(output_dictionary["reports"]))+' reports'

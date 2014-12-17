@@ -1,0 +1,11 @@
+Upper Lobe;Upper Lobes
+Mediastinum;mediastinal
+Hilar
+Lower Lobe;Lower Lobe
+Middle Lobe;Middle Lobes
+Middle/Lower Lobe;lower/middle lobes;Middle/Lower Lobes;lower/middle lobe
+Bronchi;bronchial;bronchus
+Pleura;pleurum;pleural
+Retroperitoneum;retroperitoneal
+Upper/Middle Lobes;Upper/Middle Lobe;middle/upper lobes;middle/upper lobe
+Lymph Node;nodes;nodal;1l;1r;2l;2r;3l;3r;4l;4r;5l;5r;6l;6r;7l;7r;8l;8r;9l;9r;10l;10r;11l;11r;12l;12r

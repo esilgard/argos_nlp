@@ -1,0 +1,6 @@
+PathSpecimenType	GROSS DESCRIPTION
+PathSite	SpecimenSource
+PathSide	GROSS DESCRIPTION
+PathHistology	FINAL DIAGNOSIS
+PathDate	DEMOGRAPHICS
+Pathologist	NULL
