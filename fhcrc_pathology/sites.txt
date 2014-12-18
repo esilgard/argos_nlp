@@ -1,0 +1,40 @@
+Liver;hepatic
+Skin
+Abdomen
+Stomach;gastric
+Lymph Node;nodes;nodal;lymph
+Heart;coronary
+Pancreas;pancreatic
+Ampulla
+Pelvis;pelvic
+Brain
+Spleen
+Tonsil
+Chest
+Marrow
+Neck
+Adrenal
+Back;Spine
+Bile Duct
+Bone;osteo
+Leg;thigh;calf
+Arm;ulna;ulnar
+Torso;thoracic
+Diaphragm
+Acetabulum
+Prostate;prostatic
+Colon;colonic
+Ovary;ovarian
+Lung;pulmonary;pulmonic
+Penis;penile
+Testis;testicular
+Breast;mammary
+Kidney;renal
+Sacrum;sacral
+Spleen
+Nasopharynx
+Bile Duct
+Brain;Frontoparietal;parietal;frontal;temporal;occipital
+Bladder
+Adrenal
+Head;Mouth;Tongue;Mandible;Nasopharynx;pharynx;pharyngeal;Oropharynx

@@ -1,0 +1,8 @@
+Brushing;brush;brushings
+Washing;Wash;washings
+Biopsy;Biopsies;core needle;cores;core
+Lavage
+Dissection
+Fine Needle Aspirate;FNA;aspirate;aspiration
+Excision
+Resection
