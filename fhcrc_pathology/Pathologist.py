@@ -5,7 +5,10 @@
 #
 
 '''author@esilgard'''
-'''October 2014'''
+'''
+    written October 2014, updates:
+    December 2014 - added table_name to return dictionary
+'''
 __version__='Pathologist1.0'
 
 import re
@@ -18,6 +21,7 @@ def get(disease_group,dictionary):
     "value":datetime object/or None,
     "algorithmVersion": __version__,
     "confidence": confidence_value,
+    "table":table_name,
     "startStops":[{"startPosition":start_pos1,"stopPostiion":stop_pos1},{"startPosition....])
     '''
     return_dictionary={"name":"Pathologist","value":None,"confidence":0.0,"algorithmVersion":__version__,
@@ -30,6 +34,7 @@ def get(disease_group,dictionary):
     if name_match:        
         return_dictionary["value"]=name_match.group(1)
         return_dictionary["confidence"]=1.0
+        return_dictionary["table"]='Pathology'
         return_dictionary["startStops"].append({"startPosition":name_match.start(1),"stopPosition":name_match.end(1)})
    
     return ([return_dictionary],list)

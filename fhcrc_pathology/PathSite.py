@@ -6,7 +6,8 @@
 
 '''author@esilgard'''
 '''
-    written November 2014    
+    written November 2014  , updates:
+    December 2014 - added table_name to return dictionary  
 '''
 __version__='PathSite1.0'
 
@@ -18,7 +19,7 @@ dirs=path.split('\\')
 
 def get(disease_group,dictionary):   
     '''
-    return a list of dictionaries of each PathSite (location of tumor) per specimen and overall Site (per report)
+    return a list of dictionaries of each PathSite (location of tumor) per specimen (for the PathFinding table) and overall Site (for the Pathology table)
     from normal cased text of the pathology report
 
     return dictionary example:
@@ -26,6 +27,7 @@ def get(disease_group,dictionary):
         "value":datetime object/or None,
         "algorithmVersion": __version__,
         "confidence": confidence_value,
+        "table":table_name,
         "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
     '''
       
@@ -69,7 +71,7 @@ def get(disease_group,dictionary):
                             specimen_start_stops_list.append({'startPosition':each_match.start(2)+line_onset,'stopPosition':each_match.end(2)+line_onset})
                                 
         if specimen_site_list:            
-            return {"name":"PathFindSite","recordKey":specimen,"table":"PathFinding","value":';'.join(set(specimen_site_list)),"confidence":("%.2f" % .85),
+            return {"name":"PathFindSite","recordKey":specimen,"table":"PathologyFinding","value":';'.join(set(specimen_site_list)),"confidence":("%.2f" % .85),
                                           "algorithmVersion":__version__,"startStops":specimen_start_stops_list}
         else: return None
                                       

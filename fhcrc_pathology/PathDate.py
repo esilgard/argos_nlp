@@ -5,7 +5,10 @@
 #
 
 '''author@esilgard'''
-'''November 2013, last update October 2014'''
+'''
+    written November 2013, updates:
+    December 2014 - added table_name to return dictionary
+'''
 __version__='PathDate1.0'
 
 
@@ -20,6 +23,7 @@ def get(disease_group,dictionary):
         "value":datetime object/or None,
         "algorithmVersion": __version__,
         "confidence": confidence_value,
+        "table":table_name,
         "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
     '''
     return_dictionary={"name":"PathDate","value":None,"confidence":0.0,"algorithmVersion":__version__,
@@ -38,5 +42,6 @@ def get(disease_group,dictionary):
         return_dictionary["value"]=str(datetime.strptime(year+','+month+','+day,'%Y,%m,%d'))
         return_dictionary["confidence"]=1.0
         return_dictionary["startStops"].append({"startPosition":date_match.start(1),"stopPosition":date_match.end(3)})
+        return_dictionary["table"]='Pathology'
            
     return ([return_dictionary],list) 

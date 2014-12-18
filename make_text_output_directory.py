@@ -23,9 +23,7 @@ def main(input_file):
         except:
             try:
                 shutil.rmtree(output_directory)
-                print 'shutil ran'
                 os.mkdir(output_directory)
-                print 'os.made dir'
                 return (dict,{'errorType':'Warning','errorString':'Output directory already existed at program runtime. It was not empty and was deleted'})
             except:
                 return(Exception,'FATAL ERROR: Output directory already existed at program runtime: '+output_directory+'. It could not be deleted'+str(sys.exc_info()[1]))

@@ -5,7 +5,10 @@
 #
 
 '''author@esilgard'''
-'''October 2014'''
+'''
+    written October 2014, updates:
+    December 2014 - added table_name to return dictionary
+'''
 __version__='PathGrade1.0'
 
 import re
@@ -27,10 +30,11 @@ def get(disease_group,dictionary):
         "value":grade or None,
         "algorithmVersion": __version__,
         "confidence": confidence_value,
+         "table":table_name,
         "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
     '''
     return_dictionary={"name":"PathGrade","value":None,"confidence":0.0,"algorithmVersion":__version__,
-                       "startStops":[]}
+                       "startStops":[],return_dictionary["table"]='PathStageGrade'}
     
     grade=[]
     text='\n'.join([y.lower() for x in dictionary.keys() if 'COMMENT' in x or 'FINAL' in x or 'IMPRESSION' in x for x,y in sorted(dictionary[x].items())])

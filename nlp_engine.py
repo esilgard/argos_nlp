@@ -112,7 +112,7 @@ else:
     output_dictionary["reports"]=output
     output_dictionary["errors"]=errors
    
-    if mkdir_errors[0]==dict:            
+    if mkdir_errors[0]==dict:        
         output_dictionary["errors"].append(mkdir_errors[1])         
     if output_dictionary["errors"]:
         
@@ -125,10 +125,11 @@ else:
     ## output results to file ##
     output_return = output_results.main(arguments.get('-o'),output_dictionary)
     if output_return:
-        print sys.stderr.write(output_return)
         sys.exit(1)
 
-print (datetime.today()-begin).days * 86400 + (datetime.today()-begin).seconds,'seconds to process '+str(len(output_dictionary["reports"]))+' reports'
+
+## timeit - print out the amount of time it took to process all the reports ##
+#print (datetime.today()-begin).days * 86400 + (datetime.today()-begin).seconds,'seconds to process '+str(len(output_dictionary["reports"]))+' reports'
 
     
         

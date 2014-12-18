@@ -5,7 +5,10 @@
 #
 
 '''author@esilgard'''
-'''last update October 2014'''
+'''
+    written October 2014 , updates:
+    December 2014 - added table_name to return dictionary
+'''
 __version__='PathFindNumNodes1.0'
 
 def get(disease_group,dictionary):
@@ -17,10 +20,11 @@ def get(disease_group,dictionary):
         "value":notes/or None,
         "algorithmVersion": __version__,
         "confidence": confidence_value,
+        "table":table_name,
         "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
     '''
     return_dictionary={"name":"PathFindNumNodes","value":None,"confidence":0.0,"algorithmVersion":__version__,
-                       "startStops":[]}
+                       "startStops":[], 'table':'NodePathFinding'}
     
     full_text=dictionary[(-1,'FullText',0,None)]
     return ([return_dictionary],list) 

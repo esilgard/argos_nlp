@@ -5,7 +5,10 @@
 #
 
 '''author@esilgard'''
-'''last update October 2014'''
+'''
+    written October 2014, updates:
+    December 2014 - added table_name to return dictionary - moved standardizations from celtral script into a disease specific dictionary
+'''
 __version__='PathSide1.0'
 import re
 
@@ -21,6 +24,7 @@ def get(disease_group,dictionary):
         "value":datetime object/or None,
         "algorithmVersion": __version__,
         "confidence": confidence_value,
+        "table":table_name,
         "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
     '''
     
@@ -61,7 +65,7 @@ def get(disease_group,dictionary):
                        
         if specimen_side_list:                      
             if ('Right' in specimen_side_list and 'Left' in specimen_side_list) or 'Bilateral' in specimen_side_list: specimen_side_list=['Bilateral']           
-            return {"name":"PathFindSide","recordKey":specimen,"table":"PathFinding","value":';'.join(set(specimen_side_list)),"confidence":("%.2f" % .85),
+            return {"name":"PathFindSide","recordKey":specimen,"table":"PathologyFinding","value":';'.join(set(specimen_side_list)),"confidence":("%.2f" % .85),
                                           "algorithmVersion":__version__,"startStops":specimen_start_stops_list}
         else:           
             return None

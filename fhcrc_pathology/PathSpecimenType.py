@@ -5,7 +5,10 @@
 #
 
 '''author@esilgard'''
-'''last update October 2014'''
+'''
+    written October 2014, updates:
+    December 2014 - added table_name to return dictionary
+'''
 __version__='PathSpecimenType1.0'
 
 import re
@@ -20,8 +23,9 @@ def get(disease_group,dictionary):
     return a dictionary of
         {"name":"PathSpecimenType",
         "value":spec type or None,
-        "algorithmVersion": __version__,
+        "algorithmVersion": __version__,        
         "confidence": confidence_value,
+        "table":table_name,
         "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
     '''
     return_dictionary={"name":"PathSpecimenType","value":None,"confidence":0.0,"algorithmVersion":__version__,
@@ -59,5 +63,6 @@ def get(disease_group,dictionary):
     #print general_standardizations
     spec_type=get_procedures(general_procedures,general_standardizations)    
     return_dictionary['value']=';'.join(spec_type)
+    return_dictionary["table"]='Pathology'
     
     return ([return_dictionary],list)

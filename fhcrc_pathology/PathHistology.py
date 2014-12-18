@@ -5,7 +5,10 @@
 #
 
 '''author@esilgard'''
-'''written 2013, last update October 2014'''
+'''
+    written 2013, updates:
+    December 2014: added table_name to return dictionary
+'''
 __version__='PathHistology1.0'
 
 import re
@@ -29,6 +32,7 @@ def get(disease_group,dictionary):
         "value":histology/histologies
         "algorithmVersion": __version__,
         "confidence": confidence_value,
+        "table":table_name,
         "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
     '''
    
@@ -83,7 +87,7 @@ def get(disease_group,dictionary):
                                     specimen_histology_list.append(standardizations[histology])
             
             if specimen_histology_list:                
-                return_dictionary_list.append({"name":"PathFindHistology","recordKey":specimen,"table":"PathFinding","value":';'.join(set(specimen_histology_list)),"confidence":("%.2f" % .85),
+                return_dictionary_list.append({"name":"PathFindHistology","recordKey":specimen,"table":"PathologyFinding","value":';'.join(set(specimen_histology_list)),"confidence":("%.2f" % .85),
                                           "algorithmVersion":__version__,"startStops":specimen_start_stops_list})
                 histology_list+=specimen_histology_list
                 start_stops_list+=specimen_start_stops_list                         
@@ -96,20 +100,7 @@ def get(disease_group,dictionary):
         if histology:
             return_dictionary_list.append({"name":"PathHistology","table":"Pathology","value":standardizations[histology],"confidence":("%.2f" % .70),
                                       "algorithmVersion":__version__,"startStops":[{"startPosition":onset,"stopPostion":offset}]})
-    ##print out to file to double check char offsets ##
-    '''
-    if 'SU-11-32011' in full_text:
-        offsets=sorted(return_dictionary['startStops'],key=lambda x: x['startPosition'])
-        offset_list=[y.values() for y in offsets]
-        print 'OFFSET LIST',offset_list
-        print return_dictionary['value']
-        for start,end in reversed(offset_list):            
-            full_text=full_text[:end]+']*]'+full_text[end:]
-            full_text=full_text[:start]+'[*['+full_text[start:]
-        with open('H:/NLP/offset_tester.txt','w') as output:
-         output.write(full_text)
-    '''
-    
+
     return (return_dictionary_list,list)        
                 
             

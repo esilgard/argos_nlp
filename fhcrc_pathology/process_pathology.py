@@ -29,7 +29,8 @@ def return_exec_code(x):
     return x
 
 
-def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,path_data_dictionary):    
+def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,path_data_dictionary):
+    ##### add comments
     '''
         import modules (either general pathology modules, or disease specific depending on parameters)
         disease_group will also serve as the folder that contains all necessary files and modules
@@ -37,10 +38,12 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
         data_dictionary maps disease and document relevant {field names:[pertinent section(s)]}
         field_value_dictionary will hold the values for each of the fields in the data_dictionary
     '''
-    report_field_list=[]
+   
+    report_table_d={}
     error_list=[]
     data_elements=dict.fromkeys(path_data_dictionary.keys()+disease_group_data_dictionary.keys())
-    for field in data_elements:        
+    for field in data_elements:
+        
         ## import the modules for the fields in the disease specific data dictionary
         try:            
             exec ('from '+disease_group+' import '+field)
@@ -56,12 +59,17 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
                 return ({},{'errorType':'Exception','errorString':'FATAL ERROR could not import '+field+' module --- program aborted'},Exception)
                     
         if return_type==list:
-            print field_value
-            report_field_list+=field_value
+            for each_field in field_value:                
+                table=each_field.get('table')                
+                report_table_d[table]=report_table_d.get(table,{})
+                report_table_d[table]['tableName']=table
+                report_table_d[table]['fields']= report_table_d[table].get('fields',[])
+                report_table_d[table]['fields'].append(each_field)
         else:
             error_list+=field_value
-            
-    return report_field_list,error_list,list
+    report_table_list=report_table_d.values()
+    
+    return report_table_list,error_list,list
         
 ### MAIN CLASS ###
 def main(arguments,path):
@@ -106,7 +114,7 @@ def main(arguments,path):
 
             i+=1
             if return_type!=Exception:                
-                field_value_dictionary['fields']=return_fields
+                field_value_dictionary['tables']=return_fields
                 field_value_output.append(field_value_dictionary)
             else:
                 return (field_value_output,{'errorType':'Exception','errorString':'ERROR in process_pathology.get(fields) - unknown number of reports completed'},list)           

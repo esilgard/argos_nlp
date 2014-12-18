@@ -5,7 +5,11 @@
 #
 
 '''author@esilgard'''
-'''last update October 2014'''
+'''
+    written October 2014, updates:
+    December 2014 - added table_name to return dictionary
+'''
+###**** table=PathTest ***###
 __version__='PathTest1.0'
 
 def get(disease_group,dictionary):
@@ -16,6 +20,7 @@ def get(disease_group,dictionary):
         "value":test name/result? None,
         "algorithmVersion": __version__,
         "confidence": confidence_value,
+        "table":table_name,
         "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
     '''
     return_dictionary_list=[]
