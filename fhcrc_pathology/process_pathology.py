@@ -33,7 +33,7 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
     ##### add comments
     '''
         import modules (either general pathology modules, or disease specific depending on parameters)
-        disease_group will also serve as the folder that contains all necessary files and modules
+        disease_group will also serve as the folder that contains all necessary disease specific files and modules
         pathology_dictionary contains parsed path reports in a dictionary of {mrn:{acc:{section:{index:text}}}}}
         data_dictionary maps disease and document relevant {field names:[pertinent section(s)]}
         field_value_dictionary will hold the values for each of the fields in the data_dictionary
@@ -44,8 +44,8 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
     data_elements=dict.fromkeys(path_data_dictionary.keys()+disease_group_data_dictionary.keys())
     for field in data_elements:
         
-        ## import the modules for the fields in the disease specific data dictionary
-        try:            
+        ## import the modules for the fields in the disease specific data dictionary, back off to general module if there is no disease specific version ##
+        try:
             exec ('from '+disease_group+' import '+field)
             exec("field_value,return_type=return_exec_code("+field+".get(disease_group,report_dictionary))")
             if not field_value:
@@ -56,15 +56,18 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
                 exec('import '+field)
                 exec("field_value,return_type=return_exec_code("+field+".get(disease_group,report_dictionary))")
             except:                
-                return ({},{'errorType':'Exception','errorString':'FATAL ERROR could not import '+field+' module --- program aborted'},Exception)
-                    
+                return ({},{'errorType':'Exception','errorString':'FATAL ERROR could not import '+field+' module --- program aborted. '},Exception)
+        ## organize fields by tables, then individual records, then individual fields
+        
         if return_type==list:
             for each_field in field_value:                
-                table=each_field.get('table')                
+                table=each_field.get('table')
+                record_key=each_field.get('recordKey',None)
                 report_table_d[table]=report_table_d.get(table,{})
-                report_table_d[table]['tableName']=table
-                report_table_d[table]['fields']= report_table_d[table].get('fields',[])
-                report_table_d[table]['fields'].append(each_field)
+                report_table_d[table][record_key]=report_table_d[table].get(record_key,{})
+                report_table_d[table][record_key]['tableName']=table
+                report_table_d[table][record_key]['fields']= report_table_d[table][record_key].get('fields',[])
+                report_table_d[table][record_key]['fields'].append(each_field)
         else:
             error_list+=field_value
     report_table_list=report_table_d.values()
@@ -100,23 +103,24 @@ def main(arguments,path):
     ## create a list of output field dictionaries ##
     for mrn in pathology_dictionary:            
         for accession in pathology_dictionary[mrn]:
-                                  
-            field_value_dictionary={}
-            field_value_dictionary["report"]=accession
-            field_value_dictionary["mrn"]=mrn
-            
-            try:
-                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+accession+'.txt','w') as out:
-                          out.write(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])
-            except:
-                return (field_value_output,{'errorType':'Exception','errorString':'ERROR in process_pathology attempting to write text to file at'+ arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+accession+'.txt - unknown number of reports completed'},list)
-            return_fields,return_errors,return_type=get_fields(disease_group,pathology_dictionary[mrn][accession],disease_group_data_dictionary,path_data_dictionary)
+            if 'SU-13-12887' in accession:                
+                field_value_dictionary={}
+                field_value_dictionary["report"]=accession
+                field_value_dictionary["mrn"]=mrn
+                
+                try:
+                    with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+accession+'.txt','w') as out:
+                              out.write(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])
+                except:
+                    return (field_value_output,[{'errorType':'Exception','errorString':'ERROR in process_pathology attempting to write text to file at'+ arguments.get('-f')[:arguments.get('-f').find('.nlp')]\
+                                                 +'/'+accession+'.txt - unknown number of reports completed'}],list)
+                return_fields,return_errors,return_type=get_fields(disease_group,pathology_dictionary[mrn][accession],disease_group_data_dictionary,path_data_dictionary)
 
-            i+=1
-            if return_type!=Exception:                
-                field_value_dictionary['tables']=return_fields
-                field_value_output.append(field_value_dictionary)
-            else:
-                return (field_value_output,{'errorType':'Exception','errorString':'ERROR in process_pathology.get(fields) - unknown number of reports completed'},list)           
-  
+                i+=1
+                if return_type!=Exception:                
+                    field_value_dictionary['tables']=return_fields                    
+                    field_value_output.append(field_value_dictionary)
+                else:
+                    return (field_value_output,[{'errorType':'Exception','errorString':'FATAL ERROR in process_pathology.get(fields) - unknown number of reports completed'}],list)           
+
     return (field_value_output,return_errors,list)

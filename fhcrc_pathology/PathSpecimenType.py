@@ -60,9 +60,10 @@ def get(disease_group,dictionary):
                             return_dictionary["startStops"].append({'startPosition':each_match.start(2)+section_onset,'stopPosition':each_match.end(2)+section_onset})
                     
             return procedures
-    #print general_standardizations
+    
     spec_type=get_procedures(general_procedures,general_standardizations)    
     return_dictionary['value']=';'.join(spec_type)
     return_dictionary["table"]='Pathology'
+    return_dictionary["confidence"]=.8
     
     return ([return_dictionary],list)
