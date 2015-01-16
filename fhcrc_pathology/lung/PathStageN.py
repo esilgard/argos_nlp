@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2014-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -11,29 +11,20 @@
 '''
 __version__='PathStageN1.0'
 import re
-
+import global_strings
 def get(disease_group,dictionary):
     try:        
         '''
-        extract the PathStageT (size/location of tumor)from normal cased text of the pathology report
-        return a dictionary of
-            {"name":"PathStageN",
-            "value":datetime object/or None,
-            "algorithmVersion": __version__,
-            "confidence": confidence_value,
-            "table":table_name,
-            "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
+        extract the PathStageT (size/location of tumor)from normal cased text of the pathology report        
         '''
-        return_dictionary={"name":"PathStageN","value":None,"confidence":0.0,"algorithmVersion":__version__,
-                           "startStops":[],"table":"PathologyStageGrade"}
-        full_text=dictionary[(-1,'FullText',0,None)]
-        print 'pN' in full_text,'pN in text'
-        print full_text[full_text.find('pN')-10:full_text.find('pN')+10]
+        return_dictionary={global_strings.NAME:"PathStageN",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
+                           global_strings.STARTSTOPS:[],global_strings.TABLE:"PathologyStageGrade"}
+        full_text=dictionary[(-1,'FullText',0,None)]        
         n_stage=re.match('.*(pN[012345][abc]?).*',full_text,re.DOTALL)
         if n_stage:
-            print 'N STAGE MATCH'
-            return_dictionary["value"]=n_stage.group(1)            
-            return_dictionary["startStops"].append({"startPosition":n_stage.start(),"stopPosition":n_stage.end()})
+            
+            return_dictionary[global_strings.VALUE]=n_stage.group(1)            
+            return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:n_stage.start(),global_strings.STOP:n_stage.end()})
         return ([return_dictionary],list)
     except:        
-        return ({'errorType':'Warning','errorString':'ERROR in PathStageN module.'},Exception)
+        return ({global_strings.ERR_TYPE:'Warning',global_strings.ERR_STR:'ERROR in PathStageN module.'},Exception)

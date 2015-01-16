@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2014-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,13 @@
 # limitations under the License.
 #
 
-import sys,path_parser
+import sys,path_parser,final_logic
 import os
 path2= os.path.dirname(os.path.realpath(__file__))+'/'
 '''author@esilgard'''
 '''last updated October 2014'''
 __version__='process_pathology1.0'
+
 
 #################################################################################################################################################
 def return_exec_code(x):
@@ -103,24 +104,24 @@ def main(arguments,path):
     ## create a list of output field dictionaries ##
     for mrn in pathology_dictionary:            
         for accession in pathology_dictionary[mrn]:
-            if 'SU-13-12887' in accession:                
-                field_value_dictionary={}
-                field_value_dictionary["report"]=accession
-                field_value_dictionary["mrn"]=mrn
-                
-                try:
-                    with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+accession+'.txt','w') as out:
-                              out.write(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])
-                except:
-                    return (field_value_output,[{'errorType':'Exception','errorString':'ERROR in process_pathology attempting to write text to file at'+ arguments.get('-f')[:arguments.get('-f').find('.nlp')]\
-                                                 +'/'+accession+'.txt - unknown number of reports completed'}],list)
-                return_fields,return_errors,return_type=get_fields(disease_group,pathology_dictionary[mrn][accession],disease_group_data_dictionary,path_data_dictionary)
+            #if 'SU-13-12887' in accession:                
+            field_value_dictionary={}
+            field_value_dictionary["report"]=accession
+            field_value_dictionary["mrn"]=mrn
+            
+            try:
+                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+accession+'.txt','w') as out:
+                          out.write(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])
+            except:
+                return (field_value_output,[{'errorType':'Exception','errorString':'ERROR in process_pathology attempting to write text to file at'+ arguments.get('-f')[:arguments.get('-f').find('.nlp')]\
+                                             +'/'+accession+'.txt - unknown number of reports completed'}],list)
+            return_fields,return_errors,return_type=get_fields(disease_group,pathology_dictionary[mrn][accession],disease_group_data_dictionary,path_data_dictionary)
 
-                i+=1
-                if return_type!=Exception:                
-                    field_value_dictionary['tables']=return_fields                    
-                    field_value_output.append(field_value_dictionary)
-                else:
-                    return (field_value_output,[{'errorType':'Exception','errorString':'FATAL ERROR in process_pathology.get(fields) - unknown number of reports completed'}],list)           
+            i+=1
+            if return_type!=Exception:                
+                field_value_dictionary['tables']=final_logic.get(return_fields)                  
+                field_value_output.append(field_value_dictionary)
+            else:
+                return (field_value_output,[{'errorType':'Exception','errorString':'FATAL ERROR in process_pathology.get(fields) - unknown number of reports completed'}],list)           
 
     return (field_value_output,return_errors,list)

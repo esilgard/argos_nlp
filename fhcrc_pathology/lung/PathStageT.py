@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2014-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -11,31 +11,24 @@
 '''
 __version__='PathStageT1.0'
 import re
-
+import global_strings
 
 def get(disease_group,dictionary):
     try:
       
         '''
-        extract the PathStageT (size/location of tumor)from normal cased text of the pathology report
-        return a dictionary of
-            {"name":"PathStageT",
-            "value":datetime object/or None,
-            "algorithmVersion": __version__,
-            "confidence": confidence_value,
-            "table":table_name,
-            "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
+        extract the PathStageT (size/location of tumor)from normal cased text of the pathology report        
         '''
         full_text=dictionary[(-1,'FullText',0,None)]        
-        return_dictionary={"name":"PathStageT","value":None,"confidence":0.0,"algorithmVersion":__version__,
-                           "startStops":[],"table":"PathologyStageGrade"}
+        return_dictionary={global_strings.NAME:"PathStageT",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
+                           global_strings.STARTSTOPS:[],global_strings.TABLE:"PathologyStageGrade"}
         
         
         t_stage=re.match('.*(pT[012345][abc]?).*',full_text,re.DOTALL)        
        
         if t_stage:
-            return_dictionary["value"]=t_stage.group(1)
-            return_dictionary["startStops"].append({"startPosition":t_stage.start(),"stopPosition":t_stage.end()})
+            return_dictionary[global_strings.VALUE]=t_stage.group(1)
+            return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:t_stage.start(),global_strings.STOP:t_stage.end()})
         return ([return_dictionary],list)
     except:
-        return ({'errorType':'Warning','errorString':'ERROR in PathStageT module.'},Exception)
+        return ({global_strings.ERR_TYPE:'Warning',global_strings.ERR_STR:'ERROR in PathStageT module.'},Exception)

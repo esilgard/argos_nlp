@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2014 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2013-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -62,14 +62,14 @@ def parse(obx_file):
                 OBX=sorted([y for y in OBX[1:] if (y[headers.get(MRN)]!='NULL' and y[headers.get(ACCESSION_NUM)]!='NULL' and y[headers.get(INDEX)]!='NULL')],\
                             key=lambda x: (x[headers.get(MRN)],x[headers.get(ACCESSION_NUM)],int(x[headers.get(INDEX)])))
 
-                chars_onset=0
-                specimen=''
+                chars_onset=0                
                 for line in OBX:       
                     mrn=line[headers.get(MRN)]                   
                     accession=line[headers.get(ACCESSION_NUM)]
                     index=line[headers.get(INDEX)]
                     if index=='1':section_order=0;chars_onset=0
-                    text=line[headers.get(TEXT)] 
+                    text=line[headers.get(TEXT)]
+                    
                     if ACCESSION_NUM in line:
                         pass                                                                  # ignore duplicate header lines
                     elif  text=='NULL':
@@ -84,22 +84,22 @@ def parse(obx_file):
                         pathology_dictionary[mrn][accession]=pathology_dictionary[mrn].get(accession,{})
                         if index=='1':
                             chars_onset=0                            
-                            specimen_dictionary=dict((x.split(')')[0],x.split(')')[1]) for x in  line[headers.get('SpecimenSource')].split('~'))
-                            #all_specimens=''.join(sorted(specimen_dictionary.keys()))
+                            specimen_dictionary=dict((x.split(')')[0],x.split(')')[1]) for x in  line[headers.get('SpecimenSource')].split('~'))                            
                             pathology_dictionary[mrn][accession][(0,'SpecimenSource',0,None)]={}                            
                             pathology_dictionary[mrn][accession][(0,'SpecimenSource',0,None)][0]=specimen_dictionary                                                  
 
                         section_header=re.match('[\*\" ]*([A-Z ]+)[\*:]+',text)              # match general section header patterns
+                        
                         # reassign the section variable if you find a section pattern match, reset specimen and increment section order
                         if section_header: section=section_header.group(1).strip();section_order+=1;specimen=''
-                        specimen_header=re.match('[\s\"]*([,A-Z\- ]+)[\s]*[)].*',text)            
-
-                        if specimen_header:                    
+                        specimen_header=re.match('[\s\"]{,4}([,A-Z\- ]+?)[\s]*(FS)?[\s]*[)].*',text)            
+                        
+                        if specimen_header:
+                            specimen='' ## reset specimen if there is a new specimen header match
                             M=specimen_header.group(1).replace(' ','')                                                    
                             for each in  specimen_dictionary.keys():                                
                                 if re.search('['+M+']',each):
-                                    specimen+=each 
-                        
+                                    specimen+=each
                         pathology_dictionary[mrn][accession][(section_order,section,chars_onset,specimen)]=pathology_dictionary[mrn][accession].get((section_order,section,chars_onset,specimen),{})                
                         pathology_dictionary[mrn][accession][(section_order,section,chars_onset,specimen)][index]=text
                         pathology_dictionary[mrn][accession][(-1,'FullText',0,None)]=pathology_dictionary[mrn][accession].get((-1,'FullText',0,None),'')+text+'\n'

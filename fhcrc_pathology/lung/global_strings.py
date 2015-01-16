@@ -1,0 +1,12 @@
+## global strings for output dictionaries ##
+NAME="name"
+TABLE="table"
+VALUE="value"
+CONFIDENCE="confidence"
+VERSION="algorithmVersion"
+STARTSTOPS="startStops"
+KEY="recordKey"
+START="startPosition"
+STOP="stopPosition"
+ERR_TYPE="errorType"
+ERR_STR="errorString"
