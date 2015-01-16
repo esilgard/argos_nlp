@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2014-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -15,13 +15,7 @@ __version__='PathTest1.0'
 def get(disease_group,dictionary):
     '''
     extract the pathology tests from normal cased text of the pathology report
-    return a dictionary of
-        {"name":"PathTest",
-        "value":test name/result? None,
-        "algorithmVersion": __version__,
-        "confidence": confidence_value,
-        "table":table_name,
-        "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
+    
     '''
     return_dictionary_list=[]
     

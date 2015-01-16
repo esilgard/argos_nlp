@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2014 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2013-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -13,21 +13,17 @@ __version__='PathDate1.0'
 
 
 import re
+import global_strings
 from datetime import datetime
 
 def get(disease_group,dictionary):
     '''
     extract the collection date (date of surgery)from normal cased text of the pathology report
-    return a dictionary of
-        {"name":"PathDate",
-        "value":datetime object/or None,
-        "algorithmVersion": __version__,
-        "confidence": confidence_value,
-        "table":table_name,
-        "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
+    
     '''
-    return_dictionary={"name":"PathDate","value":None,"confidence":0.0,"algorithmVersion":__version__,
-                       "startStops":[]}
+    
+    return_dictionary={global_strings.NAME:"PathDate",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
+                       global_strings.STARTSTOPS:[],global_strings.TABLE:'Pathology'}
                        
     full_text=dictionary[(-1,'FullText',0,None)]
     
@@ -39,9 +35,9 @@ def get(disease_group,dictionary):
         day=date_match.group(2)
         if len(date_match.group(2))==1:               
             day='0'+date_match.group(2)                
-        return_dictionary["value"]=str(datetime.strptime(year+','+month+','+day,'%Y,%m,%d'))
-        return_dictionary["confidence"]=1.0
-        return_dictionary["startStops"].append({"startPosition":date_match.start(1),"stopPosition":date_match.end(3)})
-        return_dictionary["table"]='Pathology'
+        return_dictionary[global_strings.VALUE]=str(datetime.strptime(year+','+month+','+day,'%Y,%m,%d'))
+        return_dictionary[global_strings.CONFIDENCE]=1.0
+        return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:date_match.start(1),global_strings.STOP:date_match.end(3)})
+        
            
     return ([return_dictionary],list) 

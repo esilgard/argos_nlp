@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2014-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -12,7 +12,7 @@
 __version__='PathGrade1.0'
 
 import re
-
+import global_strings
 ## mapping of grade numbers to words ##
 
 grades={'high':'high','low':'low','intermediate':'intermediate',
@@ -23,18 +23,10 @@ histos=['carcinoma','cancer','sclc']
 
 def get(disease_group,dictionary):
     '''
-    extract the histology from the lower cased text of the pathology report   
-    
-    return a dictionary of
-        {"name":"PathGrade",
-        "value":grade or None,
-        "algorithmVersion": __version__,
-        "confidence": confidence_value,
-         "table":table_name,
-        "startStops":[{"startPosition":start_pos1,"stopPosition":stop_pos1},{"startPosition....])
+    extract the histology from the lower cased text of the pathology report       
     '''
-    return_dictionary={"name":"PathGrade","value":None,"confidence":0.0,"algorithmVersion":__version__,
-                       "startStops":[],return_dictionary["table"]='PathStageGrade'}
+    return_dictionary={global_strings.NAME:"PathGrade",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
+                       global_strings.STARTSTOPS:[],return_dictionary[global_strings.TABLE]='PathStageGrade'}
     
     grade=[]
     text='\n'.join([y.lower() for x in dictionary.keys() if 'COMMENT' in x or 'FINAL' in x or 'IMPRESSION' in x for x,y in sorted(dictionary[x].items())])
@@ -46,21 +38,21 @@ def get(disease_group,dictionary):
         if re.match('.{,7}'+g+'.{,3}grade.{,7}',window): return n
         if re.search('[\W]'+g+'[\W]',window):
             if 'grade:' in window:
-                return_dictionary["value"]=n
+                return_dictionary[global_strings.VALUE]=n
                 return (return_dictionary,dict)
             for h in histos:
                 if h in window:
-                    return_dictionary["value"]=n
+                    return_dictionary[global_strings.VALUE]=n
                     return (return_dictionary,dict)
             
       
     m=re.match('.*([123])[/of ]{1,6}3.{,20}fn[c]?l[c]?c.*',text)
     
-    if m: return_dictionary["value"]=grades[' '+m.group(1)+' ']
+    if m: return_dictionary[global_strings.VALUE]=grades[' '+m.group(1)+' ']
     else: m=re.match('.*fn[c]?l[c]?c .{,20}([123])[/of ]{1,6}3.*',text)
-    if m: return_dictionary["value"]=grades[' '+m.group(1)+' ']
+    if m: return_dictionary[global_strings.VALUE]=grades[' '+m.group(1)+' ']
     else: m=re.match('.*fn[c]?l[c]?c .{,20}grade.{,5}([123]).*',text)
     if m:
-        return_dictionary["value"]=grades[' '+m.group(1)+' ']
+        return_dictionary[global_strings.VALUE]=grades[' '+m.group(1)+' ']
 
     return ([return_dictionary],list) 
