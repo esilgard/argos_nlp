@@ -57,6 +57,6 @@ def get(disease_group,dictionary):
     spec_type=get_procedures(general_procedures,general_standardizations)    
     return_dictionary[global_strings.VALUE]=';'.join(spec_type)
     return_dictionary[global_strings.TABLE]='Pathology'
-    return_dictionary[global_strings.CONFIDENCE]=.8
+    return_dictionary[global_strings.CONFIDENCE]=("%.2f" % .80)
     
     return ([return_dictionary],list)
