@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2014 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2013-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -14,11 +14,7 @@ __version__='output_text1.0'
 import os,shutil,sys
 
 def main(input_file):
-<<<<<<< HEAD
-    try:
-=======
     if '.nlp' in input_file:
->>>>>>> origin/labkey_dev
         output_directory=input_file[:input_file.find('.nlp')]
         if(os.path.isdir(output_directory)):        
             try:
@@ -40,10 +36,7 @@ def main(input_file):
             except:            
                 return(Exception,'FATAL ERROR: failed to create directory: '+output_directory+' based on input filename '+input_file)
 
-<<<<<<< HEAD
-    except:
-=======
+
     else:
->>>>>>> origin/labkey_dev
         return(Exception,'FATAL ERROR: bad input file name: '+input_file+' program aborted')
         
