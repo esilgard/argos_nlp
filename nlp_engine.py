@@ -119,7 +119,7 @@ else:
     if output_dictionary["errors"]:
         
         crash=False
-        print output_dictionary["errors"]
+        
         for error_dictionary in output_dictionary["errors"]:            
             if error_dictionary['errorType']=='Exception':
                 crash=True
@@ -132,7 +132,7 @@ else:
 
 
 ## timeit - print out the amount of time it took to process all the reports ##
-print (datetime.today()-begin).days * 86400 + (datetime.today()-begin).seconds,'seconds to process '+str(len(output_dictionary["reports"]))+' reports'
+#print (datetime.today()-begin).days * 86400 + (datetime.today()-begin).seconds,'seconds to process '+str(len(output_dictionary["reports"]))+' reports'
 
     
         

@@ -19,7 +19,7 @@ def get(disease_group,dictionary):
         extract the pathological M Stage (evidence of metastasis)from normal cased text of the pathology report        
         '''
         return_dictionary={global_strings.NAME:"PathStageM",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,
-                           global_strings.VERSION:__version__,global_strings.STARTSTOPS:[],global_strings.TABLE:"PathologyStageGrade"}
+                           global_strings.VERSION:__version__,global_strings.STARTSTOPS:[],global_strings.TABLE:global_strings.STAGE_GRADE_TABLE}
                                                                                            
 
 

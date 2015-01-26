@@ -23,7 +23,7 @@ def get(disease_group,dictionary):
     '''
     
     return_dictionary={global_strings.NAME:"PathDate",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
-                       global_strings.STARTSTOPS:[],global_strings.TABLE:'Pathology'}
+                       global_strings.STARTSTOPS:[],global_strings.TABLE:global_strings.PATHOLOGY_TABLE}
                        
     full_text=dictionary[(-1,'FullText',0,None)]
     

@@ -76,19 +76,19 @@ def get(disease_group,dictionary):
                                     specimen_histology_list.append(standardizations[histology])
             
             if specimen_histology_list:
-                return_dictionary_list.append({global_strings.NAME:"PathFindHistology",global_strings.KEY:specimen,global_strings.TABLE:"PathologyFinding",global_strings.VALUE:';'.join(set(specimen_histology_list)),
+                return_dictionary_list.append({global_strings.NAME:"PathFindHistology",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(set(specimen_histology_list)),
                                                global_strings.CONFIDENCE:("%.2f" % .85),global_strings.VERSION:__version__,global_strings.STARTSTOPS:specimen_start_stops_list})
                 histology_list+=specimen_histology_list
                 start_stops_list+=specimen_start_stops_list
                           
     if histology_list:
-        return_dictionary_list.append({global_strings.NAME:"PathHistology",global_strings.TABLE:"Pathology",global_strings.VALUE:';'.join(set(histology_list)),global_strings.CONFIDENCE:("%.2f" % .85),
+        return_dictionary_list.append({global_strings.NAME:"PathHistology",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(histology_list)),global_strings.CONFIDENCE:("%.2f" % .85),
                                       global_strings.VERSION:__version__,"startStops":start_stops_list})
     else:
         ## back off model - not fully developed - looks for disease specific histologies anywhere in the text - regardless of specimens
         histology,onset,offset=find_histology(full_text,histologies)
         if histology:
-            return_dictionary_list.append({global_strings.NAME:"PathHistology",global_strings.TABLE:"Pathology",global_strings.VALUE:standardizations[histology],global_strings.CONFIDENCE:("%.2f" % .70),
+            return_dictionary_list.append({global_strings.NAME:"PathHistology",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:standardizations[histology],global_strings.CONFIDENCE:("%.2f" % .70),
                                       global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:onset,global_strings.STOP:offset}]})
     return (return_dictionary_list,list)        
                 
