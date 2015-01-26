@@ -119,6 +119,7 @@ else:
     if output_dictionary["errors"]:
         
         crash=False
+        print output_dictionary["errors"]
         for error_dictionary in output_dictionary["errors"]:            
             if error_dictionary['errorType']=='Exception':
                 crash=True
