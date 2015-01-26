@@ -68,7 +68,7 @@ def get(disease_group,dictionary):
                                 numNodes,numNodesPos=PathFindNumNodes.get(section,text)
                             specimen_start_stops_list.append({global_strings.START:each_match.start(2)+line_onset,global_strings.STOP:each_match.end(2)+line_onset})                                
         if specimen_site_list:            
-            return {global_strings.NAME:"PathFindSite",global_strings.KEY:specimen,global_strings.TABLE:"PathologyFinding",global_strings.VALUE:';'.join(set(specimen_site_list)),
+            return {global_strings.NAME:"PathFindSite",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(set(specimen_site_list)),
                     global_strings.CONFIDENCE:("%.2f" % .85), global_strings.VERSION:__version__,global_strings.STARTSTOPS:specimen_start_stops_list},numNodes,numNodesPos
         else: return None,None,None
                                       
@@ -100,14 +100,14 @@ def get(disease_group,dictionary):
                 site_list+=(specimen_site_dictionary[global_strings.VALUE].split(';'))
                 start_stops_list+=(specimen_site_dictionary[global_strings.STARTSTOPS])    
     if site_list:        
-        return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.TABLE:"Pathology",global_strings.VALUE:';'.join(set(site_list)),
+        return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(site_list)),
                                        global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,global_strings.STARTSTOPS:start_stops_list})
 
     ## if there were no specimens, or no specimen headers in the text - look at the text overall ##
     else:        
         overall_site_dictionary,numNodes,numNodesPos=get_site(general_sites,general_standardizations,'')
         if overall_site_dictionary:            
-            return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.TABLE:"Pathology",global_strings.VALUE:overall_site_dictionary[global_strings.VALUE],
+            return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:overall_site_dictionary[global_strings.VALUE],
                                            global_strings.CONFIDENCE:0.75,global_strings.VERSION:__version__, global_strings.STARTSTOPS:overall_site_dictionary[global_strings.STARTSTOPS]})
             if numNodes and numNodesPos:                    
                     return_dictionary_list.append(numNodes)

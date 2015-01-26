@@ -26,7 +26,7 @@ def get(disease_group,dictionary):
     extract the histology from the lower cased text of the pathology report       
     '''
     return_dictionary={global_strings.NAME:"PathGrade",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
-                       global_strings.STARTSTOPS:[],return_dictionary[global_strings.TABLE]='PathStageGrade'}
+                       global_strings.STARTSTOPS:[],return_dictionary[global_strings.TABLE]:global_strings.STAGE_GRADE_TABLE}
     
     grade=[]
     text='\n'.join([y.lower() for x in dictionary.keys() if 'COMMENT' in x or 'FINAL' in x or 'IMPRESSION' in x for x,y in sorted(dictionary[x].items())])

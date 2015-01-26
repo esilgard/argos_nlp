@@ -21,7 +21,7 @@ def get(disease_group,dictionary):
         '''
         full_text=dictionary[(-1,'FullText',0,None)]        
         return_dictionary={global_strings.NAME:"PathStageT",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
-                           global_strings.STARTSTOPS:[],global_strings.TABLE:"PathologyStageGrade"}
+                           global_strings.STARTSTOPS:[],global_strings.TABLE:global_strings.STAGE_GRADE_TABLE}
         
         
         t_stage=re.match('.*(pT[012345][abc]?).*',full_text,re.DOTALL)        

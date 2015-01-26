@@ -56,7 +56,7 @@ def get(disease_group,dictionary):
         if specimen_side_list:
             if type(specimen_side_list)==str:   specimen_side_list=[specimen_side_list]
             if ('Right' in specimen_side_list and 'Left' in specimen_side_list) or 'Bilateral' in specimen_side_list: specimen_side_list=['Bilateral']           
-            return {global_strings.NAME:"PathFindSide",global_strings.KEY:specimen,global_strings.TABLE:"PathologyFinding",global_strings.VALUE:';'.join(set(specimen_side_list)),
+            return {global_strings.NAME:"PathFindSide",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(set(specimen_side_list)),
                     global_strings.CONFIDENCE:("%.2f" % .85), global_strings.VERSION:__version__, global_strings.STARTSTOPS:specimen_start_stops_list}
            
         else:           
@@ -77,7 +77,7 @@ def get(disease_group,dictionary):
     if side_list:        
         if type(side_list)==str:    side_list=[side_list]
         if ('Right' in side_list and 'Left' in side_list) or 'Bilateral' in side_list: side_list=['Bilateral']
-        return_dictionary_list.append({global_strings.NAME:"PathSide",global_strings.TABLE:"Pathology",global_strings.VALUE:';'.join(set(side_list)),
+        return_dictionary_list.append({global_strings.NAME:"PathSide",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(side_list)),
                                        global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,global_strings.STARTSTOPS:start_stops_list})
 
     ## if there were no specimens, or no specimen headers in the text - look at the text overall ##
@@ -87,7 +87,7 @@ def get(disease_group,dictionary):
             if ('Right' in overall_side_dictionary[global_strings.VALUE] and 'Left' in overall_side_dictionary[global_strings.VALUE]) \
                or 'Bilateral' in overall_side_dictionary[global_strings.VALUE]: overall_side_dictionary[global_strings.VALUE]=['Bilateral']
             if type(overall_side_dictionary[global_strings.VALUE])==str:   overall_side_dictionary[global_strings.VALUE]=[overall_side_dictionary[global_strings.VALUE]]
-            return_dictionary_list.append({global_strings.NAME:"PathSide",global_strings.TABLE:"Pathology",global_strings.VALUE:';'.join(set(overall_side_dictionary[global_strings.VALUE])),
+            return_dictionary_list.append({global_strings.NAME:"PathSide",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(overall_side_dictionary[global_strings.VALUE])),
                                            global_strings.CONFIDENCE:0.75,global_strings.VERSION:__version__,global_strings.STARTSTOPS:overall_side_dictionary[global_strings.STARTSTOPS]})
             
     return (return_dictionary_list,list) 

@@ -18,7 +18,7 @@ def get(disease_group,dictionary):
         extract the PathStageT (size/location of tumor)from normal cased text of the pathology report        
         '''
         return_dictionary={global_strings.NAME:"PathStageN",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
-                           global_strings.STARTSTOPS:[],global_strings.TABLE:"PathologyStageGrade"}
+                           global_strings.STARTSTOPS:[],global_strings.TABLE:global_strings.STAGE_GRADE_TABLE}
         full_text=dictionary[(-1,'FullText',0,None)]        
         n_stage=re.match('.*(pN[012345][abc]?).*',full_text,re.DOTALL)
         if n_stage:

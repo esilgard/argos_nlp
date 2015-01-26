@@ -24,7 +24,7 @@
 '''
 __version__='path_parser1.0'
 
-import re,sys
+import re,sys,global_strings
 
 ## header names coming from the Amalga Import ##
 MRN='MRN'
@@ -107,10 +107,10 @@ def parse(obx_file):
                    
                 return pathology_dictionary,dict
             except:
-                return ({'errorType':'Exception','errorString':"ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" trouble parsing "+str(obx_file)+" -- program aborted"},Exception)
+                return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" trouble parsing "+str(obx_file)+" -- program aborted"},Exception)
         else:
-            return ({'errorType':'Exception','errorString':"ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" required field headers not found in inital line of "+str(obx_file)+" -- must include "+\
+            return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" required field headers not found in inital line of "+str(obx_file)+" -- must include "+\
                      ','.join(required_header_set-header_set)+" -- program aborted"},Exception)      
     except:        
-        return ({'errorType':'Exception','errorString':"ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" -- could not find input file "+str(obx_file)+" -- program aborted"},Exception)
+        return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" -- could not find input file "+str(obx_file)+" -- program aborted"},Exception)
         

@@ -22,7 +22,7 @@ def get(disease_group,dictionary):
     extract the specimen type/procedure from the SpecimenSource       
     '''
     return_dictionary={global_strings.NAME:"PathSpecimenType",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
-                       global_strings.STARTSTOPS:[]}
+                       global_strings.STARTSTOPS:[],global_strings.TABLE:global_strings.PATHOLOGY_TABLE}
     ## a list of general procedures and their standardized forms from a general sites file ##
     general_procedures=[]
     general_standardizations={}
@@ -55,8 +55,7 @@ def get(disease_group,dictionary):
             return procedures
     
     spec_type=get_procedures(general_procedures,general_standardizations)    
-    return_dictionary[global_strings.VALUE]=';'.join(spec_type)
-    return_dictionary[global_strings.TABLE]='Pathology'
+    return_dictionary[global_strings.VALUE]=';'.join(spec_type)    
     return_dictionary[global_strings.CONFIDENCE]=("%.2f" % .80)
     
     return ([return_dictionary],list)
