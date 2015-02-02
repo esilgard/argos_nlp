@@ -29,28 +29,21 @@ def get(table_list):
                 table dictionary: tableName and a dictionary
                     
     '''   
-    return_list=[]
-    for table in table_list:
-        
-        remove_list=[]
-        for record,dictionary in table.items():
+    return_list=[]   
+    for table in table_list:       
+        table_d={global_strings.TABLE:table[global_strings.TABLE],global_strings.FIELDS:[]}               
+        for each_field in table[global_strings.FIELDS]:
             record_histology_found=False
-            little_remove_list=[]
-            #if dictionary[global_strings.TABLE]==global_strings.FINDING_TABLE:
-            for each in dictionary[global_strings.FIELDS]:                
-                if each[global_strings.VALUE]:
-                    if each[global_strings.NAME]=='PathFindHistology' and dictionary[global_strings.TABLE]==global_strings.FINDING_TABLE:
-                        record_histology_found=True
-                else:       ## the value is null, or the empty string
-                    little_remove_list.append(each)
-            remove_list.append(dict((k,v) for k,v in each.items() if k not in little_remove_list))
-            if record_histology_found==False:   ## if there was no histology for this specimen, remove it from the dictionary
-                remove_list.append(record)
-            
-        ## take away any PathologyFinding values if there was no cancer in the given specimen ##
-        #print 'remove list',remove_list
-        table=dict((k,v) for k,v in table.items() if k not in remove_list)
-        if table:
-            return_list.append(table)
-
+            specimen_fields=[] 
+            if each_field[global_strings.VALUE]:
+                if each_field[global_strings.NAME]=='PathFindHistology':
+                    record_histology_found=True                    
+                table_d[global_strings.FIELDS].append(each_field)
+        ## don't report any PathologyFinding values if there was no cancer in the given specimen ##
+        if (each_field[global_strings.TABLE]==global_strings.FINDING_TABLE and record_histology_found==False):    
+            table_d[global_strings.FIELDS]=[]            
+        
+        if table_d[global_strings.FIELDS]:            
+            return_list.append(table_d)    
+    
     return return_list      
