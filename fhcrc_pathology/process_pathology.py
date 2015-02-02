@@ -66,12 +66,10 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
         if return_type==list:
             for each_field in field_value:                
                 table=each_field.get(global_strings.TABLE)
-                record_key=each_field.get(global_strings.KEY,None)
                 report_table_d[table]=report_table_d.get(table,{})
-                report_table_d[table][record_key]=report_table_d[table].get(record_key,{})
-                report_table_d[table][record_key][global_strings.TABLE]=table
-                report_table_d[table][record_key][global_strings.FIELDS]= report_table_d[table][record_key].get(global_strings.FIELDS,[])
-                report_table_d[table][record_key][global_strings.FIELDS].append(each_field)
+                report_table_d[table][global_strings.TABLE]=table
+                report_table_d[table][global_strings.FIELDS]= report_table_d[table].get(global_strings.FIELDS,[])
+                report_table_d[table][global_strings.FIELDS].append(each_field)
         else:
             error_list+=field_value
     report_table_list=report_table_d.values()
@@ -106,8 +104,7 @@ def main(arguments,path):
     i=0
     ## create a list of output field dictionaries ##
     for mrn in pathology_dictionary:            
-        for accession in pathology_dictionary[mrn]:
-            #if 'SU-13-12887' in accession:                
+        for accession in pathology_dictionary[mrn]:                       
             field_value_dictionary={}
             field_value_dictionary[global_strings.REPORT]=accession
             field_value_dictionary[global_strings.MRN]=mrn
@@ -117,13 +114,12 @@ def main(arguments,path):
                           out.write(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])
             except:
                 return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'ERROR in process_pathology attempting to write text to file at'+ \
-                                             arguments.get('-f')[:arguments.get('-f').find('.nlp')]\
-                                             +'/'+accession+'.txt - unknown number of reports completed'}],list)
+                        arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed'}],list)
             return_fields,return_errors,return_type=get_fields(disease_group,pathology_dictionary[mrn][accession],disease_group_data_dictionary,path_data_dictionary)
 
             i+=1
-            if return_type!=Exception:                
-                field_value_dictionary[global_strings.TABLE]=final_logic.get(return_fields)                  
+            if return_type!=Exception:
+                field_value_dictionary[global_strings.TABLE+'s']=final_logic.get(return_fields)                  
                 field_value_output.append(field_value_dictionary)
             else:                
                 return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_pathology.get(fields) -  \
