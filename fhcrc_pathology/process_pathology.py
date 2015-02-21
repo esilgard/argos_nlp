@@ -21,6 +21,7 @@ path2= os.path.dirname(os.path.realpath(__file__))+'/'
 '''last updated October 2014'''
 __version__='process_pathology1.0'
 
+#training_set=set([x.strip() for x in open('H:/NLP/Data/training_set.txt','r').readlines()])
 
 #################################################################################################################################################
 def return_exec_code(x):
@@ -83,28 +84,30 @@ def main(arguments,path):
         -f input pathology file
         -g disease group
     '''
-    
+   
     ## get dictionaries/gazeteers needed for processing
     try:
-        pathology_dictionary,return_type=path_parser.parse(arguments.get('-f'))
-        if return_type!=dict: return (pathology_dictionary,return_type,Exception)
+        pathology_dictionary,return_type=path_parser.parse(arguments.get('-f'))        
+        if return_type!=dict: return ({},pathology_dictionary,Exception)
     except:
         return({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR: could not parse input pathology file '+arguments.get('-f')+' --- program aborted'},Exception)
     disease_group=arguments.get('-g')
     
     ## general pathology data dictionary ##
     try:    path_data_dictionary=dict((y.split('\t')[0],y.split('\t')[1].strip()) for y in open(path2+'/data_dictionary.txt','r').readlines())
-    except: return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR: could not access pathology data dictionary at '+path2+'/data_dictionary.txt --- program aborted'},Exception)
+    except: return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR: could not access or parse pathology data dictionary at '+path2+'/data_dictionary.txt --- program aborted'},Exception)
+   
     ## disease group data dictionary ##
     try:    disease_group_data_dictionary=dict((y.split('\t')[0],y.split('\t')[1].strip()) for y in open(path2+'/'+disease_group+'/data_dictionary.txt','r').readlines())
-    except: return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR: could not access disease specific pathology data dictionary at '+path2+'/'+disease_group+'/data_dictionary.txt --- program aborted'},Exception)
-
+    except: return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR: could not access or parse disease specific pathology data dictionary at '+path2+'/'+disease_group+'/data_dictionary.txt '},Exception)
+    
     field_value_output=[]
     error_output=[]
     i=0
     ## create a list of output field dictionaries ##
     for mrn in pathology_dictionary:            
-        for accession in pathology_dictionary[mrn]:                       
+        for accession in pathology_dictionary[mrn]:
+            #if accession in training_set:                
             field_value_dictionary={}
             field_value_dictionary[global_strings.REPORT]=accession
             field_value_dictionary[global_strings.MRN]=mrn
@@ -113,7 +116,7 @@ def main(arguments,path):
                 with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+accession+'.txt','w') as out:
                           out.write(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])
             except:
-                return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'ERROR in process_pathology attempting to write text to file at'+ \
+                return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_pathology attempting to write text to file at'+ \
                         arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed'}],list)
             return_fields,return_errors,return_type=get_fields(disease_group,pathology_dictionary[mrn][accession],disease_group_data_dictionary,path_data_dictionary)
 
@@ -123,6 +126,6 @@ def main(arguments,path):
                 field_value_output.append(field_value_dictionary)
             else:                
                 return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_pathology.get(fields) -  \
-                        unknown number of reports completed.  Return error string: '+return_errors[global_strings.ERR_STR]}],list)           
+                        unknown number of reports completed.  Return error string: '+return_errors[global_strings.ERR_STR]+';'}],list)           
 
     return (field_value_output,return_errors,list)

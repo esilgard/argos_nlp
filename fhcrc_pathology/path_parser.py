@@ -27,13 +27,8 @@ __version__='path_parser1.0'
 import re,sys,global_strings
 
 ## header names coming from the Amalga Import ##
-MRN='MRN'
-ACCESSION_NUM='FillerOrderNo'
-INDEX='SetId'
-TEXT='ObservationValue'
-SPECIMEN='SpecimenSource'
-required_header_set=set([INDEX,TEXT,SPECIMEN,ACCESSION_NUM,MRN])
 
+required_header_set=set([global_strings.SET_ID,global_strings.OBSERVATION_VALUE,global_strings.SPECIMEN_SOURCE,global_strings.FILLER_ORDER_NO,global_strings.MRN_CAPS])
 
 def parse(obx_file):
     '''
@@ -59,18 +54,18 @@ def parse(obx_file):
             
             try:
                 # sort records by mrn, accession, and then setid - ignore null mrns, accessions, or setids
-                OBX=sorted([y for y in OBX[1:] if (y[headers.get(MRN)]!='NULL' and y[headers.get(ACCESSION_NUM)]!='NULL' and y[headers.get(INDEX)]!='NULL')],\
-                            key=lambda x: (x[headers.get(MRN)],x[headers.get(ACCESSION_NUM)],int(x[headers.get(INDEX)])))
+                OBX=sorted([y for y in OBX[1:] if (y[headers.get(global_strings.MRN_CAPS)]!='NULL' and y[headers.get(global_strings.FILLER_ORDER_NO)]!='NULL' and y[headers.get(global_strings.SET_ID)]!='NULL')],\
+                            key=lambda x: (x[headers.get(global_strings.MRN_CAPS)],x[headers.get(global_strings.FILLER_ORDER_NO)],int(x[headers.get(global_strings.SET_ID)])))
 
                 chars_onset=0                
                 for line in OBX:       
-                    mrn=line[headers.get(MRN)]                   
-                    accession=line[headers.get(ACCESSION_NUM)]
-                    index=line[headers.get(INDEX)]
+                    mrn=line[headers.get(global_strings.MRN_CAPS)]                   
+                    accession=line[headers.get(global_strings.FILLER_ORDER_NO)]
+                    index=line[headers.get(global_strings.SET_ID)]
                     if index=='1':section_order=0;chars_onset=0
-                    text=line[headers.get(TEXT)]
+                    text=line[headers.get(global_strings.OBSERVATION_VALUE)]
                     
-                    if ACCESSION_NUM in line:
+                    if global_strings.FILLER_ORDER_NO in line:
                         pass                                                                  # ignore duplicate header lines
                     elif  text=='NULL':
                         # maintain readability of fully constituted text by keeping empty 'NULL' lines 
@@ -84,9 +79,9 @@ def parse(obx_file):
                         pathology_dictionary[mrn][accession]=pathology_dictionary[mrn].get(accession,{})
                         if index=='1':
                             chars_onset=0                            
-                            specimen_dictionary=dict((x.split(')')[0],x.split(')')[1]) for x in  line[headers.get('SpecimenSource')].split('~'))                            
-                            pathology_dictionary[mrn][accession][(0,'SpecimenSource',0,None)]={}                            
-                            pathology_dictionary[mrn][accession][(0,'SpecimenSource',0,None)][0]=specimen_dictionary                                                  
+                            specimen_dictionary=dict((x.split(')')[0],x.split(')')[1].replace('(',' ')) for x in  line[headers.get(global_strings.SPECIMEN_SOURCE)].strip('"').split('~'))                            
+                            pathology_dictionary[mrn][accession][(0,global_strings.SPECIMEN_SOURCE,0,None)]={}                            
+                            pathology_dictionary[mrn][accession][(0,global_strings.SPECIMEN_SOURCE,0,None)][0]=specimen_dictionary                                                  
 
                         section_header=re.match('[\*\" ]*([A-Z ]+)[\*:]+',text)              # match general section header patterns
                         
@@ -107,10 +102,10 @@ def parse(obx_file):
                    
                 return pathology_dictionary,dict
             except:
-                return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" trouble parsing "+str(obx_file)+" -- program aborted"},Exception)
+                return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"FATAL ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" trouble parsing "+str(obx_file)+" -- program aborted"},Exception)
         else:
-            return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" required field headers not found in inital line of "+str(obx_file)+" -- must include "+\
+            return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"FATAL ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" required field headers not found in inital line of "+str(obx_file)+" -- must include "+\
                      ','.join(required_header_set-header_set)+" -- program aborted"},Exception)      
     except:        
-        return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" -- could not find input file "+str(obx_file)+" -- program aborted"},Exception)
+        return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"FATAL ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" -- could not find input file "+str(obx_file)+" -- program aborted"},Exception)
         

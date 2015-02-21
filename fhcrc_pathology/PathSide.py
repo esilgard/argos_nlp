@@ -20,16 +20,8 @@ def get(disease_group,dictionary):
     return a dictionary for laterality/side both for individual specimens (PathFindSide) and over all report (PathSide)
     '''
     
-    standardizations={'rt':'Right','right':'Right','lt':'Left','left':'Left','bilateral':'Bilateral','midline':'Midline',
-                      '1r':'Right','2r':'Right','3r':'Right','4r':'Right','5r':'Right','6r':'Right','7r':'Right','8r':'Right',
-                      '9r':'Right','10r':'Right','11r':'Right','12r':'Right',
-                      '1l':'Left','2l':'Left','3l':'Left','4l':'Left','5l':'Left','6l':'Left','7l':'Left','8l':'Left',
-                      '9l':'Left','10l':'Left','11l':'Left','12l':'Left',
-                      '1 r':'Right','2 r':'Right','3 r':'Right','4 r':'Right','5 r':'Right','6 r':'Right','7 r':'Right','8 r':'Right',
-                      '9 r':'Right','10 r':'Right','11 r':'Right','12 r':'Right',
-                      '1 l':'Left','2 l':'Left','3 l':'Left','4 l':'Left','5 l':'Left','6 l':'Left','7 l':'Left','8 l':'Left',
-                      '9 l':'Left','10 l':'Left','11 l':'Left','12 l':'Left'}
-    match_list=['(rt|right)','([0-9]{1,2}[ ]?[lr])','(lt|left)','(midline)','(bilateral)'] 
+    # a dictionary of regex patterns and their normalized values
+    match_list={'(rt|right)':'Right','([0-9]{1,2}[ ]?r)':'Right','([0-9]{1,2}[ ]?l)':'Left','(lt|left)':'Left','(midline)':'Midline','(bilateral)':'Bilateral','(nodal station (7|8|9))':'Midline'} 
 
     def get_side(specimen):
        
@@ -39,7 +31,7 @@ def get(disease_group,dictionary):
             section_specimen=section[3]            
             line_onset=section[2]
             header=section[1]            
-            if section_specimen is not None and specimen in section_specimen and ('SPECIMEN' in header or 'DESCRIPTION' in header):
+            if section_specimen is not None and specimen in section_specimen and ('SPECIMEN' in header or 'DESCRIPTION' in header or 'IMPRESSION' in header or 'Specimen' in header):
                 text= dictionary[section].items()[0][1]                              
                 ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                 ## these can contain confusing general statements about the cancer and/or patients in general ##
@@ -47,10 +39,11 @@ def get(disease_group,dictionary):
                 else:
                     text=text.lower()
                     text=re.sub('[.,:;\\\/\-\'\"]',' ',text)
-                    for each_pattern in match_list:                            
+                    for each_pattern in match_list:
+                        #print each_pattern
                         for each_match in re.finditer('.*( |^)'+each_pattern+'( |$).*',text,re.DOTALL):                           
-                            if standardizations[each_match.group(2)] not in specimen_side_list:                                    
-                                specimen_side_list.append(standardizations[each_match.group(2)])                                    
+                            if match_list[each_pattern] not in specimen_side_list:                                    
+                                specimen_side_list.append(match_list[each_pattern])                                    
                             specimen_start_stops_list.append({global_strings.START:each_match.start(2)+line_onset,global_strings.STOP:each_match.end(2)+line_onset})
                        
         if specimen_side_list:

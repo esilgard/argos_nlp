@@ -38,5 +38,5 @@ def main(input_file):
 
 
     else:
-        return(Exception,'FATAL ERROR: bad input file name: '+input_file+' program aborted')
+        return(Exception,'FATAL ERROR: bad input file name: '+input_file+' program aborted; expects ".nlp" in file name string in order to appropriately label text file directory')
         

@@ -22,16 +22,22 @@
     author@esilgard
     last updated October 2014
 '''
-__version__='nlp_engine1.0'
-
+ 
 import sys,os
-import output_results,make_text_output_directory
+import output_results,make_text_output_directory,codecs
 from datetime import datetime
 
 ## timeit variable for performance testing ##
 begin=datetime.today()
 ## path to the nlp_engine.py script ##
 path= os.path.dirname(os.path.realpath(__file__))+'/'
+
+## grab version number from txt file which updates with git post-commit hook scipt ##
+try:
+    __version__=codecs.open(path+'version','rb', encoding='utf-16').readlines()[0].strip()
+except:
+    sys.stderr.write('FATAL ERROR: could not locate or parse version file.')
+    sys.exit(1)
 
 ## path to file containing flags and descriptions ##
 ## in the format -char<tab>description<tab>verbose_description(for help and error messages) ##
@@ -111,17 +117,21 @@ else:
         sys.exit(1)        
     exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,path))')
     
-    output_dictionary["reports"]=output
-    output_dictionary["errors"]=errors
+    if return_type==Exception:        
+        sys.stderr.write(errors['errorString'])
+        sys.exit(1)
+    else:
+        output_dictionary["reports"]=output
+        output_dictionary["errors"]=errors
     
     if mkdir_errors[0]==dict:        
         output_dictionary["errors"].append(mkdir_errors[1])         
-    if output_dictionary["errors"]:
-        
-        crash=False
-        
+
+    ## iterate through errors - crash for Exceptions and output Warnings
+    if output_dictionary["errors"]:        
+        crash=False        
         for error_dictionary in output_dictionary["errors"]:            
-            if error_dictionary['errorType']=='Exception':
+            if error_dictionary and error_dictionary['errorType']=='Exception':
                 crash=True
                 sys.stderr.write(error_dictionary['errorString'])
         if crash==True:sys.exit(1)

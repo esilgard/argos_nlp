@@ -4,3 +4,4 @@ PathSide	GROSS DESCRIPTION
 PathHistology	FINAL DIAGNOSIS
 PathDate	DEMOGRAPHICS
 Pathologist	NULL
+PathGrade	NULL
