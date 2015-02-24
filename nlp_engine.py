@@ -31,7 +31,7 @@ from datetime import datetime
 begin=datetime.today()
 ## path to the nlp_engine.py script ##
 path= os.path.dirname(os.path.realpath(__file__))+'/'
-
+## test line for commiting and evaluating pre and post hook scripts
 ## grab version number from txt file which updates with git post-commit hook scipt (assume utf-8, but back up to utf-16) ##
 try:
     __version__=codecs.open(path+'version','rb', encoding='utf-8').readlines()[0].strip()
