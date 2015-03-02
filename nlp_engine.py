@@ -27,6 +27,8 @@ __version__='nlp_engine1.0'
 import sys,os
 import output_results,make_text_output_directory
 from datetime import datetime
+
+## timeit variable for performance testing ##
 begin=datetime.today()
 ## path to the nlp_engine.py script ##
 path= os.path.dirname(os.path.realpath(__file__))+'/'
