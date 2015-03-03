@@ -14,7 +14,7 @@ import json,sys
 
 def main(output_file_name,output):
     try:
-        of=open(output_file_name,'w')
+        of=open(output_file_name,'wb')
     except:
         sys.stderr.write('FATAL ERROR: path to output file '+output_file_name+' not found')
         return('FATAL ERROR: path to output file '+output_file_name+' not found')
