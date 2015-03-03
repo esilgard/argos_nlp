@@ -24,10 +24,9 @@
 '''
 __version__='path_parser1.0'
 
-import re,sys,global_strings
+import re,sys,global_strings,os
 
-## header names coming from the Amalga Import ##
-
+## header names exptected to be coming from the Amalga Import ##
 required_header_set=set([global_strings.SET_ID,global_strings.OBSERVATION_VALUE,global_strings.SPECIMEN_SOURCE,global_strings.FILLER_ORDER_NO,global_strings.MRN_CAPS])
 
 def parse(obx_file):
@@ -44,8 +43,8 @@ def parse(obx_file):
     section='NULL'
     section_order=0
     try:
-        OBX=open(obx_file,'r').readlines()
-        OBX=[a.strip().split('\t') for a in OBX]
+        OBX=open(obx_file,'rU').readlines()        
+        OBX=[re.sub('[\r\n]','',a).split('\t') for a in OBX]
         
         header_set= set(OBX[0])
         
@@ -71,7 +70,7 @@ def parse(obx_file):
                         # maintain readability of fully constituted text by keeping empty 'NULL' lines 
                         pathology_dictionary[mrn]=pathology_dictionary.get(mrn,{})
                         pathology_dictionary[mrn][accession]=pathology_dictionary[mrn].get(accession,{})
-                        pathology_dictionary[mrn][accession][(-1,'FullText',0,None)]=pathology_dictionary[mrn][accession].get((-1,'FullText',0,None),'')+'\n'
+                        pathology_dictionary[mrn][accession][(-1,'FullText',0,None)]=pathology_dictionary[mrn][accession].get((-1,'FullText',0,None),'')  +'\n'
                         chars_onset+=1                                                        # maintain readability of fully constituted text by keeping 'NULL' lines
                     else:
                         ## grab accession dictionary

@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-import sys,path_parser,final_logic
+import sys,path_parser,final_logic,re
 import os,global_strings
 path2= os.path.dirname(os.path.realpath(__file__))+'/'
 '''author@esilgard'''
@@ -113,11 +113,12 @@ def main(arguments,path):
             field_value_dictionary[global_strings.MRN]=mrn
             
             try:
-                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+accession+'.txt','w') as out:
+                
+                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+accession+'.txt','wb') as out:
                           out.write(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])
             except:
                 return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_pathology attempting to write text to file at'+ \
-                        arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed'}],list)
+                        arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed. '+sys.arg}],list)
             return_fields,return_errors,return_type=get_fields(disease_group,pathology_dictionary[mrn][accession],disease_group_data_dictionary,path_data_dictionary)
 
             i+=1
