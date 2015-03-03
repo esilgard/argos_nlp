@@ -1,6 +1,7 @@
 Upper Lobe;Upper Lobes
-Mediastinum;mediastinal
+Mediastinum;mediastinal;station 7;station 8;station 9;subcarinal;paraesophageal;pulmonary ligament
 Hilar
+Interlobular
 Lower Lobe;Lower Lobe
 Middle Lobe;Middle Lobes
 Middle/Lower Lobe;lower/middle lobes;Middle/Lower Lobes;lower/middle lobe
@@ -8,4 +9,4 @@ Bronchi;bronchial;bronchus
 Pleura;pleurum;pleural
 Retroperitoneum;retroperitoneal
 Upper/Middle Lobes;Upper/Middle Lobe;middle/upper lobes;middle/upper lobe
-Lymph Node;nodes;nodal;1l;1r;2l;2r;3l;3r;4l;4r;5l;5r;6l;6r;7l;7r;8l;8r;9l;9r;10l;10r;11l;11r;12l;12r
+Lymph Node;nodes;nodal;station;1l;1r;2l;2r;3a;3p;4l;4r;5l;5r;6l;6r;10l;10r;11l;11r;station 12;station 13;station 14;station 10;station 11

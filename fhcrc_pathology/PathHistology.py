@@ -29,7 +29,7 @@ def get(disease_group,dictionary):
     '''
    
     return_dictionary_list=[]
-    ## a list of histologies from the disease relevent histology_file
+    ## a list of histologies from the disease relevent histology file
     histologies=[]
     standardizations={}
     try:
@@ -40,6 +40,7 @@ def get(disease_group,dictionary):
                 standardizations[h]=histos[0].strip()
                 histologies.append(h)
         histologies=sorted(histologies,key=lambda x: len(x),reverse=True)
+        ## append generic carcinoma histology to end of list as a last resort string match
         histologies.append('carcinoma');standardizations['carcinoma']='Carcinoma'
     except: return ([{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'ERROR: could not access histology file at '+path+'/'+disease_group+'/'+'histologies.txt -- PathHistology not completed'}],Exception)
     
@@ -47,26 +48,25 @@ def get(disease_group,dictionary):
     
     histology_list=[]
     start_stops_list=[]
-    for specimen_dictionary in dictionary[(0,'SpecimenSource',0,None)].values():
+    
+    for specimen_dictionary in dictionary[(0,'SpecimenSource',0,None)].values():        
         for specimen,description in specimen_dictionary.items():
             specimen_histology_list=[]
             specimen_start_stops_list=[]
             for section in sorted(dictionary):                
                 section_specimen=section[3]
                 line_onset=section[2]
-                header=section[1]
-                
-                if ('CYTOLOGIC IMPRESSION' in header or 'FINAL DIAGNOSIS' in header or 'COMMENT' in header):            
+                header=section[1]                
+                if ('IMPRESSION' in header or 'FINAL DIAGNOSIS' in header or 'COMMENT' in header):                    
                     for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):                        
                         ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                         ## these can contain confusing general statements about the cancer and/or patients in general ##
-                        if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',results):pass               
-
+                        if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',results):pass 
                         elif specimen in section_specimen:                           
                             text=results.lower()
                             text=re.sub('[.,:;\\\/\-]',' ',text)                            
                             histology,onset,offset=find_histology(text,histologies)                           
-                            if histology:                                
+                            if histology:                               
                                 specimen_start_stops_list.append({global_strings.START:line_onset+onset,global_strings.STOP:line_onset+offset})                        
                                 already_seen=False
                                 for each in specimen_histology_list:
@@ -74,22 +74,25 @@ def get(disease_group,dictionary):
                                         already_seen=True
                                 if not already_seen:
                                     specimen_histology_list.append(standardizations[histology])
-            
+                        
             if specimen_histology_list:
                 return_dictionary_list.append({global_strings.NAME:"PathFindHistology",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(set(specimen_histology_list)),
                                                global_strings.CONFIDENCE:("%.2f" % .85),global_strings.VERSION:__version__,global_strings.STARTSTOPS:specimen_start_stops_list})
                 histology_list+=specimen_histology_list
                 start_stops_list+=specimen_start_stops_list
-                          
+
+
+    if not histology_list:
+        ## back off model - not fully developed - looks for disease specific histologies anywhere in the text - regardless of specimens and applies them to Specimen 'UNK'
+        histology,onset,offset=find_histology(full_text,histologies)
+        if histology:
+           histology_list.append(standardizations[histology])
+           return_dictionary_list.append({global_strings.NAME:"PathFindHistology",global_strings.KEY:"UNK",global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:standardizations[histology],global_strings.CONFIDENCE:("%.2f" % .70),
+                                      global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:onset,global_strings.STOP:offset}]})                          
     if histology_list:
         return_dictionary_list.append({global_strings.NAME:"PathHistology",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(histology_list)),global_strings.CONFIDENCE:("%.2f" % .85),
                                       global_strings.VERSION:__version__,"startStops":start_stops_list})
-    else:
-        ## back off model - not fully developed - looks for disease specific histologies anywhere in the text - regardless of specimens
-        histology,onset,offset=find_histology(full_text,histologies)
-        if histology:
-            return_dictionary_list.append({global_strings.NAME:"PathHistology",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:standardizations[histology],global_strings.CONFIDENCE:("%.2f" % .70),
-                                      global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:onset,global_strings.STOP:offset}]})
+    
     return (return_dictionary_list,list)        
                 
             
