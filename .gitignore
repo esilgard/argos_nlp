@@ -54,5 +54,3 @@ docs/_build/
 # PyBuilder
 target/
 
-# ignore the versioning text file
-version
