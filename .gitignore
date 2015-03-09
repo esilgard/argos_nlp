@@ -1,7 +1,10 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+<<<<<<< HEAD
 *.pyc
+=======
+>>>>>>> origin/labkey_dev
 
 # C extensions
 *.so
@@ -53,4 +56,3 @@ docs/_build/
 
 # PyBuilder
 target/
-
