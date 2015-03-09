@@ -39,10 +39,8 @@ def git(*args):
 # get version number from git log and tag
 try:
     os.chdir(nlp_engine_path) 
-    tag= git("describe","--tags","--long").strip()
-    print tag
-    version_num= len(git("log","--oneline").split('\n'))
-    print version_num
+    tag= git("describe","--tags","--long").strip() 
+    version_num= len(git("log","--oneline").split('\n'))   
     __version__=tag+'-'+str(version_num)
     os.chdir(original_wd) 
 except:
