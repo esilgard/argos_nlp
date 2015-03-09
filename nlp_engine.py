@@ -26,26 +26,37 @@
 import sys,os
 import output_results,make_text_output_directory,codecs
 from datetime import datetime
+import subprocess
+
+## path to the nlp_engine.py script ##
+nlp_engine_path= os.path.dirname(os.path.realpath(__file__))+'/'
+original_wd=os.getcwd()
+
+def git(*args):       
+    proc= subprocess.Popen(['git'] + list(args), stdout=subprocess.PIPE)
+    return proc.communicate()[0]
+
+# get version number from git log and tag
+try:
+    os.chdir(nlp_engine_path) 
+    tag= git("describe","--tags","--long").strip()
+    print tag
+    version_num= len(git("log","--oneline").split('\n'))
+    print version_num
+    __version__=tag+'-'+str(version_num)
+    os.chdir(original_wd) 
+except:
+    sys.stderr.write('FATAL ERROR: could not access or parse git tag and logs through python subprocess')
+    sys.exit(1)
+
 
 ## timeit variable for performance testing ##
 begin=datetime.today()
-## path to the nlp_engine.py script ##
-path= os.path.dirname(os.path.realpath(__file__))+'/'
-## test line for commiting and evaluating pre and post hook scripts
-## grab version number from txt file which updates with git post-commit hook scipt (assume utf-8, but back up to utf-16) ##
-try:
-    __version__=codecs.open(path+'version','rb', encoding='utf-8').readlines()[0].strip()
-except:
-    try:
-         __version__=codecs.open(path+'version','rb', encoding='utf-16').readlines()[0].strip()
-    except:
-        sys.stderr.write('FATAL ERROR: could not locate or parse version file.')
-        sys.exit(1)
 
 ## path to file containing flags and descriptions ##
 ## in the format -char<tab>description<tab>verbose_description(for help and error messages) ##
 try:
-    command_line_flag_file=path+'command_line_flags.txt'
+    command_line_flag_file=nlp_engine_path+'command_line_flags.txt'
 except:
     sys.stderr.write('FATAL ERROR: command line flag file not found.  program aborted.')
     sys.exit(1)
@@ -118,7 +129,7 @@ else:
     if mkdir_errors[0]==Exception:
         sys.stderr.write(mkdir_errors[1])
         sys.exit(1)        
-    exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,path))')
+    exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,nlp_engine_path ))')
     
     if return_type==Exception:        
         sys.stderr.write(errors['errorString'])

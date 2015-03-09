@@ -17,3 +17,10 @@ __init__.py
 
 fhcrc_pathology
 	directory of modules for processing pathology reports
+
+make_text_output_directory.py
+	a python script to create a directory for output text files (the directory location is expected to match the input file name location)
+
+output_results.py
+	output the final JSON object to the location specified by the command line -o flag
+	
