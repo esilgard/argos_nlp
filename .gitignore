@@ -1,10 +1,11 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-<<<<<<< HEAD
+
 *.pyc
-=======
->>>>>>> origin/labkey_dev
+
+# version file
+version
 
 # C extensions
 *.so
