@@ -37,10 +37,10 @@ begin=datetime.today()
 # test line for commiting and evaluating pre and post hook scripts
 ## grab version number from txt file which updates with git post-commit hook scipt (assume utf-8, but back up to utf-16) ##
 try:
-    __version__=codecs.open(path+'version','rb', encoding='utf-8').readlines()[0].strip()
+    __version__=codecs.open(nlp_engine_path+'version','rb', encoding='utf-8').readlines()[0].strip()
 except:
     try:
-        __version__=codecs.open(path+'version','rb', encoding='utf-16').readlines()[0].strip()
+        __version__=codecs.open(nlp_engine_path+'version','rb', encoding='utf-16').readlines()[0].strip()
     except:
         sys.stderr.write('FATAL ERROR: could not locate or parse version file.')
         sys.exit(1)

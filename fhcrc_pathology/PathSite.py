@@ -18,9 +18,6 @@ import PathFindNumNodes
 path= os.path.dirname(os.path.realpath(__file__))
 dirs=path.split('\\')
 
-
-
-
     
 def get(disease_group,dictionary):   
     '''
@@ -65,11 +62,11 @@ def get(disease_group,dictionary):
                     text=text.lower()
                     text=re.sub('[,:;\\\/\-]',' ',text); text=re.sub('[.] ', '  ',text)      ## this should keep decimal places and throw out periods                    
                     for each_site in site_list:                        
-                        for each_match in re.finditer('^.*( |^|\")'+each_site+'( |$|\").*',text,re.DOTALL):                            
+                        for each_match in re.finditer('^.*( |^|\")('+each_site+')( |$|\").*',text,re.DOTALL):                            
                             if standardizations[each_site] not in specimen_site_list:                                    
                                 specimen_site_list.append(standardizations[each_site])
                             if 'Lymph' in standardizations[each_site]:
-                                numNodes,numNodesPos=PathFindNumNodes.get(section,text)
+                                numNodes,numNodesPos=PathFindNumNodes.get(section,text)                            
                             specimen_start_stops_list.append({global_strings.START:each_match.start(2)+line_onset,global_strings.STOP:each_match.end(2)+line_onset})                                
         if specimen_site_list:            
             return {global_strings.NAME:"PathFindSite",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(set(specimen_site_list)),

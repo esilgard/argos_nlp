@@ -107,7 +107,7 @@ def main(arguments,path):
     ## create a list of output field dictionaries ##
     for mrn in pathology_dictionary:            
         for accession in pathology_dictionary[mrn]:
-            #if accession in training_set:                
+                            
             field_value_dictionary={}
             field_value_dictionary[global_strings.REPORT]=accession
             field_value_dictionary[global_strings.MRN]=mrn

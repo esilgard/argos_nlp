@@ -22,7 +22,7 @@ path= os.path.dirname(os.path.realpath(__file__))+'/'
 #############################################################################################################################################################
 
 def get(disease_group,dictionary):
-    
+   
     '''
     extract the histology from the lower cased text of the pathology report       
     return a list of dictionaries of each PathFindHistology (per specimen) and overall PathHistology (for the entire report)
@@ -50,11 +50,11 @@ def get(disease_group,dictionary):
     start_stops_list=[]
     
     for specimen_dictionary in dictionary[(0,'SpecimenSource',0,None)].values():        
-        for specimen,description in specimen_dictionary.items():
+        for specimen,description in specimen_dictionary.items():            
             specimen_histology_list=[]
             specimen_start_stops_list=[]
             for section in sorted(dictionary):                
-                section_specimen=section[3]
+                section_specimen=section[3]                
                 line_onset=section[2]
                 header=section[1]                
                 if ('IMPRESSION' in header or 'FINAL DIAGNOSIS' in header or 'COMMENT' in header):                    
@@ -67,14 +67,13 @@ def get(disease_group,dictionary):
                             text=re.sub('[.,:;\\\/\-]',' ',text)                            
                             histology,onset,offset=find_histology(text,histologies)                           
                             if histology:                               
-                                specimen_start_stops_list.append({global_strings.START:line_onset+onset,global_strings.STOP:line_onset+offset})                        
+                                specimen_start_stops_list.append({global_strings.START:line_onset+onset,global_strings.STOP:line_onset+offset})                                
                                 already_seen=False
                                 for each in specimen_histology_list:
                                     if standardizations[histology] in each:
                                         already_seen=True
                                 if not already_seen:
-                                    specimen_histology_list.append(standardizations[histology])
-                        
+                                    specimen_histology_list.append(standardizations[histology])                       
             if specimen_histology_list:
                 return_dictionary_list.append({global_strings.NAME:"PathFindHistology",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(set(specimen_histology_list)),
                                                global_strings.CONFIDENCE:("%.2f" % .85),global_strings.VERSION:__version__,global_strings.STARTSTOPS:specimen_start_stops_list})
@@ -84,8 +83,9 @@ def get(disease_group,dictionary):
 
     if not histology_list:
         ## back off model - not fully developed - looks for disease specific histologies anywhere in the text - regardless of specimens and applies them to Specimen 'UNK'
-        histology,onset,offset=find_histology(full_text,histologies)
+        histology,onset,offset=find_histology(full_text,histologies)       
         if histology:
+           start_stops_list.append({global_strings.START:onset,global_strings.STOP:offset})
            histology_list.append(standardizations[histology])
            return_dictionary_list.append({global_strings.NAME:"PathFindHistology",global_strings.KEY:"UNK",global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:standardizations[histology],global_strings.CONFIDENCE:("%.2f" % .70),
                                       global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:onset,global_strings.STOP:offset}]})                          
