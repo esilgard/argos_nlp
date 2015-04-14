@@ -89,7 +89,8 @@ def get(disease_group,dictionary):
         overall_side_dictionary=get_side('')        
         if overall_side_dictionary:
             
-            if ('Right' in overall_side_dictionary["value"] and 'Left' in overall_side_dictionary["value"]) or 'Bilateral' in overall_side_dictionary["value"]: overall_side_dictionary["value"]=['Bilateral']
+            if ('Right' in overall_side_dictionary["value"] and 'Left' in overall_side_dictionary["value"]) or 'Bilateral' in overall_side_dictionary["value"]:
+                overall_side_dictionary["value"]=['Bilateral']
             
             return_dictionary_list.append({"name":"PathSide","table":"Pathology","value":';'.join(set(overall_side_dictionary["value"])),"confidence":0.75,"algorithmVersion":__version__,
                        "startStops":overall_side_dictionary["startStops"]})
