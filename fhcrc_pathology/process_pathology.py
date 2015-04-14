@@ -91,10 +91,7 @@ def main(arguments,path):
     ## create a list of output field dictionaries ##
     for mrn in pathology_dictionary:            
         for accession in pathology_dictionary[mrn]:
-            #if 'SU-12-16869' in accession:
-                #for sections in pathology_dictionary[mrn][accession]:
-                    #print pathology_dictionary[mrn][accession][sections]
-                                                    
+                          
             field_value_dictionary={}
             field_value_dictionary["report"]=accession
             field_value_dictionary["mrn"]=mrn

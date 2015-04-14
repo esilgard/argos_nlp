@@ -14,19 +14,14 @@
 # limitations under the License.
 #
 
-import sys,uw_cyto_parser,scca_cyto_parser,iscn_parser,classify_aml_swog_category,iscn_string_cleaner
+import sys,uw_cyto_parser,scca_cyto_parser,iscn_parser,iscn_string_cleaner
 import os,re,global_strings
 
 '''author@esilgard'''
 '''December 2014'''
 __version__='process_cytogenetics1.0'
 
-training_set=[a.strip().split('\t') for a in open('C:/users/esilgard/Documents/NLPStaples/Repositories/Data/cytogenetics/starter_dev_aml_cyto_set.txt','r').readlines()[1:]]
-acc_set=set([a[1] for a in training_set])
-print acc_set
-
-def main(arguments,path):
-    
+def main(arguments,path):    
     '''
     current minimum required flags for the pathology parsing in the "arguments" dictionary are:
         -f input cytogenetics file
@@ -64,7 +59,7 @@ def main(arguments,path):
         for accession in cytogenetics_dictionary[mrn]:
             #if accession in acc_set:
             cyto_string=''
-            print mrn,accession
+            #print mrn,accession
             for sections in cytogenetics_dictionary[mrn][accession]:
                 section_header=sections[1]
                 beginning_offset=sections[2]
@@ -73,31 +68,29 @@ def main(arguments,path):
                     for line,text in cytogenetics_dictionary[mrn][accession][sections].items():                            
                         cyto_string+=text.strip('"')                            
             if cyto_string:
-                print cyto_string
+                #print cyto_string
                 field_value_dictionary={}
                 field_value_dictionary[global_strings.REPORT]=accession
                 field_value_dictionary[global_strings.MRN]=mrn
                 karyotype_string=iscn_string_cleaner.get(text)
-                field_value_dictionary[global_strings.KARYOTYPE_STRING]=karyotype_string
+                #field_value_dictionary[global_strings.KARYOTYPE_STRING]=karyotype_string
+                ## return_fields holds dictionaries of karyotypes and cell types to use in swog classification
                 return_fields,return_errors,return_type=iscn_parser.get(karyotype_string,karyo_offset)
-                
-                cell_list,swog_return_fields,return_errors=classify_aml_swog_category.get(return_fields,karyotype_string)
-                field_value_dictionary[global_strings.FIELDS]=swog_return_fields
-                
-                for each in field_value_dictionary[global_strings.FIELDS]:
-                    if each['value']!=0:
-                        print each['name'],each['value'],each['startStops']
-                  
-                
-                print '\n\n'
+                try:                    
+                    exec ('from '+disease_group+' import classify_'+disease_group+'_swog_category')
+                    exec('cell_list,swog_return_fields,return_errors=classify_'+disease_group+'_swog_category.get(return_fields,karyotype_string)')
+                except:
+                    return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:\
+                             ' FATAL ERROR in process_cytogenetics.get() - could not retrive disease group specific cytogenetics module'+str(sys.exc_info())}],list)           
+
                 try:                
                     with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+accession+'.txt','wb') as out:
                         out.write(cytogenetics_dictionary[mrn][accession][(-1,'FullText',0,None)])
                 except:                                
                     return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_cytogenetics attempting to write text to file at'+ \
-                        arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed. '+sys.argexc_info()}],list)
+                        arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed. '+sys.exc_info()}],list)
                 if return_type!=Exception:                
-                    field_value_dictionary['fields']=return_fields
+                    field_value_dictionary[global_strings.FIELDS]=swog_return_fields
                     field_value_output.append(field_value_dictionary)
                     if return_errors: return_error_list.append(return_errors)
                 else:

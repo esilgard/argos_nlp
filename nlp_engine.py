@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2014-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,21 +22,36 @@
     author@esilgard
     last updated October 2014
 '''
-__version__='nlp_engine1.0'
-
+ 
 import sys,os
-import json
+import output_results,make_text_output_directory,codecs
 from datetime import datetime
-begin=datetime.today()
-## path to the nlp_engine.py script ##
-path= os.path.dirname(os.path.realpath(__file__))+'/'
 
+## path to the nlp_engine.py script ##
+nlp_engine_path= os.path.dirname(os.path.realpath(__file__))+'/'
+original_wd=os.getcwd()
+
+## timeit variable for performance testing ##
+begin=datetime.today()
+
+# test line for commiting and evaluating pre and post hook scripts
+## grab version number from txt file which updates with git post-commit hook scipt (assume utf-8, but back up to utf-16) ##
+try:
+    __version__=codecs.open(nlp_engine_path+'version','rb', encoding='utf-8').readlines()[0].strip()
+except:
+    try:
+        __version__=codecs.open(nlp_engine_path+'version','rb', encoding='utf-16').readlines()[0].strip()
+    except:
+        sys.stderr.write('FATAL ERROR: could not locate or parse version file.')
+        sys.exit(1)
+    
 ## path to file containing flags and descriptions ##
 ## in the format -char<tab>description<tab>verbose_description(for help and error messages) ##
 try:
-    command_line_flag_file=path+'command_line_flags.txt'
+    command_line_flag_file=nlp_engine_path+'command_line_flags.txt'
 except:
-    output_results(Exception,'\nFATAL ERROR: command line flag file not found.  program aborted.')
+    sys.stderr.write('FATAL ERROR: command line flag file not found.  program aborted.')
+    sys.exit(1)
 
 
 ## set of required flags for program to run successfully ##
@@ -60,26 +75,9 @@ def return_exec_code(x):
         helper method to retrieve the returned field value from each module
     '''
     return x
+   
 
-
-def output_results(output):
-    '''
-    output results to json file
-    '''
-    try:
-        of=open(arguments.get('-o'),'w')
-    except:
-        sys.stderr.write('FATAL ERROR: path to output file '+arguments.get('-o')+' not found');sys.exit(1)
-    try:
-        with of as output_file:
-            pretty_dump = json.dumps(output, sort_keys=True, indent=4, separators=(',', ': '))           
-            output_file.write(pretty_dump)        
-    except:
-        sys.stderr.write('FATAL ERROR: problem with output filestream to file object "'+arguments.get('-o')+'"\
-            --- sys.exec_info = '+str(sys.exc_info()));sys.exit(1)
-        
-
-#############################################################################################################
+######################################################################################################
 ## build the dictionary for the json output ##
 output_dictionary={}
 output_dictionary["controlInfo"]={}
@@ -89,7 +87,6 @@ output_dictionary["controlInfo"]["docVersion"]="document version"
 output_dictionary["controlInfo"]["source"]="document source"
 output_dictionary["controlInfo"]["docDate"]="doc date"
 output_dictionary["controlInfo"]["processDate"]=str(datetime.today())
-
 output_dictionary["errors"]=[]
 output_dictionary["reports"]=[]
 
@@ -113,26 +110,45 @@ if len(missing_flags)>0:
     for each_flag in missing_flags:
         sys.stderr.write('FATAL ERROR: missing required flag: '+each_flag+' '+command_line_flags[each_flag][1])    
     sys.exit(1)
-else:    
+else:   
 
     ## import and call appropriate module ##
     try:        
         exec 'from fhcrc_'+arguments.get('-t')+' import process_'+arguments.get('-t')        
     except:
         sys.stderr.write('FATAL ERROR:  could not import module process_'+arguments.get('-t'));sys.exit(1)
-    exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,path))')
+    mkdir_errors=make_text_output_directory.main(arguments.get('-f'))
+    if mkdir_errors[0]==Exception:
+        sys.stderr.write(mkdir_errors[1])
+        sys.exit(1)        
+    exec ('output,errors,return_type=return_exec_code(process_'+arguments.get('-t')+'.main(arguments,nlp_engine_path ))')
     
-    output_dictionary["reports"]=output
-    output_dictionary["errors"]=errors
-         
-    if output_dictionary["errors"]:
-        print 'error output dictionary',output_dictionary["errors"]
-        crash=False
-        error_dictionary=output_dictionary["errors"]            
-        if error_dictionary['errorType']=='Exception':
-            crash=True
-            sys.stderr.write(error_dictionary['errorString'])
-        if crash==True:sys.exit(1)
-    output_results(output_dictionary)
+    if return_type==Exception:        
+        sys.stderr.write(errors['errorString'])
+        sys.exit(1)
+    else:
+        output_dictionary["reports"]=output
+        output_dictionary["errors"]=errors
+    
+    if mkdir_errors[0]==dict:
+        output_dictionary["errors"].append(mkdir_errors[1])         
 
-print (datetime.today()-begin).days * 86400 + (datetime.today()-begin).seconds,'seconds to process '+str(len(output_dictionary["reports"]))+' reports'
+    ## iterate through errors - crash for Exceptions and output Warnings
+    if output_dictionary["errors"]:        
+        crash=False        
+        for error_dictionary in output_dictionary["errors"]:            
+            if error_dictionary and error_dictionary['errorType']=='Exception':
+                crash=True
+                sys.stderr.write(error_dictionary['errorString'])
+        if crash==True:sys.exit(1)
+    ## output results to file ##
+    output_return = output_results.main(arguments.get('-o'),output_dictionary)
+    if output_return:
+        sys.exit(1)
+
+
+## timeit - print out the amount of time it took to process all the reports ##
+#print (datetime.today()-begin).days * 86400 + (datetime.today()-begin).seconds,'seconds to process '+str(len(output_dictionary["reports"]))+' reports'
+
+    
+        
