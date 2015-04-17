@@ -4,9 +4,6 @@ __pycache__/
 
 *.pyc
 
-# version file
-version
-
 # C extensions
 *.so
 
