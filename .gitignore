@@ -54,3 +54,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+#Sample data folder
+SampleData
