@@ -59,22 +59,23 @@ def main(arguments,path):
         for accession in cytogenetics_dictionary[mrn]:
             #if accession in acc_set:
             cyto_string=''
-            #print mrn,accession
-            for sections in cytogenetics_dictionary[mrn][accession]:
+             ## walk through ISCN section in order (by offsets) incase the cytogenetics string is on multiple, sequential lines
+            for sections in sorted(cytogenetics_dictionary[mrn][accession], key=lambda x: x[2]):               
                 section_header=sections[1]
                 beginning_offset=sections[2]
-                if 'ISCN' in section_header:
+               
+                if 'ISCN' in section_header:                   
                     karyo_offset=beginning_offset
-                    for line,text in cytogenetics_dictionary[mrn][accession][sections].items():                            
-                        cyto_string+=text.strip('"')                            
-            if cyto_string:
-                #print cyto_string
+                    for line,text in sorted(cytogenetics_dictionary[mrn][accession][sections].items(),key=lambda x:x[0]):                        
+                        cyto_string+=text.strip('"')
+            
+            if cyto_string:               
                 field_value_dictionary={}
                 field_value_dictionary[global_strings.REPORT]=accession
                 field_value_dictionary[global_strings.MRN]=mrn
-                karyotype_string=iscn_string_cleaner.get(text)
-                #field_value_dictionary[global_strings.KARYOTYPE_STRING]=karyotype_string
-                ## return_fields holds dictionaries of karyotypes and cell types to use in swog classification
+                field_value_dictionary[global_strings.DATE]=(cytogenetics_dictionary[mrn][accession][(-1,'Date',0,None)])
+               
+                karyotype_string=iscn_string_cleaner.get(cyto_string)                
                 return_fields,return_errors,return_type=iscn_parser.get(karyotype_string,karyo_offset)
                 try:                    
                     exec ('from '+disease_group+' import classify_'+disease_group+'_swog_category')
@@ -89,8 +90,9 @@ def main(arguments,path):
                 except:                                
                     return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_cytogenetics attempting to write text to file at'+ \
                         arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed. '+sys.exc_info()}],list)
-                if return_type!=Exception:                
-                    field_value_dictionary[global_strings.FIELDS]=swog_return_fields
+                if return_type!=Exception:
+                    field_value_dictionary[global_strings.TABLES]=[]
+                    field_value_dictionary[global_strings.TABLES].append({global_strings.TABLE:disease_group.upper()+'_Cytogenetics',global_strings.FIELDS:swog_return_fields})                    
                     field_value_output.append(field_value_dictionary)
                     if return_errors: return_error_list.append(return_errors)
                 else:

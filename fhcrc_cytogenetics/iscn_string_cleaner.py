@@ -16,15 +16,22 @@ def get(text):
     clean up the scca or uw string that contains the ISCN karyotype info
     '''
     
-    ## cut off FISH results in SCCA strings - this should return the whole string if there is no "nuc ish"
-    text=text[:text.find('nuc')]    
+    ## cut off FISH results in SCCA strings
+    if 'nuc' in text:
+        text=text[:text.find('nuc')]
+    if 'NUC' in text:
+        text=text[:text.find('NUC')]
+    ## do not parse strings with typo ":" (instead of ";")
+    if re.search('[\d]:[\d]',text):
+        return ''
+   
     ## get all text before the final cell count 
-    text=text[:text.rfind(']')+1]   
-    ## if ':' is not "found", find() will return -1 ; with the '+1' this will match the full string
+    text=text[:text.rfind(']')+1] 
     karyotype_string=text[text.find(':')+1:].strip()   
-    karyotype_string=karyotype_string.replace('//','/')
-    karyotype_string=karyotype_string.strip('"')
-    karyotype_string=karyotype_string.strip('/')   
+    karyotype_string=karyotype_string.replace('//','/')    
+    karyotype_string=karyotype_string.strip('"')   
+    karyotype_string=karyotype_string.strip('/')
+    
     if 'ish' in karyotype_string or 'rror' in karyotype_string:        
         return ''
         print 'PARSING ERROR'

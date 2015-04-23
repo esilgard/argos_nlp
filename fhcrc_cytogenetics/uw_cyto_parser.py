@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2015 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2014-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 '''
 __version__='uw_cyto_parser1.0'
 
-import re,sys,global_strings
+import re,sys,global_strings,make_datetime
 
 required_header_set=set([global_strings.SET_ID,global_strings.OBSERVATION_VALUE,global_strings.FILLER_ORDER_NO,global_strings.MRN_CAPS])
 
@@ -50,7 +50,7 @@ def parse(obx_file):
                 # sort records by MRN_CAPS, accession, and then setid - ignore null MRN_CAPSs, accessions, or setids
                 OBX=sorted([y for y in OBX[1:] if (y[headers.get(global_strings.MRN_CAPS)]!='NULL' and y[headers.get(global_strings.FILLER_ORDER_NO)]!='NULL' and y[headers.get(global_strings.SET_ID)]!='NULL')],\
                             key=lambda x: (x[headers.get(global_strings.MRN_CAPS)],x[headers.get(global_strings.FILLER_ORDER_NO)],int(x[headers.get(global_strings.SET_ID)])))
-
+                
                 chars_onset=0                
                 for line in OBX:                    
                     mrn=line[headers.get(global_strings.MRN_CAPS)]                   
@@ -69,12 +69,14 @@ def parse(obx_file):
                         cytogenetics_dictionary[mrn]=cytogenetics_dictionary.get(mrn,{})
                         cytogenetics_dictionary[mrn][accession]=cytogenetics_dictionary[mrn].get(accession,{})
                         cytogenetics_dictionary[mrn][accession][(-1,'FullText',0,None)]=cytogenetics_dictionary[mrn][accession].get((-1,'FullText',0,None),'')  +'\n'
+                        
                         chars_onset+=1                                                       
                     else:
                         
                         ## grab accession dictionary
                         cytogenetics_dictionary[mrn]=cytogenetics_dictionary.get(mrn,{})                        
                         cytogenetics_dictionary[mrn][accession]=cytogenetics_dictionary[mrn].get(accession,{})
+                        
                         if index=='1':
                             chars_onset=0
                             ## create a specimen source dictionary for each labeled specimen (in the same format as the regular pathology section dictionary ##
@@ -94,10 +96,17 @@ def parse(obx_file):
                             M=specimen_header.group(1).replace(' ','')                                                    
                             for each in  specimen_dictionary.keys():                                
                                 if re.search('['+M+']',each):
-                                    specimen+=each                                
+                                    specimen+=each
+                        
                         cytogenetics_dictionary[mrn][accession][(section_order,section,chars_onset,specimen)]=cytogenetics_dictionary[mrn][accession].get((section_order,section,chars_onset,specimen),{})                
                         cytogenetics_dictionary[mrn][accession][(section_order,section,chars_onset,specimen)][index]=text
                         cytogenetics_dictionary[mrn][accession][(-1,'FullText',0,None)]=cytogenetics_dictionary[mrn][accession].get((-1,'FullText',0,None),'')+text+'\n'
+                        
+                        if 'RECEIVED' in text and 'CASE' in text:
+                            received_date=re.match('.*RECEIVED:[ ]+([A-Z][a-z]+)[ ]+([\d]+)[ ]+([\d]{4}).*',text)   
+                            if received_date:
+                                cytogenetics_dictionary[mrn][accession][(-1,'Date',0,None)]=make_datetime.get((received_date.group(3),received_date.group(1),received_date.group(2)),'%Y,%b,%d')
+                            else:  cytogenetics_dictionary[mrn][accession][(-1,'Date',0,None)]='NA'
                         chars_onset+=len(text)+1
                    
                 return cytogenetics_dictionary,dict

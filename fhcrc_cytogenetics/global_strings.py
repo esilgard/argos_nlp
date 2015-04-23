@@ -1,10 +1,12 @@
 ## global strings for output dictionaries ##
 NAME="name"
 TABLE="table"
+TABLES="tables"
 VALUE="value"
 FIELDS="fields"
 REPORT="report"
 MRN="mrn"
+DATE="date"
 MRN_CAPS="MRN"
 UWID="uwid"
 ACCESSION_NUM="accession"
@@ -35,4 +37,5 @@ WARNING="Warning"
 AML_CYTOGENETICS="AML_Cytogenetics"
 SWOG="AML_SWOG_RiskCategory"
 UNKNOWN="Unknown"
+SPEC_DATE="spec_date"
 
