@@ -52,5 +52,5 @@ coverage.xml
 docs/_build/
 
 # git revision batch to automate versioning numbers
-
+version
 git-revision.cmd
