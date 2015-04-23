@@ -50,3 +50,6 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+# git versioning cmd script used for auto version numbers
+git-revision.cmd
