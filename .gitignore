@@ -51,6 +51,7 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+
 # git revision batch to automate versioning numbers
 version
 git-revision.cmd
