@@ -24,3 +24,6 @@ make_text_output_directory.py
 output_results.py
 	output the final JSON object to the location specified by the command line -o flag
 	
+version
+	a text file with the version number which is automatically updated by the pre commit hook script
+
