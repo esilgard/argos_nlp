@@ -5,7 +5,7 @@
 #
 
 '''author@esilgard'''
-'''November 2013, last update October 2014'''
+'''November 2013'''
 __version__='PathDate1.0'
 
 
@@ -14,7 +14,7 @@ from datetime import datetime
 
 def get(disease_group,dictionary):
     '''
-    extract the collection date (date of surgery)from normal cased text of the pathology report
+    extract the signed date from normal cased text of the pathology report
     return a dictionary of
         {"name":"PathDate",
         "value":datetime object/or None,

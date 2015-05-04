@@ -35,7 +35,7 @@ def get(karyotype_string,karyo_offset):
                 d['CellCount']=cell_count.group(2)
                 each_cell_type=each_cell_type[:each_cell_type.find(cell_count.group(1))]                
             ## catches error when there is no cell count
-            except:
+            except:               
                 d['Warning']='PARSING ERROR'
             cell_description=each_cell_type.split(',')           
             try:
@@ -46,7 +46,7 @@ def get(karyotype_string,karyo_offset):
                 d['Chromosome']=cell_description[1].strip()
                 d['Warning']=None               
             except:
-                ## catches error when there is no chromosome type number and type 
+                ## catches error when there is no chromosome type number and type                
                 d['Warning']='PARSING ERROR'
             ## if the length of the cell_description is greater than 2, then there are one or more abnormalities
             if len(cell_description)>2:
@@ -58,42 +58,45 @@ def get(karyotype_string,karyo_offset):
                          d['Warning']='PARSING ERROR'
                          d['Chromosome']='UNK'                    
                     d['Abnormalities']+=return_list[0]['Abnormalities']
-                ## catch this typo? where the XX and XY is included in the idem/sl cell line reference - exclude the reference itself from the list of abnormalities
+                ## catch this typo - where the XX and XY is included in the idem/sl cell line reference - exclude the reference itself from the list of abnormalities
                 elif (d['Abnormalities'][0] == 'sl' or 'idem' in d['Abnormalities'][0]) and len(seperate_cell_types)>1:
                     d['Abnormalities']=return_list[0]['Abnormalities']+d['Abnormalities'][1:]
-
-
+                
+                ## when sdl is used to refer back to sl
                 elif d['Chromosome'] == 'sdl' and len(seperate_cell_types)>2:                    
                     d['Chromosome']=return_list[1]['Chromosome']
                     d['Abnormalities']+=return_list[1]['Abnormalities']
                 ## catch the specific cell line references like sdl1 or sdl2 ##
-                elif 'sdl' in d['Chromosome']:
-                    try:
-                        d['Chromosome']=return_list[int(d['Chromosome'][-1])]['Chromosome']
-                        d['Abnormalities']+=return_list[int(d['Chromosome'][-1])]['Abnormalities']
-                    except:
-                        d['Warning']='PARSING ERROR'
-                        
-                
+                elif 'sdl' in d['Chromosome']:                    
+                    try:                       
+                        d['Chromosome']=return_list[cell_type_order-1]['Chromosome']
+                        d['Abnormalities']=return_list[cell_type_order-1]['Abnormalities']+d['Abnormalities']
+                    except:                        
+                        d['Warning']='PARSING ERROR'                        
+               
             ## further parse abnormalities into dictionaries of type of mutation:chromosome specifics (number, location) ##
-            for i in range(len(d['Abnormalities'])):                   
+            for i in range(len(d['Abnormalities'])):                
                 if type(d['Abnormalities'][i])==str:
                     loss_gain=re.match('[ ]?([+-])[ ]?([\d\w\~\?]+)',d['Abnormalities'][i])
-                    abnormal_chromosome=re.match('(.*)[(]([\.\d;XY\?\(\) ]+)[)](.*)',d['Abnormalities'][i])                       
+                    ## should capture chromosome numbers, sex chromosomes, and 'or's/'?'s for ambiguous chromosomes
+                    abnormal_chromosome=re.match('(.*)[(]([.\d;XY\?or ]+)[)](.*)',d['Abnormalities'][i])                       
                     if loss_gain:
                         d['Abnormalities'][i]={loss_gain.group(1):(loss_gain.group(2),'')}
-                    elif abnormal_chromosome:                        
+                    elif abnormal_chromosome:
+                        #if ' t(1;12;16;17' in karyotype_string and 'der(17)ins?(17;5)(q' in d['Abnormalities'][i]:
+                        #    print 'AB',abnormal_chromosome.group(1),abnormal_chromosome.group(2),abnormal_chromosome.group(3)
                         d['Abnormalities'][i]={abnormal_chromosome.group(1):(abnormal_chromosome.group(2),abnormal_chromosome.group(3))}
                     else:
-                        abnormal_chromosome=re.match('[ ]?([\d\-\~? ]*)[ ]?(mar|r|dmin|pstk+|inc)[ ]?',d['Abnormalities'][i])
+                        ## catches the case where there's no "type" of abnormality (eg del,der, +) because it's inferred
+                        abnormal_chromosome=re.match('[ ]?([\d\-\~?\ ]*)[ ]?(mar|r|dmin|pstk+|inc)[ ]?',d['Abnormalities'][i])
                         if abnormal_chromosome:
                             d['Abnormalities'][i]={'other aberration':(abnormal_chromosome.group(1),abnormal_chromosome.group(2))}
-                        else:               
-                            d['Warning']='PARSING ERROR'                   
-                               
-        else:
-            d['Warning']='PARSING ERROR'        
-            
+                        else:                            
+                            d['Warning']='PARSING ERROR'                  
+                              
+        else:            
+            d['Warning']='PARSING ERROR' 
         return_list.append(d)        
-        cell_type_order+=1   
+        cell_type_order+=1
+   
     return return_list,None,list

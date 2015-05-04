@@ -41,12 +41,10 @@ def get(cell_list,karyotype_string):
 ##################################################################################################################################
     
     ## start by counting cells with each type of pertinent aberration      
-    for x in cell_list:
-        
+    for x in cell_list:        
         if x[global_strings.WARNING]:aml_swog_mutations['warning']=1
         try:
-            cell_count=int(x['CellCount'])
-            if 'XY,-6,-11,-12[1]' in karyotype_string: print cell_count
+            cell_count=int(x['CellCount'])            
             cell_offset=x['Offset']
             ## minimum number of cells needed to verify a clone (either 2 or 3)
             clone_minimum=2            
@@ -54,7 +52,8 @@ def get(cell_list,karyotype_string):
             if x[global_strings.ABNORMALITIES]:
                 for y in x[global_strings.ABNORMALITIES]:                   
                     try:                        
-                        for z,zz in y.items():                        
+                        for z,zz in y.items():
+                            if ' t(1;12;16;17' in karyotype_string and 'der(17)ins?(17;5)(q' in karyotype_string: print z,zz
                             variation_string=z+'('+zz[0]+')'+zz[1]
                             if cell_count>=clone_minimum:
                                 if z=='-' or z=='+':
@@ -96,18 +95,17 @@ def get(cell_list,karyotype_string):
                                     elif (z=='t' and '16;16' in zz[0]):
                                         aml_swog_mutations['t(16;16)']+=cell_count
                                         aml_swog_offsets['t(16;16)'].append((variation_start,variation_end))
-                                    elif (z=='del' and '16' in zz[0] and 'q'==zz[1]):
+                                    elif (z=='del' and 'q'==zz[1]):
                                         aml_swog_mutations['del(16q)']+=cell_count
                                         aml_swog_offsets['del(16q)'].append((variation_start,variation_end))
-
+                                
                                 ## translocations
                                 if z=='t':
                                     for each in ['t(15;17)','t(6;9)','t(9;22)','t(8;21)']:
                                         if zz[0]==each[2:-1]:
                                             aml_swog_mutations[each]+=cell_count
-                                            aml_swog_offsets[each].append((variation_start,variation_end))
-                                  
-                                                  
+                                            aml_swog_offsets[each].append((variation_start,variation_end))                                  
+                                            
                                 ## del 5q, del 7q, del 12p
                                 elif z=='del':
                                     for each in ['5','7']:
@@ -118,45 +116,43 @@ def get(cell_list,karyotype_string):
                                     if zz[0]=='12' and 'p' in zz[1]:
                                         aml_swog_mutations['del(12p)']+=cell_count
                                         aml_swog_offsets['del(12p)'].append((variation_start,variation_end))
-
+                               
                                 ## any 17p, 21q, 20q, 11q, 9q, 3q  - we want to capture things like t(3;3) but NOT -13
                                 ## also must make sure the 'q' is on the '11' arm - do not want to capture things like t(11;22)(p4;q20)
                                 location=zz[0].split(';')
-                                arm=zz[1].split(';')        
-                                if 'q' in zz[1]:
+                                arm=zz[1].split(';')                               
+                                    
+                                if 'q' in zz[1] or 'i' in z:
                                     for each in ['3','9','11','20','21']:                                    
                                         if each in location:                                       
-                                            if 'q' in arm[location.index(each)]:                                           
+                                            if 'q' in arm[location.index(each)] or 'i' in z:                                          
                                                 aml_swog_mutations[each+'q']+=cell_count
                                                 aml_swog_offsets[each+'q'].append((variation_start,variation_end))
-                                elif 'p' in zz[1]:
-                                    if '17' in location:
-                                        if 'p' in arm[location.index('17')]:
-                                            aml_swog_mutations['17p']+=cell_count
-                                            aml_swog_offsets['17p'].append((variation_start,variation_end))
+                                
+                                if 'p' in zz[1] or 'i' in z:                                    
+                                    if '17' in location and len(arm)>location.index('17') and 'p' in arm[location.index('17')] or 'i' in z:                                           
+                                        aml_swog_mutations['17p']+=cell_count
+                                        aml_swog_offsets['17p'].append((variation_start,variation_end))
 
-                                                                  
-                           
                     ## catch any other formatting abnormalities/parsing errors
                     except:
-                        aml_swog_mutations['warning']=1
+                        aml_swog_mutations['warning']=1                        
                         x[global_strings.WARNING]='PARSING ERROR'                   
             ## there are no abnormalities - add up the "normal" cells
             else:              
-                aml_swog_mutations['normal']+=cell_count
-                if 'XY,-6,-11,-12[1]' in karyotype_string: print aml_swog_mutations['normal'] 
+                aml_swog_mutations['normal']+=cell_count                
                 aml_swog_offsets['normal'].append((karyotype_string.find('4'),karyotype_string.find(']')))
                 
          ## catch trouble with cell counts etc       
         except:
             aml_swog_mutations['warning']=1
+            if 't(1;12;16;17)' in karyotype_string: print 11,x
             x[global_strings.WARNING]='PARSING ERROR'      
            
     aml_swog_mutations['mutations']=len(abnormality_set)    
     aml_swog_mutations['monosomies']=len(monosomy_set)
     aml_swog_mutations['trisomies']=len(trisomy_set)
-
-
+       
     ## Assign SWOG risk categories based on important mutations
     ###############################################################################################################################################
     swog_dictionary={global_strings.NAME:global_strings.SWOG,global_strings.TABLE:global_strings.AML_CYTOGENETICS,global_strings.VALUE:global_strings.UNKNOWN,global_strings.CONFIDENCE:1.0,
@@ -204,13 +200,11 @@ def get(cell_list,karyotype_string):
          aml_swog_mutations['warning']=1
     if  aml_swog_mutations['warning']==1:
         swog_dictionary[global_strings.VALUE] = global_strings.UNKNOWN
-    
+        
     return_dictionary_list.append(swog_dictionary)    
-   
-##############################test return dictionary ########################################
+    ##############################test return dictionary ########################################
     
     for each_variation in aml_swog_mutations:
         return_dictionary_list.append({global_strings.NAME:each_variation,global_strings.VALUE:aml_swog_mutations[each_variation],global_strings.CONFIDENCE:1.0,
                      global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:a[0],global_strings.STOP:a[1]} for a in aml_swog_offsets[each_variation]] })
-    
     return cell_list,return_dictionary_list,return_errors
