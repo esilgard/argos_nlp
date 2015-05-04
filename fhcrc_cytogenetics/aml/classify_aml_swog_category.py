@@ -52,8 +52,7 @@ def get(cell_list,karyotype_string):
             if x[global_strings.ABNORMALITIES]:
                 for y in x[global_strings.ABNORMALITIES]:                   
                     try:                        
-                        for z,zz in y.items():
-                            if ' t(1;12;16;17' in karyotype_string and 'der(17)ins?(17;5)(q' in karyotype_string: print z,zz
+                        for z,zz in y.items():                            
                             variation_string=z+'('+zz[0]+')'+zz[1]
                             if cell_count>=clone_minimum:
                                 if z=='-' or z=='+':
@@ -130,7 +129,7 @@ def get(cell_list,karyotype_string):
                                                 aml_swog_offsets[each+'q'].append((variation_start,variation_end))
                                 
                                 if 'p' in zz[1] or 'i' in z:                                    
-                                    if '17' in location and len(arm)>location.index('17') and 'p' in arm[location.index('17')] or 'i' in z:                                           
+                                    if '17' in location and ((len(arm)>location.index('17') and 'p' in arm[location.index('17')]) or 'i' in z):                                           
                                         aml_swog_mutations['17p']+=cell_count
                                         aml_swog_offsets['17p'].append((variation_start,variation_end))
 
@@ -145,8 +144,7 @@ def get(cell_list,karyotype_string):
                 
          ## catch trouble with cell counts etc       
         except:
-            aml_swog_mutations['warning']=1
-            if 't(1;12;16;17)' in karyotype_string: print 11,x
+            aml_swog_mutations['warning']=1            
             x[global_strings.WARNING]='PARSING ERROR'      
            
     aml_swog_mutations['mutations']=len(abnormality_set)    

@@ -82,9 +82,7 @@ def get(karyotype_string,karyo_offset):
                     abnormal_chromosome=re.match('(.*)[(]([.\d;XY\?or ]+)[)](.*)',d['Abnormalities'][i])                       
                     if loss_gain:
                         d['Abnormalities'][i]={loss_gain.group(1):(loss_gain.group(2),'')}
-                    elif abnormal_chromosome:
-                        #if ' t(1;12;16;17' in karyotype_string and 'der(17)ins?(17;5)(q' in d['Abnormalities'][i]:
-                        #    print 'AB',abnormal_chromosome.group(1),abnormal_chromosome.group(2),abnormal_chromosome.group(3)
+                    elif abnormal_chromosome:                       
                         d['Abnormalities'][i]={abnormal_chromosome.group(1):(abnormal_chromosome.group(2),abnormal_chromosome.group(3))}
                     else:
                         ## catches the case where there's no "type" of abnormality (eg del,der, +) because it's inferred
