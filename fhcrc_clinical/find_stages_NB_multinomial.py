@@ -1,13 +1,12 @@
 #Emily Silgard - find prognostic stages using weighted vecotrs (NB) - Multinomial Event Model
 
-import sys
-import math
+import sys, math, global_strings, os
 import numpy as np
-
+path= os.path.dirname(os.path.realpath(__file__))+'/'
 threshold=.20
 classes =['True','False']
 prognostic_stages=['I','II','III','IV']
-class_labels=['I','II','III','IV','NOT FOUND']
+class_labels=['I','II','III','IV','UNKNOWN']
 
 
 '''normalize log10 values before they're brought back into probability space in order to solve underflow problem'''
@@ -18,7 +17,16 @@ def normalize(x):
    
 '''iterate through the training_vectors dictionary (label:list of lists [f1,v1],[f2,v2]....)
 and output the probabilities of class given the features in the documents'''
-def classify_stage_match_vectors(vectors,prior_model_file,prob_of_word_model_file,smoothed_model_file):
+def classify_stage_match_vectors(vectors,disease_group):
+   
+    ## import language models from disease group folder
+    try:
+        prior_model_file=path+disease_group+'/MASTER_NB_ME_prior_model.txt'
+        prob_of_word_model_file=path+disease_group+'/MASTER_NB_ME_prob_of_word_model.txt'
+        smoothed_model_file=path+disease_group+'/MASTER_NB_ME_smoothed_model.txt'
+    except:
+        return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not open prognostic staging diseasee specific models --- program aborted. '},Exception)
+        
     return_dictionary={}
     pt_dict={}
     pOfClass =  dict((a.split('\t')[0],float(a.split('\t')[1])) for a in open(prior_model_file,'r').readlines())
@@ -36,9 +44,8 @@ def classify_stage_match_vectors(vectors,prior_model_file,prob_of_word_model_fil
         line=lines.split()
         
         instance_data=line[0].split('_')
-        stage_match=instance_data[1]
-        
-        patient=instance_data[0]
+        stage_match=instance_data[1]        
+        #patient=instance_data[0]
         vector=[(line[a],int(line[a+1])) for a in range(2,len(line)-2,2)]
         cProbs=[]
             
@@ -57,22 +64,18 @@ def classify_stage_match_vectors(vectors,prior_model_file,prob_of_word_model_fil
             cProbs.append(num+math_log(.25))
         ## bring back into probability space ##
         cProbs=normalize(cProbs)        
-        cProbDict=dict(zip(classes,cProbs))
-        
-        pt_dict[patient]=pt_dict.get(patient,{})        
-        pt_dict[patient][stage_match]= pt_dict[patient].get(stage_match,0)+cProbDict['True']
-        
-    for each_pt in pt_dict:
-        return_dictionary[each_pt]=output_pt_stages(sorted(pt_dict[each_pt].items()))
-        
-    return return_dictionary   
+        cProbDict=dict(zip(classes,cProbs))        
+                
+        pt_dict[stage_match]= pt_dict.get(stage_match,0)+cProbDict['True']        
+       
+    return output_pt_stages(sorted(pt_dict.items()))   
 
 
 def output_pt_stages(candidate_stages):
     
     total=sum([m[1] for m in candidate_stages])
     if total < 0.00000005:  #float value may not match 0.0
-        return('NOT FOUND',0.0)
+        return('UNKNOWN',0.0)
         
     else:
         candidate_probs=[p[1]/total for p in candidate_stages]

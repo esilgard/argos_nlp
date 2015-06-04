@@ -68,7 +68,6 @@ for line in open(command_line_flag_file,'r').readlines():
     command_line_flags[line[0]]=(line[2],line[3])
 
 args=sys.argv[1:]
-
 ######################################################################################################
 def return_exec_code(x):
     '''
