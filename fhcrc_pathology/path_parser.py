@@ -15,13 +15,6 @@
 #
 
 ''' author @ esilgard '''
-''' written 2013 '''
-
-''' last update Nov 2014
-    - added section order to to the section heading
-    - SpecimenSource column from OBR as section (first section, section order=0)
-    - stripped all NULL lines (to avoid character offset issues when interpreting NULL as a string) and replaced with a single carriage return
-'''
 __version__='path_parser1.0'
 
 import re,sys,global_strings,os
