@@ -112,8 +112,7 @@ def main(arguments,path):
             field_value_dictionary[global_strings.REPORT]=accession
             field_value_dictionary[global_strings.MRN]=mrn
             
-            try:
-                
+            try:                
                 with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+accession+'.txt','wb') as out:
                           out.write(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])
             except:
@@ -122,8 +121,12 @@ def main(arguments,path):
             return_fields,return_errors,return_type=get_fields(disease_group,pathology_dictionary[mrn][accession],disease_group_data_dictionary,path_data_dictionary)
 
             i+=1
+            ## if there are no Exceptions and the "no algorithm" isn't there, then run appropriate algorithms
             if return_type!=Exception:
-                field_value_dictionary[global_strings.TABLE+'s']=final_logic.get(return_fields)                  
+                if arguments.get('-a')=='n':
+                    pass
+                else:
+                    field_value_dictionary[global_strings.TABLE+'s']=final_logic.get(return_fields)                  
                 field_value_output.append(field_value_dictionary)
             else:                
                 return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_pathology.get(fields) -  \

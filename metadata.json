@@ -1,0 +1,78 @@
+{    
+	"pathology": {
+		"Pathology":
+			[
+			{"field":"PathHistology",
+			"datatype":"string",
+			"diseaseGroup":["lung","head&neck"],
+			"values":["Adenocarcinoma","Adenosquamous Carcinoma","Alveolar Fibrosis","Atypical Cells","Atypical Epithelial Cells","Bronchioloalveolar Carcinoma","Interstitial Pulmonary Fibrosis","Large Cell Carcinoma","Metastatic Adenocarcinoma","Metastatic Carcinoma","Non Small Cell Carcinoma","Non-Necrotizing Granulomas","Small Cell Carcinoma","Squamous Cell Carcinoma","Lymphoepithelial Carcinoma"]
+			}
+			,
+			{"field":"PathSpecimenType",
+			"datatype":"string",
+			"diseaseGroup":["all"],
+			"values":["Brushing","Washing","Biopsy","Lavage","Dissection","Fine Needle Aspirate","Excision","Resection"]
+			},
+			{"field":"PathSite",
+			"datatype":"string",
+			"diseaseGroup":["lung"],
+			"values":["Upper Lobe","Mediastinum","Hilar","Interlobular","Lower Lobe","Middle Lobe","Middle/Lower Lobe","Bronchi","Pleura","Retroperitoneum","Upper/Middle Lobe","Lymph Node","Chest Wall"]
+			},
+			{"field":"PathSide",
+			"datatype":"string",
+			"diseaseGroup":["all"],
+			"values":["Right","Left","Bilateral","Midline"]
+			},
+			{
+			"field":"PathDate",
+			"datatype":"datetime",
+			"diseaseGroup":["all"],
+			"values":[]
+			},
+			{"field":"Pathologist",
+			"datatype":"string",
+			"diseaseGroup":["all"],
+			"values":[]
+			}
+			],
+		"PathStageGrade":
+			[			
+			{"field":"PathStageT",
+			"datatype":"string",
+			"diseaseGroup":["lung"],
+			"values":["Tis","T1","T1a","T1b","T2","T2a","T2b","T3","T3a","T3b","T4","TX"]
+			},
+			{"field":"PathStageN",
+			"datatype":"string",
+			"diseaseGroup":["lung"],
+			"values":["N0","N1","N2","NX"]
+			},
+			{"field":"PathStageM",
+			"datatype":"string",
+			"diseaseGroup":["lung"],
+			"values":["M0","M1","M1a","M1b","MX"]
+			},
+			{"field":"PathGrade",
+			"datatype":"string",
+			"diseaseGroup":["lung"],
+			"values":["G1","G2","G3","GX","High","Intermediate","Moderate to Poorly Differentiated","Moderately Differentiated","Poorly Differentiated","Undifferentiated","Well Differentiated"]
+			}
+			] 				
+		},			
+	"cytogenetics": {
+		"AML_Cytogenetics":
+			[
+			{"field":"+8",
+			"datatype":"integer",
+			"diseaseGroup":["aml"],
+			"values":[0,20]
+			},
+			{"field":"normal",
+			"datatype":"integer",
+			"diseaseGroup":["aml"],
+			"values":[0,20]
+			}
+			]
+		}	
+	
+}
