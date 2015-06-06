@@ -18,8 +18,7 @@ from datetime import datetime
 
 def get(disease_group,dictionary):
     '''
-    extract the collection date (date of surgery)from normal cased text of the pathology report
-    
+    extract the collection date (date of surgery)from normal cased text of the pathology report    
     '''
     
     return_dictionary={global_strings.NAME:"PathDate",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
@@ -35,7 +34,7 @@ def get(disease_group,dictionary):
         day=date_match.group(2)
         if len(date_match.group(2))==1:               
             day='0'+date_match.group(2)                
-        return_dictionary[global_strings.VALUE]=str(datetime.strptime(year+','+month+','+day,'%Y,%m,%d'))
+        return_dictionary[global_strings.VALUE]=str(datetime.strptime(year+','+month+','+day,'%Y,%m,%d').isoformat())
         return_dictionary[global_strings.CONFIDENCE]=1.0
         return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:date_match.start(1),global_strings.STOP:date_match.end(3)})
         
