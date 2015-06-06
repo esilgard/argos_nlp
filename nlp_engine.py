@@ -110,7 +110,7 @@ output_dictionary["controlInfo"]["referenceId"]="12345"
 output_dictionary["controlInfo"]["docVersion"]="document version"
 output_dictionary["controlInfo"]["source"]="document source"
 output_dictionary["controlInfo"]["docDate"]="doc date"
-output_dictionary["controlInfo"]["processDate"]=str(datetime.today())
+output_dictionary["controlInfo"]["processDate"]=str(datetime.today().isoformat())
 output_dictionary["controlInfo"]["metadata"]=dict((table,[field for field in metadata_d.get(arguments.get('-t')).get(table) if arguments.get('-g') in field.get('diseaseGroup')]) \
                                                   for table in metadata_d.get(arguments.get('-t')))
 output_dictionary["errors"]=[]
