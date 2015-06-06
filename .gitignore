@@ -1,7 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-
 *.pyc
 
 # C extensions
@@ -52,8 +51,5 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
-# PyBuilder
-target/
-
-#Sample data folder
-SampleData
+# git versioning cmd script used for auto version numbers
+git-revision.cmd
