@@ -23,7 +23,7 @@
 '''
  
 import sys,os,json
-import output_results,make_text_output_directory,codecs
+import output_results,make_text_output_directory,codecs,metadata
 from datetime import datetime
 
 ## declare output dictionary for values, warnings, and metadata
@@ -70,17 +70,6 @@ except:
     sys.stderr.write('FATAL ERROR: command line flag file not found.  program aborted.')
     sys.exit(1)
 
-## path to file containing the metadata dictionary (in json format) ##
-try:
-    meta_data_file=open(nlp_engine_path+'metadata.json','r')
-    try:
-        metadata_d=json.load(meta_data_file)
-    except:
-        sys.stderr.write('FATAL ERROR: json could not load metadata dictionary file, potential formatting error.  program aborted.')
-        sys.exit(1)
-except:
-    sys.stderr.write('FATAL ERROR: metadata dictionary not found.  program aborted.')
-    sys.exit(1)
 
 ## parse the arguments from arg1 on into a dictionary - notify user of unrecognized flags ##
 ## NOTE - this does assume that flags start in the first position and every other argument is a flag ##
@@ -110,11 +99,9 @@ output_dictionary["controlInfo"]["docVersion"]="document version"
 output_dictionary["controlInfo"]["source"]="document source"
 output_dictionary["controlInfo"]["docDate"]="doc date"
 output_dictionary["controlInfo"]["processDate"]=str(datetime.today().isoformat())
-output_dictionary["controlInfo"]["metadata"]=dict((table,[field for field in metadata_d.get(arguments.get('-t')).get(table) if arguments.get('-g') in field.get('diseaseGroup')]) \
-                                                  for table in metadata_d.get(arguments.get('-t')))
+output_dictionary["controlInfo"]["metadata"]=metadata.get(nlp_engine_path,arguments)                                                                                                      
 output_dictionary["errors"]=[]
 output_dictionary["reports"]=[]
-meta_data_file.close()
 
 ## add in flag info to the json output dictionary
 output_dictionary["controlInfo"]["docName"]=arguments.get('-f')
