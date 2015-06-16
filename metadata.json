@@ -4,6 +4,7 @@
 			[
 			{"field":"PathHistology",
 			"datatype":"string",
+			"closedClass":"True",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["lung"],
@@ -22,6 +23,7 @@
 			},
 			{"field":"PathHistology2",
 			"datatype":"string",
+			"closedClass":"True",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["lung"],
@@ -38,8 +40,9 @@
 					}
 				]
 			},
-			{"field":"PathNotes,
+			{"field":"PathNotes",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -49,6 +52,7 @@
 			},
 			{"field":"PathSpecimenType",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -58,6 +62,7 @@
 			},
 			{"field":"PathQuality",
 			"datatype":"string",
+			"closedClass":"True",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -67,6 +72,7 @@
 			},
 			{"field":"PathInstitution",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -76,6 +82,7 @@
 			},
 			{"field":"PathSite",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["lung"],
@@ -88,12 +95,13 @@
 					"values":["Cerebellar","Fossa","Frontal","Frontoparietal","Frontotemporal","Frontotemporoparietal","Occipital","Occipitoparietal","Occipitotemporal","Paraspinal","Parietal","Parietooccipital","Sellar","Skull","Spine","Suboccipital","Subtemporal","Temporooccipital","Temporoparietal","Temporal","Thalamus"]
 					},
 					{"diseaseGroup":["head&neck"],
-					"values":["Buccal ","Chin","Epiglottic fold","False vocal cord","Gingiva","Head","Hypopharynx","Jugular","Larynx","Lip","Lymph Nodes","Mandible","Maxilla","Mouth","Nasal","Neck","Nose","Oropharynx","Palate","Paratracheal","Pharynx","Salivary glands","Sinus","Subglottis","Sublingual","Submandibular","Supraglottis","Tongue","Tonsil","Tooth","Trachea","True vocal cord",vocal cord"]
+					"values":["Buccal ","Chin","Epiglottic fold","False vocal cord","Gingiva","Head","Hypopharynx","Jugular","Larynx","Lip","Lymph Nodes","Mandible","Maxilla","Mouth","Nasal","Neck","Nose","Oropharynx","Palate","Paratracheal","Pharynx","Salivary glands","Sinus","Subglottis","Sublingual","Submandibular","Supraglottis","Tongue","Tonsil","Tooth","Trachea","True vocal cord","vocal cord"]
 					}
 				]
 			},
 			{"field":"PathSubsite",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -101,7 +109,7 @@
 					},
 					{"diseaseGroup":["head&neck"],
 					"values":["Level 1","Level 1A","Level 1B","Level 2","Level 2A","Level 2B","Level 3","Level 4","Level 5","Level 6"]
-					}
+					},
 					{"diseaseGroup":["breast"],
 					"values":["1 o'clock","2 o'clock","3 o'clock","4 o'clock","5 o'clock","6 o'clock","7 o'clock","8 o'clock","9 o'clock","10 o'clock","11 o'clock","12 o'clock"]
 					}
@@ -109,47 +117,51 @@
 			},
 			{"field":"PathSide",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
 					"values":["Right","Left","Bilateral","Midline"]
-					},
+					}
 				]
 			},
 			{
 			"field":"PathDate",
 			"datatype":"datetime",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
 					"values":[]
 					}
 				]
-				}
 			},
 			{"field":"Pathologist",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
 					"values":[]
 					}
 				]
-			},
+			}
 		],
 		"PathStageGrade":
 			[
 			{"field":"PathStageT",
 			"datatype":"string",
+			"closedClass":"True",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
 					"values":["Tis","T1","T1a","T1b","T2","T2a","T2b","T3","T3a","T3b","T4","TX"]
-					},
+					}
 				]
 			},
 			{"field":"PathStageN",
 			"datatype":"string",
+			"closedClass":"True",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -159,6 +171,7 @@
 			},
 			{"field":"PathStageM",
 			"datatype":"string",
+			"closedClass":"True",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -168,15 +181,17 @@
 			},
 			{"field":"PathSide",
 			"datatype":"string",
+			"closedClass":"True",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
 					"values":["Right","Left","Bilateral","Midline"]
-					},
+					}
 				]
 			},
 			{"field":"PathStageDisease",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -189,6 +204,7 @@
 			[
 			{"field":"PathSite",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["lung"],
@@ -201,12 +217,13 @@
 					"values":["Cerebellar","Fossa","Frontal","Frontoparietal","Frontotemporal","Frontotemporoparietal","Occipital","Occipitoparietal","Occipitotemporal","Paraspinal","Parietal","Parietooccipital","Sellar","Skull","Spine","Suboccipital","Subtemporal","Temporooccipital","Temporoparietal","Temporal","Thalamus"]
 					},
 					{"diseaseGroup":["head&neck"],
-					"values":["Buccal ","Chin","Epiglottic fold","False vocal cord","Gingiva","Head","Hypopharynx","Jugular","Larynx","Lip","Lymph Nodes","Mandible","Maxilla","Mouth","Nasal","Neck","Nose","Oropharynx","Palate","Paratracheal","Pharynx","Salivary glands","Sinus","Subglottis","Sublingual","Submandibular","Supraglottis","Tongue","Tonsil","Tooth","Trachea","True vocal cord",vocal cord"]
+					"values":["Buccal ","Chin","Epiglottic fold","False vocal cord","Gingiva","Head","Hypopharynx","Jugular","Larynx","Lip","Lymph Nodes","Mandible","Maxilla","Mouth","Nasal","Neck","Nose","Oropharynx","Palate","Paratracheal","Pharynx","Salivary glands","Sinus","Subglottis","Sublingual","Submandibular","Supraglottis","Tongue","Tonsil","Tooth","Trachea","True vocal cord","vocal cord"]
 					}
 				]
 			},
 			{"field":"PathQuality",
 			"datatype":"string",
+			"closedClass":"True",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -216,6 +233,7 @@
 			},
 			{"field":"PathFindHeight",
 			"datatype":"float",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -225,6 +243,7 @@
 			},
 			{"field":"PathFindWidth",
 			"datatype":"float",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -234,6 +253,7 @@
 			},
 			{"field":"PathFindLength",
 			"datatype":"float",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -241,8 +261,9 @@
 					}
 				]
 			},
-			{"field":"PathFindNotes,
+			{"field":"PathFindNotes",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -252,6 +273,7 @@
 			},
 			{"field":"PathFinding",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
@@ -261,6 +283,7 @@
 			},
 			{"field":"PathFindHistology",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["lung"],
@@ -278,20 +301,22 @@
 				]
 			}
 		],
-		PathTest":
+		"PathTest":
 			[
 				{"field":"PathDate",
 				"datatype":"datetime",
-				"diseaseProperties":
+				"closedClass":"False",
+			"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
 						"values":[]
-						},
+						}
 					]
 				},
 				{"field":"PathTest",
 				"datatype":"string",
-					"diseaseProperties":
+					"closedClass":"False",
+			"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
 						"values":["19q","1p","1p/19q","ACTH","AE1/AE3","AKT1","ALK","APC","B72.3","BCL2L11","BerEP4","BIM","BRAF","Calretinin","CAM 5.2","CCND1","CD10","CD20","CD3","CD30","CD34","CD45","CD56","CDX2","CEA","Chromogranin","CK20","CK5","CK5/6","CK7","CTNNB1","Cytokeratin","D2-40","DDR2","EGFR","EMA","EML4-ALK arrangement","ER","ERBB2 (HER2)","FGFR1","FSH","GCDFP","GCDFP-15","GH","IDH 1","Ki-67","KIF5B","KIT","KRAS","LH","Mammaglobin","MAP2K1 (MEK1)","MEK1","MELAN A","Mesothelin","MET","MGMT","MIB1","MLH1","MOC-31","MSH2","MSH6","Mucicarmine","MYC","Napsin A","NKX2.1","NRAS","Oscar ","p16","P53","p63","Pancytokeratin","Pankeratin","PAP","PAX-8","PHE5/CG","PIK3","PIK3CA","PMS2","PR","PR88","Prolactin","PSA","PTEN","RET","ROS1","S100","S-100","SMAD4","STK11","SURF A","Surfactant","Synapto","Synaptophysin","Thyroglobulin","TP53","TSH","TTF-1","Villin","Vimentin","WT-1"]
@@ -300,16 +325,18 @@
 				},
 				{"field":"PathResult",
 				"datatype":"string",
-					"diseaseProperties":
+					"closedClass":"False",
+			"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["Amplified","Not Amplified","Deletion","Indeterminate","Negative","Non-Diagnostic","Positive","Positive, Weakly","Positive, Focally","Positive, Uniformally","Positive, Strongly","Positive, Diffusely"]
+						"values":["Amplified","Not Amplified","Deletion","Indeterminate","Negative","Non-Diagnostic","Positive","Positive, Weakly","Positive, Focally","Positive, Uniformly","Positive, Strongly","Positive, Diffusely"]
 						}
 					]
 				},
 				{"field":"PathNotes",
 				"datatype":"string",
-					"diseaseProperties":
+					"closedClass":"False",
+			"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
 						"values":["IHC","Oncoplex","PCR","FISH","Per Consult"]
@@ -318,7 +345,8 @@
 				},
 				{"field":"PathQuality",
 				"datatype":"string",
-				"diseaseProperties":
+				"closedClass":"True",
+			"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
 						"values":["OUT","STD","REV"]
@@ -330,128 +358,141 @@
 	"cytogenetics": {
 		"AML_Cytogenetics":
 			[
-				{"field":"+8",
-				"datatype":"integer",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["aml"],
-						"values":[]
-						},
-					]
-				},
-				{"field":"normal",
-				"datatype":"integer",
-					"diseaseProperties":
-					[
-						{"diseaseGroup":["aml"],
-						"values":[]
-						}
-					]
-				}
-			]
+			{"field":"+8",
+			"datatype":"integer",
+			"closedClass":"False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup":["aml"],
+					"values":[]
+					}
+				]
+			},
+			{"field":"normal",
+			"datatype":"integer",
+			"closedClass":"False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup":["aml"],
+					"values":[]
+					}
+				]
+			}
+		]
 	},
 		"clinical": {
 		"ClinicalStages":
 			[
-				{"ClinStageDate",
-				"datatype":"datetime",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":[]
-						},
-					]
-				},
-				{"field":"ClinicalStageDisease",
-				"datatype":"string",
-					"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["Brain","Thoracic","Head & Neck","Pancreas","Pituitary Adenoma","Colorectal","Breast","Prostate","GU","GI","Bladder","Sarcoma","Hematological","Ovarian","Other","Skin","Cervical","Thyroid","Liver","Penile/Testicular","Uterine/Vulvar"]
-						}
-					]
-				},
-				{"ClinStageSystem",
-				"datatype":"datetime",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["AJCC_07","AJCC_10","AJCC_02"]
-						},
-					]
-				},
-				{"field":"ClinStageT",
-				"datatype":"string",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["Tis","T1","T1a","T1b","T2","T2a","T2b","T3","T3a","T3b","T4","TX"]
-						},
-					]
-				},
-				{"field":"ClinStageN",
-				"datatype":"string",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["N0","N1","N2","N3","NX"]
-						}
-					]
-				},
-				{"field":"ClinStageM",
-				"datatype":"string",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["M0","M1","M1a","M1b","MX"]
-						}
-					]
-				},
-				{"field":"ClinStageS",
-				"datatype":"string",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["I","Ia","Ib","Ic""IIa","IIb",,"IIc","IIIa","IIIb","IIIc","IV","IVa","IVb"]
-						},
-					]
-				},
-				{"field":"ClinStageSide",
+			{"field":"ClinStageDate",
+			"datatype":"datetime",
+			"closedClass":"False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup":["*"],
+					"values":[]
+					}
+				]
+			},
+			{"field":"ClinicalStageDisease",
 			"datatype":"string",
+			"closedClass":"False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup":["*"],
+					"values":["Brain","Thoracic","Head & Neck","Pancreas","Pituitary Adenoma","Colorectal","Breast","Prostate","GU","GI","Bladder","Sarcoma","Hematological","Ovarian","Other","Skin","Cervical","Thyroid","Liver","Penile/Testicular","Uterine/Vulvar"]
+					}
+				]
+			},
+			{"field":"ClinStageSystem",
+			"datatype":"datetime",
+			"closedClass":"True",
+			"diseaseProperties":
+				[
+					{"diseaseGroup":["*"],
+					"values":["AJCC_07","AJCC_10","AJCC_02"]
+					}
+				]
+			},
+			{"field":"ClinStageT",
+			"datatype":"string",
+			"closedClass":"True",
+			"diseaseProperties":
+				[
+					{"diseaseGroup":["*"],
+					"values":["Tis","T1","T1a","T1b","T2","T2a","T2b","T3","T3a","T3b","T4","TX"]
+					}
+				]
+			},
+			{"field":"ClinStageN",
+			"datatype":"string",
+			"closedClass":"True",
+			"diseaseProperties":
+				[
+					{"diseaseGroup":["*"],
+					"values":["N0","N1","N2","N3","NX"]
+					}
+				]
+				},
+			{"field":"ClinStageM",
+			"datatype":"string",
+			"closedClass":"True",
+			"diseaseProperties":
+				[
+					{"diseaseGroup":["*"],
+					"values":["M0","M1","M1a","M1b","MX"]
+					}
+				]
+			},
+			{"field":"ClinStageS",
+			"datatype":"string",
+			"closedClass":"True",
+			"diseaseProperties":
+				[
+					{"diseaseGroup":["*"],
+					"values":["I","Ia","Ib","Ic","IIa","IIb","IIc","IIIa","IIIb","IIIc","IV","IVa","IVb"]
+					}
+				]
+			},
+			{"field":"ClinStageSide",
+			"datatype":"string",
+			"closedClass":"True",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
 					"values":["Right","Left","Bilateral","Midline"]
-					},
+					}
 				]
 			},
 			{"field":"ClinStagePhysician",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
 					"values":[]
-					},
+					}
 				]
 			},
 			{"field":"ClinStageNotes",
 			"datatype":"string",
+			"closedClass":"False",
 			"diseaseProperties":
 				[
 					{"diseaseGroup":["*"],
 					"values":[]
-					},
+					}
 				]
 			},
 			{"field":"ClinStageQuality",
-				"datatype":"string",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["OUT","STD","REV"]
-						}
-					]
-				}
+			"datatype":"string",
+			"closedClass":"True",
+			"diseaseProperties":
+				[
+					{"diseaseGroup":["*"],
+					"values":["OUT","STD","REV"]
+					}
+				]
+			}
 			]
 	}
 }

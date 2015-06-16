@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 
+import sys,json
+
 '''
     read in full json metadata dictionary from resource file
     return metadata dictionary of relavent fields for the given
@@ -24,10 +26,11 @@ def get(nlp_engine_path,arguments):
 
     ## path to file containing the metadata dictionary (in json format) ##
     try:
-        meta_data_file=open(nlp_engine_path+'metadata.json','r')
-        meta_data_file.close()
+        meta_data_file=open(nlp_engine_path+'metadata.json','r')        
+       
         try:
-            metadata_d=json.load(meta_data_file)
+            metadata_d=json.load(meta_data_file)           
+            meta_data_file.close()
         except:
             sys.stderr.write('FATAL ERROR: json could not load metadata dictionary file, potential formatting error.  program aborted.')
             sys.exit(1)
@@ -37,7 +40,7 @@ def get(nlp_engine_path,arguments):
     
     return_metadata_d={}
     return_metadata_d[arguments.get('-t')]={}
-    for table,field_list in metadata_d.get(arguments.get('-t')).items():
+    for table,field_list in metadata_d.get(arguments.get('-t')).items():        
         return_field_list=[]
         for field_dictionary in field_list:
             return_field_dictionary={}
@@ -49,7 +52,7 @@ def get(nlp_engine_path,arguments):
                     return_field_dictionary=field_dictionary
                     return_field_dictionary["diseaseProperties"]=return_disease_properties_list
             if return_field_dictionary:
-                return_field_list.append(return_field_dictioanry)
+                return_field_list.append(return_field_dictionary)
         if return_field_list:
             return_metadata_d[table]=return_field_list
     return return_metadata_d
