@@ -68,8 +68,7 @@ def get(disease_group,dictionary):
                                 for each in specimen_histology_list:
                                     if standardizations[histology] in each:
                                         already_seen=True
-                                if not already_seen:                                    
-                                    print histology,section
+                                if not already_seen: 
                                     specimen_histology_list.append(standardizations[histology])                       
             if specimen_histology_list:
                 return_dictionary_list.append({global_strings.NAME:"PathFindHistology",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(set(specimen_histology_list)),
