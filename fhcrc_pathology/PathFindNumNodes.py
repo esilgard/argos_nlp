@@ -5,9 +5,6 @@
 #
 
 '''author@esilgard'''
-'''
-    written December 2014 
-'''
 __version__='PathFindNumNodes1.0'
 import re
 import global_strings

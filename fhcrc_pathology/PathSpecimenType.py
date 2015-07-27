@@ -5,10 +5,6 @@
 #
 
 '''author@esilgard'''
-'''
-    written October 2014, updates:
-    December 2014 - added table_name to return dictionary
-'''
 __version__='PathSpecimenType1.0'
 
 import re
@@ -19,7 +15,8 @@ dirs=path.split('\\')
 
 def get(disease_group,dictionary):
     '''
-    extract the specimen type/procedure from the SpecimenSource       
+    extract the specimen type/procedure from the SpecimenSource
+    *there are no character offsets associated with this field*
     '''
     return_dictionary={global_strings.NAME:"PathSpecimenType",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
                        global_strings.STARTSTOPS:[],global_strings.TABLE:global_strings.PATHOLOGY_TABLE}
@@ -40,20 +37,16 @@ def get(disease_group,dictionary):
     full_text=dictionary[(-1,'FullText',0,None)]
     
     def get_procedures(procedures_list,standardizations):
-            procedures=set([])            
-            for section in sorted(dictionary):
-                if 'SPECIMEN' in section[1]:
-                    section_onset=section[2]                                                          
-                    text='\n'.join(results.lower() for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])))
-                    text=re.sub('[.,:;\\\/\-\)\(]',' ',text)                     
-                    for each_spec_type in procedures_list:                        
-                        for each_match in re.finditer('.*( |^)'+each_spec_type+'( |$).*',text,re.DOTALL):
-                            if standardizations[each_spec_type] not in procedures:
-                                procedures.add(standardizations[each_spec_type])                            
-                            return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:each_match.start(2)+section_onset,global_strings.STOP:each_match.end(2)+section_onset})
-                    
-            return procedures
-    
+        procedures=set([])
+        start_stops_set=set([])
+        text='  '.join((dictionary.get((0,'SpecimenSource',0,None),[(0,{})]).get(0).values()))
+        text=re.sub('[.,:;\\\/\-\)\(]',' ',text).lower()
+       
+        for each_spec_type in procedures_list:           
+            for each_match in re.finditer('.*( |^)('+each_spec_type+')( |$).*',text,re.DOTALL):               
+                procedures.add(standardizations[each_spec_type])        
+        return procedures
+    ## spaceholder for more specific procedure lookukp
     spec_type=get_procedures(general_procedures,general_standardizations)    
     return_dictionary[global_strings.VALUE]=';'.join(spec_type)    
     return_dictionary[global_strings.CONFIDENCE]=("%.2f" % .80)

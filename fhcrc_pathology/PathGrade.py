@@ -5,10 +5,6 @@
 #
 
 '''author@esilgard'''
-'''
-    written October 2014, updates:
-    December 2014 - added table_name to return dictionary
-'''
 __version__='PathGrade1.0'
 
 import re
@@ -73,13 +69,13 @@ def get(disease_group,dictionary):
     extract the grade from the lower cased text of the pathology report       
     '''
     return_dictionary_list=[]    
-    whole_start_stops_list=[]
+    whole_start_stops_set=[]
     whole_grade_set=set([])
     return_dictionary_list=[]   
     for specimen_dictionary in dictionary[(0,'SpecimenSource',0,None)].values():        
         for specimen,description in specimen_dictionary.items():            
             grade_set=set([])
-            start_stops_list=[]
+            start_stops_set=set([])
             for section in dictionary:               
                 section_specimen=section[3]
                 line_onset=section[2]
@@ -96,17 +92,17 @@ def get(disease_group,dictionary):
                         specimen_grade,offsets=get_grade(text,line_onset)                        
                         if specimen_grade:
                             grade_set=grade_set.union(specimen_grade)                            
-                            start_stops_list+=offsets   
+                            start_stops_set.add(offsets) 
                             
             if grade_set:                
                 return_dictionary_list.append({global_strings.NAME:"PathFindGrade",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(grade_set),
-                    global_strings.CONFIDENCE:("%.2f" % .85), global_strings.VERSION:__version__,global_strings.STARTSTOPS:start_stops_list} )                
+                    global_strings.CONFIDENCE:("%.2f" % .85), global_strings.VERSION:__version__,global_strings.STARTSTOPS:list(start_stops_set)} )                
                 whole_grade_set=whole_grade_set.union(grade_set)
-                whole_start_stops_list+= start_stops_list
+                whole_start_stops_set.union(start_stops_set)
                 
     if whole_grade_set:
         return_dictionary_list.append({global_strings.NAME:"PathGrade",global_strings.TABLE:global_strings.STAGE_GRADE_TABLE,global_strings.VALUE:';'.join(whole_grade_set),
-                                   global_strings.CONFIDENCE:0.75,global_strings.VERSION:__version__,global_strings.STARTSTOPS:whole_start_stops_list})
+                                   global_strings.CONFIDENCE:0.75,global_strings.VERSION:__version__,global_strings.STARTSTOPS:list(whole_start_stops_list)})
     
     ## if there were no specimens, or no specimen headers in the text - look at the text overall ##
     else:        
@@ -126,9 +122,9 @@ def get(disease_group,dictionary):
                     specimen_grade,offsets=get_grade(text,line_onset)                        
                     if specimen_grade:
                         whole_grade_set=whole_grade_set.union(specimen_grade)                            
-                        whole_start_stops_list+=offsets  
+                        whole_start_stops_set.add(offsets) 
                             
         if whole_grade_set:
             return_dictionary_list.append({global_strings.NAME:"PathGrade",global_strings.TABLE:global_strings.STAGE_GRADE_TABLE,global_strings.VALUE:';'.join(whole_grade_set),
-                global_strings.CONFIDENCE:0.65,global_strings.VERSION:__version__,global_strings.STARTSTOPS:whole_start_stops_list})          
+                global_strings.CONFIDENCE:0.65,global_strings.VERSION:__version__,global_strings.STARTSTOPS:list(whole_start_stops_set)})          
     return (return_dictionary_list,list)

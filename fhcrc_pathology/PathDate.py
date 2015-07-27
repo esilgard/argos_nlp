@@ -5,10 +5,6 @@
 #
 
 '''author@esilgard'''
-'''
-    written November 2013, updates:
-    December 2014 - added table_name to return dictionary
-'''
 __version__='PathDate1.0'
 
 
@@ -18,7 +14,7 @@ from datetime import datetime
 
 def get(disease_group,dictionary):
     '''
-    extract the collection date (date of surgery)from normal cased text of the pathology report    
+    extract the first signed date (date of surgery)from normal cased text of the pathology report    
     '''
     
     return_dictionary={global_strings.NAME:"PathDate",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,

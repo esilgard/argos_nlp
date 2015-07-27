@@ -5,10 +5,6 @@
 #
 
 '''author@esilgard'''
-'''
-    written October 2014, updates:
-    December 2014 - added table_name to return dictionary
-'''
 __version__='PathStageT1.0'
 import re
 import global_strings
