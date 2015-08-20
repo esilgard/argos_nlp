@@ -92,7 +92,7 @@ def get(disease_group,dictionary):
     if histology_list:
         x= [{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]
         return_dictionary_list.append({global_strings.NAME:"PathHistology",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(histology_list)),global_strings.CONFIDENCE:("%.2f" % .85),
-                                      global_strings.VERSION:__version__,"startStops":[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})     
+                                      global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})     
     return (return_dictionary_list,list)        
                 
             

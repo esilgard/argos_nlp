@@ -5,21 +5,14 @@
 #
 
 '''author@esilgard'''
-'''
-    written October 2014, updates:
-    December 2014 - added table_name to return dictionary
-'''
-
 
 from PathStage import PathStage
 
-class PathStageT(PathStage):
-
-    __version__='PathStageT1.0'
-    
+class PathStageT(PathStage):    
+    __version__='PathStageT1.0' 	
     def __init__(self):
         self.stage_name='PathStageT'
-        self.regex='.*(pT[012345][abc]?).*'
-        self.return_dictionary = {}
-        self.full_text = []
-        
+        self.regex='.*(pT[012345][abc]?).*'   
+		
+		
+	

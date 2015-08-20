@@ -1,12 +1,10 @@
 Brushing;brush;brushings
 Washing;Wash;washings
-Biopsy;Biopsies;core needle;cores;core;core bx
+Biopsy;Biopsies;core needle;core bx
 Lavage
 Exisional Biopsy
 Punch Biopsy; punch
 Dissection
-Fine Needle Aspirate;FNA;aspirate;aspiration;aspirate
+Fine Needle Aspirate;FNA;aspirate;aspiration;apsirate
 Excision
 Resection
-Fluid
-Marrow
