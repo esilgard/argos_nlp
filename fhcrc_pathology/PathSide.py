@@ -27,14 +27,14 @@ def get(disease_group,dictionary):
             section_specimen=section[3]            
             line_onset=section[2]
             header=section[1]            
-            if section_specimen is not None and specimen in section_specimen and ('SPECIMEN' in header or 'DESCRIPTION' in header or 'IMPRESSION' in header or 'Specimen' in header):
+            if section_specimen is not None and specimen in section_specimen and ('SPECIMEN' in header or 'DESCRIPTION' in header or 'IMPRESSION' in header or 'Specimen' in header or 'DIAGNOSIS' in header):
                 text= dictionary[section].items()[0][1]                              
                 ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                 ## these can contain confusing general statements about the cancer and/or patients in general ##
                 if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',text):pass               
                 else:
                     text=text.lower()
-                    text=re.sub('[.,:;\\\/\-\'\"]',' ',text)
+                    text=re.sub('[.,:;\\\/\-\'\"\)\(]',' ',text)
                     for each_pattern in match_list:                        
                         for each_match in re.finditer('.*( |^)'+each_pattern+'( |$).*',text,re.DOTALL):                           
                             if match_list[each_pattern] not in specimen_side_list:                                    
@@ -42,10 +42,11 @@ def get(disease_group,dictionary):
                             specimen_start_stops_set.add((each_match.start(2)+line_onset,each_match.end(2)+line_onset))
                        
         if specimen_side_list:
+            if specimen=='':specimen='UNK'
             if type(specimen_side_list)==str:   specimen_side_list=[specimen_side_list]
             if ('Right' in specimen_side_list and 'Left' in specimen_side_list) or 'Bilateral' in specimen_side_list: specimen_side_list=['Bilateral']           
             return {global_strings.NAME:"PathFindSide",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(set(specimen_side_list)),
-                    global_strings.CONFIDENCE:("%.2f" % .85), global_strings.VERSION:__version__, global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]}
+                    global_strings.CONFIDENCE:("%.2f" % .97), global_strings.VERSION:__version__, global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]}
            
         else:           
             return None
@@ -66,16 +67,18 @@ def get(disease_group,dictionary):
         if type(side_list)==str:    side_list=[side_list]
         if ('Right' in side_list and 'Left' in side_list) or 'Bilateral' in side_list: side_list=['Bilateral']
         return_dictionary_list.append({global_strings.NAME:"PathSide",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(side_list)),
-                                       global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})
+                                       global_strings.CONFIDENCE:0.97,global_strings.VERSION:__version__, global_strings.KEY:'ALL',
+                                       global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})
 
-    ## if there were no specimens, or no specimen headers in the text - look at the text overall ##
+    ## if there were no specimens, or no specimen headers in the text - without reference to a specific specimen ##
     else:
-        overall_side_dictionary=get_side('')        
+        overall_side_dictionary=get_side('')
+        
         if overall_side_dictionary:           
             if ('Right' in overall_side_dictionary[global_strings.VALUE] and 'Left' in overall_side_dictionary[global_strings.VALUE]) \
                or 'Bilateral' in overall_side_dictionary[global_strings.VALUE]: overall_side_dictionary[global_strings.VALUE]=['Bilateral']
             if type(overall_side_dictionary[global_strings.VALUE])==str:   overall_side_dictionary[global_strings.VALUE]=[overall_side_dictionary[global_strings.VALUE]]
             return_dictionary_list.append({global_strings.NAME:"PathSide",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(overall_side_dictionary[global_strings.VALUE])),
-                                           global_strings.CONFIDENCE:0.75,global_strings.VERSION:__version__,global_strings.STARTSTOPS:overall_side_dictionary[global_strings.STARTSTOPS]})
+                  global_strings.CONFIDENCE:0.9,global_strings.VERSION:__version__,global_strings.KEY:'ALL',global_strings.STARTSTOPS:overall_side_dictionary[global_strings.STARTSTOPS]})
             
-    return (return_dictionary_list,list) 
+    return (return_dictionary_list,list)

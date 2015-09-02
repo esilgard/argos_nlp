@@ -2,7 +2,7 @@ Upper Lobe;Upper Lobes
 Mediastinum;mediastinal;station 7;station 8;station 9;subcarinal;paraesophageal;pulmonary ligament
 Hilar
 Interlobular
-Lower Lobe;Lower Lobe
+Lower Lobe;Lower Lobes
 Middle Lobe;Middle Lobes
 Middle/Lower Lobe;lower/middle lobes;Middle/Lower Lobes;lower/middle lobe
 Bronchi;bronchial;bronchus

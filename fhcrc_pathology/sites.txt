@@ -7,15 +7,14 @@ Heart;coronary
 Pancreas;pancreatic
 Ampulla
 Pelvis;pelvic
-Brain
-Spleen
+ Spleen
 Tonsil
 Chest
 Marrow
 Neck
 Adrenal
-Back;Spine
-Bile Duct
+Back
+Spine;spinal;paraspinal
 Bone;osteo
 Leg;thigh;calf
 Arm;ulna;ulnar
@@ -28,10 +27,9 @@ Ovary;ovarian
 Lung;pulmonary;pulmonic
 Penis;penile
 Testis;testicular
-Breast;mammary
+Breast;mammary;axilliary
 Kidney;renal
 Sacrum;sacral
-Spleen
 Nasopharynx
 Bile Duct
 Brain;Frontoparietal;parietal;frontal;temporal;occipital

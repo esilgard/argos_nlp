@@ -1,0 +1,7 @@
+Cancer;cancerous
+Malignant;malignancy
+Metastatic Carcinoma
+Metastatic Cancer
+Carcinoma
+Tumor
+Lesion

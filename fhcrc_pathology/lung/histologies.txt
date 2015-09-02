@@ -1,15 +1,10 @@
-Adenocarcinoma;Adenocarcinoma/Bronchioloalveolar
+Adenocarcinoma
 Adenosquamous Carcinoma
-Alveolar Fibrosis
-Atypical Cells;Atypical Cell Cluster
-Atypical Epithelial Cells
 Bronchioloalveolar Carcinoma
-Interstitial Pulmonary Fibrosis;Intersitial pulmonary fibrosis
 Large Cell Carcinoma
 Metastatic Adenocarcinoma
-Metastatic Carcinoma
-Non Small Cell Carcinoma;Non Small Cell Malignancy;Non-Small Cell Carcinoma;Non-Small Cell Lung Cancer;Non-Small Cell Lung Carcinoma;NSCLC
-Non-Necrotizing Granulomas
+Non Small Cell Carcinoma;Non Small Cell Malignancy;Non Small Cell Lung Cancer;Non Small Cell Lung Carcinoma;NSCLC
 Small Cell Carcinoma;Small Cell Lung Carcinoma;SCLC
 Squamous Cell Carcinoma
 Lymphoepithelial Carcinoma;Lymphoepithelial
+Neuroendocrine Carcinoma

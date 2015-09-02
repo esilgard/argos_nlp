@@ -49,16 +49,16 @@ def get(disease_group,dictionary):
             section_specimen=section[3]
             line_onset=section[2]
             header=section[1]            
-            if section_specimen is not None and specimen in section_specimen and ('SPECIMEN' in header or 'DESCRIPTION' in header or 'IMPRESSION' in header or 'Specimen' in header):               
+            if section_specimen is not None and specimen in section_specimen and ('SPECIMEN' in header or 'DESCRIPTION' in header or 'IMPRESSION' in header or 'Specimen' in header or 'DIAGNOSIS' in header):               
                 text= dictionary[section].items()[0][1]                
                 ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                 ## these can contain confusing general statements about the cancer and/or patients in general ##
                 if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',text):pass               
                 else:
                     text=text.lower()
-                    text=re.sub('[,:;\\\/\-]',' ',text); text=re.sub('[.] ', '  ',text)      ## this should keep decimal places and throw out periods                    
+                    text=re.sub('[,:;\\\/\-\"\']',' ',text); text=re.sub('[.] ', '  ',text)      ## this should keep decimal places and throw out periods                    
                     for each_site in site_list:                        
-                        for each_match in re.finditer('^.*( |^|\")('+each_site+')( |$|\").*',text,re.DOTALL):                            
+                        for each_match in re.finditer('^.*( |^)('+each_site+')( |$).*',text,re.MULTILINE):                            
                             if standardizations[each_site] not in specimen_site_list:                               
                                 specimen_site_list.append(standardizations[each_site])
                             if 'Lymph' in standardizations[each_site]:
@@ -95,7 +95,7 @@ def get(disease_group,dictionary):
                 for offsets in specimen_site_dictionary[global_strings.STARTSTOPS]:                    
                     start_stops_set.add((offsets[global_strings.START],offsets[global_strings.STOP]))      
     if site_list:        
-        return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(site_list)),
+        return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.KEY:specimen,global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(site_list)),
                                        global_strings.CONFIDENCE:0.75,global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})
 
     ## if there were no specimens, or no specimen headers in the text - look at the text overall - first for disease specific, then for general sites ##
@@ -112,7 +112,7 @@ def get(disease_group,dictionary):
             ## general sites throughout the whole report ##
             overall_site_dictionary,numNodes,numNodesPos=get_site(general_sites,general_standardizations,'')
             if overall_site_dictionary:            
-                return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:overall_site_dictionary[global_strings.VALUE],
+                return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.KEY:'ALL',global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:overall_site_dictionary[global_strings.VALUE],
                     global_strings.CONFIDENCE:0.75,global_strings.VERSION:__version__, global_strings.STARTSTOPS:overall_site_dictionary[global_strings.STARTSTOPS]})
                 if numNodes and numNodesPos:                    
                     return_dictionary_list.append(numNodes)

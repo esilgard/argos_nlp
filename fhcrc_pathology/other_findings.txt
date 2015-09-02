@@ -1,0 +1,14 @@
+Fibrosis;fibrotic
+Atypical Cells;atypical;atypia;atypical
+Granuloma;granulomas
+Mucinous;mucin producing
+Necrosis;necrotic;necroses
+Dysplasia;dysplastic
+Hyperplasia;hyperplastic
+Adenoma;adenomas
+Fibroma;fibromas
+Cyst;cysts
+Lipoma;lipomas
+Polyp;polyps
+Inflammation;inflammatory
+Treatment Effect
