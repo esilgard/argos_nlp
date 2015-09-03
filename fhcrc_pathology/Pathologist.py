@@ -5,10 +5,6 @@
 #
 
 '''author@esilgard'''
-'''
-    written October 2014, updates:
-    December 2014 - added table_name to return dictionary
-'''
 __version__='Pathologist1.0'
 
 import re
@@ -27,7 +23,8 @@ def get(disease_group,dictionary):
     
     if name_match:
         return_dictionary[global_strings.VALUE]=name_match.group(1)
-        return_dictionary[global_strings.CONFIDENCE]=1.0        
+        return_dictionary[global_strings.CONFIDENCE]=1.0
+        return_dictionary[global_strings.KEY]="ALL"
         return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:name_match.start(1),global_strings.STOP:name_match.end(1)})  
    
     return ([return_dictionary],list)

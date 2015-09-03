@@ -76,7 +76,7 @@ def get(disease_group,dictionary):
             if section==(0,'SpecimenSource',0,None):
                 if dictionary[section][0].get(specimen):
                     find_procedure_match(dictionary[section][0].get(specimen))
-            elif ('FINAL DIAGNOSIS' in header):
+            elif ('FINAL DIAGNOSIS' in header) and 'CLINICAL' not in header:
                 for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):                    
                     if specimen in section_specimen:
                         find_procedure_match(results)          
@@ -109,7 +109,8 @@ def get(disease_group,dictionary):
         if not specimen_procedure_set:
             specimen_procedure_set,specimen_procedure_start_stops_set=get_procedures('',general_procedures,general_standardizations)
         if specimen_procedure_set:
-            procedure_set=procedure_set.union(specimen_procedure_set)           
+            procedure_set=procedure_set.union(specimen_procedure_set)
+            procedure_start_stops_set=procedure_start_stops_set.union(specimen_procedure_start_stops_set)
             return_dictionary_list.append({global_strings.NAME:"PathSpecimenType",global_strings.KEY:"UNK",global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(specimen_procedure_set),global_strings.CONFIDENCE:("%.2f" % .50),
                                       global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_procedure_start_stops_set]})
    

@@ -80,8 +80,7 @@ def get(disease_group,dictionary):
                 section_specimen=section[3]
                 line_onset=section[2]
                 header=section[1]
-                if section_specimen is not None and specimen in section_specimen and ('COMMENT' in header \
-                   or 'FINAL' in header or 'IMPRESSION' in header or 'SUMMARY' in header):                               
+                if ('FINAL' in header or 'IMPRESSION' in header or 'SUMMARY' in header) and 'CLINICAL' not in header:                               
                     text= dictionary[section].values()[0]                    
                     ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                     ## these can contain confusing general statements about the cancer and/or patients in general ##
@@ -97,23 +96,11 @@ def get(disease_group,dictionary):
             if grade_set:                
                 return_dictionary_list.append({global_strings.NAME:"PathFindGrade",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(grade_set),
                     global_strings.CONFIDENCE:("%.2f" % .85), global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]} )                
-                whole_grade_set=whole_grade_set.union(grade_set)
-                whole_start_stops_set.union(start_stops_set)
+                whole_grade_set=whole_grade_set.union(grade_set)                
+                whole_start_stops_set= whole_start_stops_set.union(start_stops_set)  
                     
-    if whole_grade_set:       
+    if whole_grade_set:        
         return_dictionary_list.append({global_strings.NAME:"PathGrade",global_strings.TABLE:global_strings.STAGE_GRADE_TABLE,global_strings.VALUE:';'.join(whole_grade_set),
                                    global_strings.CONFIDENCE:0.75,global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in whole_start_stops_set]})
-        
-    ## if there were no grades listed under specific specimens - look at the text overall ##
-    else:                              
-        text=dictionary[(-1,'FullText',0,None)].lower()
-        text=re.sub('[,:;\\\/\-]',' ',text); text=re.sub('[.] ', '  ',text)      ## this should keep decimal places and throw out periods                        
-        specimen_grade,offsets=get_grade(text,0)                        
-        if specimen_grade:            
-            whole_grade_set=whole_grade_set.union(specimen_grade)                            
-            whole_start_stops_set= whole_start_stops_set.union(offsets)                 
-        if whole_grade_set:
-            return_dictionary_list.append({global_strings.NAME:"PathGrade",global_strings.TABLE:global_strings.STAGE_GRADE_TABLE,global_strings.VALUE:';'.join(whole_grade_set),
-                global_strings.CONFIDENCE:0.65,global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in whole_start_stops_set]})
-            
+          
     return (return_dictionary_list,list)
