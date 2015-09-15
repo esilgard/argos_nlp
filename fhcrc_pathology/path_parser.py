@@ -17,7 +17,7 @@
 ''' author @ esilgard '''
 __version__='path_parser1.0'
 
-import re,sys,global_strings,os
+import re,sys,global_strings,os,codecs
 
 ## header names exptected to be coming from the Amalga Import ##
 required_header_set=set([global_strings.SET_ID,global_strings.OBSERVATION_VALUE,global_strings.SPECIMEN_SOURCE,global_strings.FILLER_ORDER_NO,global_strings.MRN_CAPS])
@@ -36,21 +36,22 @@ def parse(obx_file):
     section='NULL'
     section_order=0
     try:
-        OBX=open(obx_file,'rU').readlines()        
+        OBX=open(obx_file,'rU').readlines()
+        #OBX=codecs.open(obx_file,'r',encoding='utf-8').readlines()
         OBX=[re.sub('[\r\n]','',a).split('\t') for a in OBX]
         
         header_set= set(OBX[0])
         
         if set(header_set)>=(required_header_set):           
-            headers=dict((k,v) for v,k in enumerate(OBX[0]))
-            
+            headers=dict((k,v) for v,k in enumerate(OBX[0]))            
             try:
                 # sort records by mrn, accession, and then setid - ignore null mrns, accessions, or setids
                 OBX=sorted([y for y in OBX[1:] if (y[headers.get(global_strings.MRN_CAPS)]!='NULL' and y[headers.get(global_strings.FILLER_ORDER_NO)]!='NULL' and y[headers.get(global_strings.SET_ID)]!='NULL')],\
                             key=lambda x: (x[headers.get(global_strings.MRN_CAPS)],x[headers.get(global_strings.FILLER_ORDER_NO)],int(x[headers.get(global_strings.SET_ID)])))
-
+                
                 chars_onset=0                
-                for line in OBX:       
+                for line in OBX:
+                    
                     mrn=line[headers.get(global_strings.MRN_CAPS)]                   
                     accession=line[headers.get(global_strings.FILLER_ORDER_NO)]
                     index=line[headers.get(global_strings.SET_ID)]
@@ -72,7 +73,11 @@ def parse(obx_file):
                         if index=='1':
                             chars_onset=0
                             ## create a specimen source dictionary for each labeled specimen (in the same format as the regular pathology section dictionary ##
-                            specimen_dictionary=dict((x.split(')')[0],x.split(')')[1].replace('(',' ')) for x in  line[headers.get(global_strings.SPECIMEN_SOURCE)].strip('"').split('~'))                            
+                            ## catch NULL or empty string specimenSources 
+                            if not line[headers.get(global_strings.SPECIMEN_SOURCE)] or line[headers.get(global_strings.SPECIMEN_SOURCE)]=='NULL':
+                                specimen_dictionary = {'NO SPECIMEN SOURCE LISTED':'NO SPECIMEN SOURCE LISTED'}                                
+                            else:
+                                specimen_dictionary=dict((x.split(')')[0],x.split(')')[1].replace('(',' ')) for x in  line[headers.get(global_strings.SPECIMEN_SOURCE)].strip('"').split('~'))                            
                             pathology_dictionary[mrn][accession][(0,global_strings.SPECIMEN_SOURCE,0,None)]={}                            
                             pathology_dictionary[mrn][accession][(0,global_strings.SPECIMEN_SOURCE,0,None)][0]=specimen_dictionary                                                  
 
@@ -80,12 +85,14 @@ def parse(obx_file):
                         
                         # reassign the section variable if you find a section pattern match, reset specimen and increment section order
                         if section_header: section=section_header.group(1).strip();section_order+=1;specimen=''
-                        specimen_header=re.match('[\s\"]{,4}([,A-Z\- and&]+?)[\s]*(FS)?[\s]*[)].*',text)                        
+                        specimen_header=re.match('[\s\"]{,4}([,A-Z\- and&]+?)[\s]*(FS)?((-[A-Z])[\s]*FS)?[\s]*[)].*',text)                        
                         if specimen_header:                          
                             specimen='' ## reset specimen if there is a new specimen header match
-                            M=specimen_header.group(1).replace(' ','')                                                    
+                            M=specimen_header.group(1).replace(' ','')
+                            ## catch specimens listed in surgical notes in path eg "AFS-EFS: negative for..."
+                            if specimen_header.group(4) and '-' in specimen_header.group(4):M=M+specimen_header.group(4)
                             for each in  specimen_dictionary.keys():                                
-                                if re.search('['+M+']',each):
+                                if each and re.search('['+M+']',each):
                                     specimen+=each                                
                         pathology_dictionary[mrn][accession][(section_order,section,chars_onset,specimen)]=pathology_dictionary[mrn][accession].get((section_order,section,chars_onset,specimen),{})                
                         pathology_dictionary[mrn][accession][(section_order,section,chars_onset,specimen)][index]=text
@@ -94,6 +101,7 @@ def parse(obx_file):
                    
                 return pathology_dictionary,dict
             except:
+               
                 return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"FATAL ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" trouble parsing "+str(obx_file)+" -- program aborted"},Exception)
         else:
             return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"FATAL ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])+" required field headers not found in inital line of "+str(obx_file)+" -- must include "+\

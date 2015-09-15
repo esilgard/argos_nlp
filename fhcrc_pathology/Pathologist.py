@@ -18,7 +18,7 @@ def get(disease_group,dictionary):
     extract the (first) pathologist's name from the end of the report
     ----but --- not picking up PhD's
     '''   
-    return_dictionary={global_strings.NAME:"Pathologist",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
+    return_dictionary={global_strings.NAME:"Pathologist",global_strings.KEY:"ALL",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
                        global_strings.STARTSTOPS:[],global_strings.TABLE:'Pathology'}
    
     full_text=dictionary[(-1,'FullText',0,None)]    

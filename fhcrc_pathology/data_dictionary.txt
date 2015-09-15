@@ -6,3 +6,4 @@ PathDate	DEMOGRAPHICS
 Pathologist	NULL
 PathGrade	NULL
 OtherFinding	NULL
+PathQuality	NULL

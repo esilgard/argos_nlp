@@ -3,5 +3,4 @@ Malignant;malignancy
 Metastatic Carcinoma
 Metastatic Cancer
 Carcinoma
-Tumor
-Lesion
+Sarcoma

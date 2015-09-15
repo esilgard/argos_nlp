@@ -29,7 +29,7 @@ def get(nlp_engine_path,arguments):
         meta_data_file=open(nlp_engine_path+'metadata.json','r')        
        
         try:
-            metadata_d=json.load(meta_data_file)           
+            metadata_d=json.load(meta_data_file)
             meta_data_file.close()
         except:
             sys.stderr.write('FATAL ERROR: json could not load metadata dictionary file, potential formatting error.  program aborted.')
@@ -37,22 +37,31 @@ def get(nlp_engine_path,arguments):
     except:
         sys.stderr.write('FATAL ERROR: metadata dictionary not found.  program aborted.')
         sys.exit(1)
-    
+
     return_metadata_d={}
-    return_metadata_d[arguments.get('-t')]={}
-    for table,field_list in metadata_d.get(arguments.get('-t')).items():        
+    ## only return list of relevant tables
+    return_table_list=[]
+    ## only output the appropriate metadata for the given document type and disease group
+    for table_dictionary in metadata_d.get(arguments.get('-t'))['tables']:
+        #table_dictionary has two keys - "table":table_name and "fields":[multiple_field_dictionaries]           
         return_field_list=[]
-        for field_dictionary in field_list:
+        for field_dictionary in table_dictionary['fields']:
+            ## only return relevant fields in that table
             return_field_dictionary={}
-            for disease_group_dictionary in field_dictionary.get("diseaseProperties"):
-                return_disease_properties_list=[]
+            return_disease_properties_list=[]
+            for disease_group_dictionary in field_dictionary.get("diseaseProperties"):                
+                ## only return relevant values for that disease group  (or general '*' patients/all disease groups)
                 if arguments.get('-g') in disease_group_dictionary.get("diseaseGroup") or '*' in disease_group_dictionary.get("diseaseGroup"):
                     return_disease_properties_list.append(disease_group_dictionary)
-                if return_disease_properties_list:
-                    return_field_dictionary=field_dictionary
-                    return_field_dictionary["diseaseProperties"]=return_disease_properties_list
+            if return_disease_properties_list:
+                return_field_dictionary=field_dictionary
+                return_field_dictionary["diseaseProperties"]=return_disease_properties_list                
             if return_field_dictionary:
                 return_field_list.append(return_field_dictionary)
         if return_field_list:
-            return_metadata_d[table]=return_field_list
+            return_table_dictionary={'fields':return_field_list,'table':table_dictionary['table']}
+            return_table_list.append(return_table_dictionary)
+    if return_table_list:
+        return_metadata_d['tables']=return_table_list
+    
     return return_metadata_d

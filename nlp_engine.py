@@ -153,7 +153,7 @@ else:
 
 
 ## timeit - print out the amount of time it took to process all the reports ##
-#print (datetime.today()-begin).days * 86400 + (datetime.today()-begin).seconds,'seconds to process '+str(len(output_dictionary["reports"]))+' reports'
+## print (datetime.today()-begin).days * 86400 + (datetime.today()-begin).seconds,'seconds to process '+str(len(output_dictionary["reports"]))+' reports'
 
     
         

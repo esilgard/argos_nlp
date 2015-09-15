@@ -16,7 +16,8 @@ class PathStage(object):
     def __init__(self):    
         self.stage_name='Default'  
         self.regex=''  
-        self.return_dictionary = {}  
+        self.return_dictionary = {}
+        self.confidence=0.0
 
 
     def get_version(self):
@@ -34,10 +35,10 @@ class PathStage(object):
         
             stage=re.match(self.regex, full_text, re.DOTALL)
             if stage:            
-                self.return_dictionary[dict_keys.CONFIDENCE]=0.90
+                self.return_dictionary[dict_keys.CONFIDENCE]=self.confidence
                 self.return_dictionary[dict_keys.VALUE]=stage.group(1)
                 self.return_dictionary[dict_keys.STARTSTOPS].append({dict_keys.START:stage.start(1),dict_keys.STOP:stage.end(1)})
             return ([self.return_dictionary],list)
            
         except:
-            return ({dict_keys.ERR_TYPE:'Warning',dict_keys.ERR_STR:'ERROR in %s module.' % self.stage_name},Exception)
+            return ([{dict_keys.ERR_TYPE:'Warning',dict_keys.ERR_STR:'ERROR in %s module.' % self.stage_name}],Exception)

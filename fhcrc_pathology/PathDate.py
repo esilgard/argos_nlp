@@ -17,11 +17,11 @@ def get(disease_group,dictionary):
     extract the first signed date (date of surgery)from normal cased text of the pathology report    
     '''
     
-    return_dictionary={global_strings.NAME:"PathDate",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
+    return_dictionary={global_strings.NAME:"PathDate",global_strings.KEY:"ALL",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
                        global_strings.STARTSTOPS:[],global_strings.TABLE:global_strings.PATHOLOGY_TABLE}
                        
     full_text=dictionary[(-1,'FullText',0,None)]
-    
+ 
     ## make this match non greedy so that the first date is picked out
     date_match=re.match('.*?Electronically signed[ ]*([\d]{1,2})[\-/]([\d]{1,2})[\-/]([\d]{4}).*',full_text,re.DOTALL)
     if date_match:

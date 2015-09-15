@@ -58,9 +58,9 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
                 try:
                     exec("field_value,return_type=return_exec_code("+field+".get(disease_group,report_dictionary))")                    
                 except:
-                     return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not complete '+field+' module --- program aborted. '},Exception)
+                     return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not complete '+field+' module --- program aborted. '+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])},Exception)
             except:                
-                return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not import '+field+' module --- program aborted. '},Exception)
+                return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not import '+field+' module --- program aborted. '+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])},Exception)
         ## organize fields by tables, then individual records, then individual fields
         
         if return_type==list:
@@ -105,7 +105,7 @@ def main(arguments,path):
     i=0
     ## create a list of output field dictionaries ##
     for mrn in pathology_dictionary:            
-        for accession in pathology_dictionary[mrn]:                            
+        for accession in pathology_dictionary[mrn]:           
             field_value_dictionary={}
             field_value_dictionary[global_strings.REPORT]=accession
             field_value_dictionary[global_strings.MRN]=mrn
@@ -115,7 +115,7 @@ def main(arguments,path):
                           out.write(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])
             except:
                 return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_pathology attempting to write text to file at'+ \
-                        arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed. '+sys.arg}],list)
+                        arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed. '+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])}],list)
             return_fields,return_errors,return_type=get_fields(disease_group,pathology_dictionary[mrn][accession],disease_group_data_dictionary,path_data_dictionary)
 
             i+=1
@@ -128,7 +128,7 @@ def main(arguments,path):
                 field_value_output.append(field_value_dictionary)
             else:                
                 return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_pathology.get(fields) -  \
-                        unknown number of reports completed.  Return error string: '+return_errors[global_strings.ERR_STR]+';'}],list)           
+                        unknown number of reports completed.  Return error string: '+return_errors[global_strings.ERR_STR]+';'+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])}],list)           
 
     return (field_value_output,return_errors,list)
 
