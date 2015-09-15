@@ -64,10 +64,10 @@ def get(disease_group,dictionary):
                 for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):                 
                     ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                     ## these can contain confusing general statements about the cancer and/or patients in general ##
-                    if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',results):pass 
+                    if re.search(r'[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',results):pass 
                     elif specimen in section_specimen:                        
                         text=results.lower()
-                        text=re.sub('[.,:;\\\/\-]',' ',text)                            
+                        text=re.sub(r'[.,:;\\\/\-]',' ',text)                            
                         histology,onset,offset=find_histology(text,string_list)                           
                         if histology:                         
                             specimen_start_stops_set.add((line_onset+onset,line_onset+offset))                                
@@ -105,11 +105,8 @@ def get(disease_group,dictionary):
                                       global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]})
         
     ## aggregate histologies of individual specimens for overall histology
-<<<<<<< HEAD
-    if histology_set:       
-=======
+
     if histology_set:      
->>>>>>> 85cf54cc9e7e045fba01965771a96db9feae5336
         return_dictionary_list.append({global_strings.NAME:"PathHistology",global_strings.KEY:"ALL",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(histology_set),
                                        global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in return_dictionary_list])/len(return_dictionary_list))),
                                       global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})     

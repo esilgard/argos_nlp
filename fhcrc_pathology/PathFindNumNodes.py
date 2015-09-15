@@ -27,11 +27,11 @@ def get(section,text):
     combo=dict(number_words,**number_digits)    
     number_list=sorted([a[0] for a in combo.items()], key=lambda x: combo[x],reverse=True)
     
-    pos_total_patterns=['.*[(](lymph|node|[\d]{1,2}[rl]).{,15}('+'|'.join(number_list)+')[ ]*([/]|of|out of)[ ]*('+'|'.join(number_list)+').*',
-                        '.*[(]('+'|'.join(number_list)+')[ ]*([/]|of|out of)[ ]*('+'|'.join(number_list)+').{,15}(lymph|node|[\d]{1,2}[rl]).*']
+    pos_total_patterns=[r'.*[(](lymph|node|[\d]{1,2}[rl]).{,15}('+'|'.join(number_list)+')[ ]*([/]|of|out of)[ ]*('+'|'.join(number_list)+').*',
+                        r'.*[(]('+'|'.join(number_list)+')[ ]*([/]|of|out of)[ ]*('+'|'.join(number_list)+').{,15}(lymph|node|[\d]{1,2}[rl]).*']
 
-    just_total_patterns=['.*(lymph|node|[\d]{1,2}[rl]).{,15}('+'|'.join(number_words)+').*',
-                        '.*('+'|'.join(number_words)+').{,15}(lymph|node|[\d]{1,2}[rl]).*']
+    just_total_patterns=[r'.*(lymph|node|[\d]{1,2}[rl]).{,15}('+'|'.join(number_words)+').*',
+                        r'.*('+'|'.join(number_words)+').{,15}(lymph|node|[\d]{1,2}[rl]).*']
     for each in pos_total_patterns:
         pos= re.match(each,text)
         if pos:

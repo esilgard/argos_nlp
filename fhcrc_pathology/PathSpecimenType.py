@@ -53,10 +53,10 @@ def get(disease_group,dictionary):
         
         ## helper method that has visibility of local variables, both for lookups and return dictionaries    
         def find_procedure_match(text):
-            text=re.sub('[.,:;\\\/\-\)\(]',' ',text).lower()
+            text=re.sub(r'[.,:;\\\/\-\)\(]',' ',text).lower()
                     
             for each_spec_type in procedures_list:                
-                for each_match in re.finditer('.*( |^)('+each_spec_type+')( |$).*',text,re.MULTILINE):
+                for each_match in re.finditer(r'.*( |^)('+each_spec_type+r')( |$).*',text,re.MULTILINE):
                     proc=standardizations[each_spec_type]
                     ## this is trying to avoid a duplicate match span for a less specific procedure (e.g. just "biopsy)
                     general_proc=False

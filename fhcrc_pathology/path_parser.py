@@ -38,7 +38,7 @@ def parse(obx_file):
     try:
         OBX=open(obx_file,'rU').readlines()
         #OBX=codecs.open(obx_file,'r',encoding='utf-8').readlines()
-        OBX=[re.sub('[\r\n]','',a).split('\t') for a in OBX]
+        OBX=[re.sub(r'[\r\n]','',a).split('\t') for a in OBX]
         
         header_set= set(OBX[0])
         
@@ -81,11 +81,11 @@ def parse(obx_file):
                             pathology_dictionary[mrn][accession][(0,global_strings.SPECIMEN_SOURCE,0,None)]={}                            
                             pathology_dictionary[mrn][accession][(0,global_strings.SPECIMEN_SOURCE,0,None)][0]=specimen_dictionary                                                  
 
-                        section_header=re.match('[\*\" ]*([A-Z ]+)[\*:]+',text)              # match general section header patterns
+                        section_header=re.match(r'[\*\" ]*([A-Z ]+)[\*:]+',text)              # match general section header patterns
                         
                         # reassign the section variable if you find a section pattern match, reset specimen and increment section order
                         if section_header: section=section_header.group(1).strip();section_order+=1;specimen=''
-                        specimen_header=re.match('[\s\"]{,4}([,A-Z\- and&]+?)[\s]*(FS)?((-[A-Z])[\s]*FS)?[\s]*[)].*',text)                        
+                        specimen_header=re.match(r'[\s\"]{,4}([,A-Z\- and&]+?)[\s]*(FS)?((-[A-Z])[\s]*FS)?[\s]*[)].*',text)                        
                         if specimen_header:                          
                             specimen='' ## reset specimen if there is a new specimen header match
                             M=specimen_header.group(1).replace(' ','')

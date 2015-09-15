@@ -48,10 +48,10 @@ def get(disease_group,dictionary):
                 for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):                 
                     ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                     ## these can contain confusing general statements about the cancer and/or patients in general ##
-                    if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',results):pass 
+                    if re.search(r'[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',results):pass 
                     elif specimen in section_specimen:                        
                         text=results.lower()
-                        text=re.sub('[.,:;\\\/\-]',' ',text)
+                        text=re.sub(r'[.,:;\\\/\-]',' ',text)
                         for each_string in string_list:                            
                             finding,onset,offset=find_histology(text,each_string)                           
                             if finding:                           

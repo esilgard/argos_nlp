@@ -31,12 +31,12 @@ def get(disease_group,dictionary):
                 text= dictionary[section].items()[0][1]                              
                 ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                 ## these can contain confusing general statements about the cancer and/or patients in general ##
-                if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',text):pass               
+                if re.search(r'[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',text):pass               
                 else:
                     text=text.lower()
-                    text=re.sub('[.,:;\\\/\-\'\"\)\(]',' ',text)
+                    text=re.sub(r'[.,:;\\\/\-\'\"\)\(]',' ',text)
                     for each_pattern in match_list:                        
-                        for each_match in re.finditer('.*( |^)'+each_pattern+'( |$).*',text,re.DOTALL):                           
+                        for each_match in re.finditer(r'.*( |^)'+each_pattern+r'( |$).*',text,re.DOTALL):                           
                             if match_list[each_pattern] not in specimen_side_list:                                    
                                 specimen_side_list.append(match_list[each_pattern])                                    
                             specimen_start_stops_set.add((each_match.start(2)+line_onset,each_match.end(2)+line_onset))

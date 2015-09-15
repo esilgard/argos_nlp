@@ -43,7 +43,7 @@ def get(disease_group,dictionary):
         specimen_start_stops_set=set([])
    
         def find_site(text):            
-            text=re.sub('[.,:;\\\/\-\)\(]',' ',text).lower()
+            text=re.sub(r'[.,:;\\\/\-\)\(]',' ',text).lower()
             for each_site in site_list:  
                 for each_match in re.finditer('^.*( |^)('+each_site+')( |$).*',text,re.MULTILINE):                            
                     specimen_site_set.add(standardizations[each_site])                              
@@ -62,7 +62,7 @@ def get(disease_group,dictionary):
                     if specimen in section_specimen:
                         ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                         ## these can contain confusing general statements about the cancer and/or patients in general ##
-                        if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',index):pass
+                        if re.search(r'[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',index):pass
                         else:
                             find_site(results)                  
         if specimen_site_set:

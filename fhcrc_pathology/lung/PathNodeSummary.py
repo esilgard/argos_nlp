@@ -11,7 +11,7 @@ from PathNodes import PathNodes
 class PathNodeSummary(PathNodes):
     __version__='PathNodeSummary1.0'    
     def __init__(self):        
-        self.regex='.*SUMMARY CANCER DATA:.*?([\w\d ]+) nodes:[ ]*Nodes with carcinoma:[ ]*([\d]+)[/ ]*Total nodes examined:[ ]*([\d]+).*'
+        self.regex=r'.*SUMMARY CANCER DATA:.*?([\w\d ]+) nodes:[ ]*Nodes with carcinoma:[ ]*([\d]+)[/ ]*Total nodes examined:[ ]*([\d]+).*'
         self.node_name='PathNodeSummary'
         self.confidence=.95
         self.site_nodes=1

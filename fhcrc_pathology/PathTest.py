@@ -14,6 +14,4 @@ def get(disease_group,dictionary):
     '''
     return_dictionary_list=[]
     
-
-    full_text=dictionary[(-1,'FullText',0,None)]
     return (return_dictionary_list,list) 

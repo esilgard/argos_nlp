@@ -12,14 +12,13 @@ import global_strings
 def get(disease_group,dictionary):
     '''
     extract the (first) pathologist's name from the end of the report
-    ----but --- not picking up PhD's
     '''   
     return_dictionary={global_strings.NAME:"Pathologist",global_strings.KEY:"ALL",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
                        global_strings.STARTSTOPS:[],global_strings.TABLE:'Pathology'}
    
     full_text=dictionary[(-1,'FullText',0,None)]    
     ## this match is non greedy so that the INITIAL pathologist signature is picked out
-    name_match=re.match('.*?\n([A-Za-z\'\-,. ]+) MD(, PhD)?[ ]*\n[ ]*Pathologist[ ]*\n.*',full_text,re.DOTALL)
+    name_match=re.match(r'.*?\n([A-Za-z\'\-,. ]+) MD(, PhD)?[ ]*\n[ ]*Pathologist[ ]*\n.*',full_text,re.DOTALL)
     
     if name_match:
         return_dictionary[global_strings.VALUE]=name_match.group(1)

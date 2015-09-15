@@ -23,7 +23,7 @@ def get(disease_group,dictionary):
     full_text=dictionary[(-1,'FullText',0,None)]
  
     ## make this match non greedy so that the first date is picked out
-    date_match=re.match('.*?Electronically signed[ ]*([\d]{1,2})[\-/]([\d]{1,2})[\-/]([\d]{4}).*',full_text,re.DOTALL)
+    date_match=re.match(r'.*?Electronically signed[ ]*([\d]{1,2})[\-/]([\d]{1,2})[\-/]([\d]{4}).*',full_text,re.DOTALL)
     if date_match:
         year=date_match.group(3)
         month=date_match.group(1)
