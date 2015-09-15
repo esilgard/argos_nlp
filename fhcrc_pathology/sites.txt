@@ -2,17 +2,15 @@ Liver;hepatic
 Skin
 Abdomen
 Stomach;gastric
-Lymph Node;nodes;nodal;lymph
+Esophagus;esophageal
+Lymph Node;nodes;nodal;lymph;lymph nodes
 Heart;coronary
 Pancreas;pancreatic
 Ampulla
 Pelvis;pelvic
- Spleen
-Tonsil
+Spleen
+Tonsil;tonsils
 Chest
-Marrow
-Neck
-Adrenal
 Back
 Spine;spinal;paraspinal
 Bone;osteo
@@ -22,17 +20,16 @@ Torso;thoracic
 Diaphragm
 Acetabulum
 Prostate;prostatic
-Colon;colonic
-Ovary;ovarian
-Lung;pulmonary;pulmonic
+Colorectal;colon;colonic;sigmoid;rectum;rectal;rectosigmoid
+Ovary;ovarian;ovaries
+Lung;pulmonary;pulmonic;lungs
 Penis;penile
-Testis;testicular
-Breast;mammary;axilliary
-Kidney;renal
+Testis;testicular;testicle
+Breast;mammary;axilliary;breasts
+Kidney;renal;kidneys
 Sacrum;sacral
-Nasopharynx
 Bile Duct
-Brain;Frontoparietal;parietal;frontal;temporal;occipital
+Brain and CNS;Frontoparietal;parietal;frontal;temporal;occipital;cns
 Bladder
 Adrenal
-Head;Mouth;Tongue;Mandible;Nasopharynx;pharynx;pharyngeal;Oropharynx
+Head and Neck;Head;Mouth;Tongue;Mandible;Nasopharynx;pharynx;pharyngeal;Oropharynx;Nasopharynx;Neck

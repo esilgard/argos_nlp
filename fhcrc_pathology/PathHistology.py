@@ -99,12 +99,17 @@ def get(disease_group,dictionary):
         if not specimen_histology_set:
             specimen_histology_set,specimen_start_stops_set=get_spec_histo('',general_diagnoses,general_standardizations)
         if specimen_histology_set:           
-            histology_set=histology_set.union(specimen_histology_set)           
+            histology_set=histology_set.union(specimen_histology_set)
+            start_stops_set=start_stops_set.union(specimen_start_stops_set)
             return_dictionary_list.append({global_strings.NAME:"PathFindHistology",global_strings.KEY:"UNK",global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(specimen_histology_set),global_strings.CONFIDENCE:("%.2f" % .70),
                                       global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]})
         
     ## aggregate histologies of individual specimens for overall histology
+<<<<<<< HEAD
     if histology_set:       
+=======
+    if histology_set:      
+>>>>>>> 85cf54cc9e7e045fba01965771a96db9feae5336
         return_dictionary_list.append({global_strings.NAME:"PathHistology",global_strings.KEY:"ALL",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(histology_set),
                                        global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in return_dictionary_list])/len(return_dictionary_list))),
                                       global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})     
@@ -115,9 +120,9 @@ def get(disease_group,dictionary):
 ## check for the presence of a non-negated string ##
 def find_histology(short_text,histologies):      
     for histo in histologies:        
-        if re.search(r'([\W]|^)'+histo+r'([\W]|$)',short_text):            
-            if not re.search(r'( no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+histo+r'([\W]|$)',short_text) and \
-               not re.search(r'([\W]|^)'+histo+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',short_text):                
+        if re.search(r'([\W]|^)'+histo+r'([\W]|$)',short_text):
+            if not re.search(r'( not | no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+histo+r'([\W]|$)',short_text) and \
+               not re.search(r'([\W]|^)'+histo+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',short_text):
                 return (histo,short_text.find(histo),short_text.find(histo)+len(histo))
     return None,None,None
                       

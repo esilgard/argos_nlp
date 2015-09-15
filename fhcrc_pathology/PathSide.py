@@ -27,7 +27,7 @@ def get(disease_group,dictionary):
             section_specimen=section[3]            
             line_onset=section[2]
             header=section[1]            
-            if section_specimen is not None and specimen in section_specimen and ('SPECIMEN' in header or 'DESCRIPTION' in header or 'IMPRESSION' in header or 'Specimen' in header or 'DIAGNOSIS' in header):
+            if section_specimen is not None and specimen in section_specimen and ('SPECIMEN' in header or 'DESCRIPTION' in header or 'IMPRESSION' in header or 'Specimen' in header or 'DIAGNOSIS' in header) and 'CLINICAL' not in header:
                 text= dictionary[section].items()[0][1]                              
                 ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                 ## these can contain confusing general statements about the cancer and/or patients in general ##

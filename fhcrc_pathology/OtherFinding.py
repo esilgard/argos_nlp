@@ -83,8 +83,8 @@ def get(disease_group,dictionary):
                 
     ## aggregate histologies of individual specimens for overall finding
     if finding_set:
-       
-        return_dictionary_list.append({global_strings.NAME:"PathFindingOther",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(finding_set),
+        
+        return_dictionary_list.append({global_strings.NAME:"PathFindingOther",global_strings.KEY:"ALL",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(finding_set),
             global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in return_dictionary_list])/len(return_dictionary_list))),
             global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in finding_start_stops_set]})     
     
@@ -95,7 +95,7 @@ def get(disease_group,dictionary):
 def find_histology(short_text,finding):
    
     if re.search(r'([\W]|^)'+finding+r'([\W]|$)',short_text):        
-        if not re.search(r'( no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+finding+r'([\W]|$)',short_text) and \
+        if not re.search(r'( not | no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+finding+r'([\W]|$)',short_text) and \
            not re.search(r'([\W]|^)'+finding+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',short_text):                
             return (finding,short_text.find(finding),short_text.find(finding)+len(finding))
     return None,None,None

@@ -71,6 +71,7 @@ def get(disease_group,dictionary):
     return_dictionary_list=[]    
     whole_start_stops_set=set([])
     whole_grade_set=set([])
+<<<<<<< HEAD
     return_dictionary_list=[]
     try:
         for specimen_dictionary in dictionary[(0,'SpecimenSource',0,None)].values():        
@@ -126,3 +127,38 @@ def get(disease_group,dictionary):
     except:
         return ({global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:"FATAL ERROR: "+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])},Exception)
 
+=======
+    return_dictionary_list=[]   
+    for specimen_dictionary in dictionary[(0,'SpecimenSource',0,None)].values():        
+        for specimen,description in specimen_dictionary.items():            
+            grade_set=set([])
+            start_stops_set=set([])
+            for section in dictionary:               
+                section_specimen=section[3]
+                line_onset=section[2]
+                header=section[1]
+                if ('FINAL' in header or 'IMPRESSION' in header or 'SUMMARY' in header) and 'CLINICAL' not in header:                               
+                    text= dictionary[section].values()[0]                    
+                    ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
+                    ## these can contain confusing general statements about the cancer and/or patients in general ##
+                    if re.search('[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',text):pass               
+                    else:                        
+                        text=text.lower()
+                        text=re.sub('[,:;\\\/\-]',' ',text); text=re.sub('[.] ', '  ',text)      ## this should keep decimal places and throw out periods                        
+                        specimen_grade,offsets=get_grade(text,line_onset)                        
+                        if specimen_grade:                            
+                            grade_set=grade_set.union(specimen_grade)                            
+                            start_stops_set=start_stops_set.union(offsets)                           
+                        
+            if grade_set:                
+                return_dictionary_list.append({global_strings.NAME:"PathFindGrade",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(grade_set),
+                    global_strings.CONFIDENCE:("%.2f" % .85), global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]} )                
+                whole_grade_set=whole_grade_set.union(grade_set)                
+                whole_start_stops_set= whole_start_stops_set.union(start_stops_set)  
+                    
+    if whole_grade_set:        
+        return_dictionary_list.append({global_strings.NAME:"PathGrade",global_strings.TABLE:global_strings.STAGE_GRADE_TABLE,global_strings.VALUE:';'.join(whole_grade_set),
+                                   global_strings.CONFIDENCE:0.75,global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in whole_start_stops_set]})
+          
+    return (return_dictionary_list,list)
+>>>>>>> 85cf54cc9e7e045fba01965771a96db9feae5336

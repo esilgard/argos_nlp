@@ -32,6 +32,7 @@ def get(disease_group,dictionary):
             day='0'+date_match.group(2)                
         return_dictionary[global_strings.VALUE]=str(datetime.strptime(year+','+month+','+day,'%Y,%m,%d').isoformat())
         return_dictionary[global_strings.CONFIDENCE]=1.0
+        return_dictionary[global_strings.KEY]="ALL"
         return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:date_match.start(1),global_strings.STOP:date_match.end(3)})
         
            
