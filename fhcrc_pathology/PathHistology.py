@@ -56,6 +56,16 @@ def get(disease_group,dictionary):
     def get_spec_histo(specimen,string_list,standardizations):        
         specimen_histology_set=set([])
         specimen_start_stops_set=set([])
+
+        ## helper method to find non-negated string matches ##
+        def find_histology_match(short_text,histologies):            
+            for histo in histologies:        
+                if re.search(r'([\W]|^)'+histo+r'([\W]|$)',short_text):
+                    if not re.search(r'( not | no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+histo+r'([\W]|$)',short_text) and \
+                       not re.search(r'([\W]|^)'+histo+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',short_text):                                              
+                        specimen_histology_set.add(standardizations[histo])
+                        specimen_start_stops_set.add((short_text.find(histo),short_text.find(histo)+len(histo)))
+    
         for section in sorted(dictionary):                
             section_specimen=section[3]                
             line_onset=section[2]
@@ -68,10 +78,8 @@ def get(disease_group,dictionary):
                     elif specimen in section_specimen:                        
                         text=results.lower()
                         text=re.sub(r'[.,:;\\\/\-]',' ',text)                            
-                        histology,onset,offset=find_histology(text,string_list)                           
-                        if histology:                         
-                            specimen_start_stops_set.add((line_onset+onset,line_onset+offset))                                
-                            specimen_histology_set.add(standardizations[histology])                
+                        find_histology_match(text,string_list)
+                                            
         return specimen_histology_set,specimen_start_stops_set
 ##############################################################################################################################################################        
     histology_set=set([])
@@ -105,7 +113,6 @@ def get(disease_group,dictionary):
                                       global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]})
         
     ## aggregate histologies of individual specimens for overall histology
-
     if histology_set:      
         return_dictionary_list.append({global_strings.NAME:"PathHistology",global_strings.KEY:"ALL",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(histology_set),
                                        global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in return_dictionary_list])/len(return_dictionary_list))),
@@ -114,12 +121,5 @@ def get(disease_group,dictionary):
     return (return_dictionary_list,list)        
                 
             
-## check for the presence of a non-negated string ##
-def find_histology(short_text,histologies):      
-    for histo in histologies:        
-        if re.search(r'([\W]|^)'+histo+r'([\W]|$)',short_text):
-            if not re.search(r'( not | no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+histo+r'([\W]|$)',short_text) and \
-               not re.search(r'([\W]|^)'+histo+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',short_text):
-                return (histo,short_text.find(histo),short_text.find(histo)+len(histo))
-    return None,None,None
+
                       

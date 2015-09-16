@@ -23,7 +23,7 @@ def get(disease_group,dictionary):
     full_text=dictionary[(-1,'FullText',0,None)]
     
     ## make this match non greedy so that the first date is picked out
-    review_match=re.finditer(r'.*( consult |outside institution|reviewed at uwmc|reviewed at university of washington|slide review).*',full_text.lower(),re.DOTALL)
+    review_match=re.finditer(r' (consult|outside institution|reviewed at uwmc|reviewed at university of washington|slide review) ',full_text.lower(),re.DOTALL)
     start_stops_set=set([])
     for each in review_match:                               
         return_dictionary[global_strings.VALUE]='REV'        

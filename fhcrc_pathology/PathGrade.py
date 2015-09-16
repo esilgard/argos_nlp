@@ -24,35 +24,25 @@ def get_grade(text,line_onset):
 
     ## number grades paired with the word "grade" ##
     for g,n in grades.items():
-        m=re.match(r'.*('+g+'.{,15}grade).*',text,re.DOTALL)
-        if m:
+        for m in re.finditer(r'('+g+'.{,15}grade)',text,re.DOTALL):        
             grade_set.add(n)
             start_stops_set.add((m.start(1)+line_onset,m.end(1)+line_onset))
-        m=re.match(r'.*(grade.{,15'+g+').*',text,re.DOTALL )
-        if m:
+        for m in re.finditer(r'(grade.{,15'+g+')',text,re.DOTALL ):       
             grade_set.add(n)
             start_stops_set.add((m.start(1)+line_onset,m.end(1)+line_onset))
   
     ## descriptions of cell differentiation ##
     for each_desc in descriptions:
-        m= re.match(r'.*('+each_desc+'.{1,15}differentiated).*',text,re.DOTALL)
-        if m:           
+        for m in re.finditer(r'('+each_desc+'.{1,15}differentiated)',text,re.DOTALL):                
             grade_set.add(m.group(1))                     
             start_stops_set.add((m.start(1)+line_onset,m.end(1)+line_onset))
        
     ## specific grading system (FNCLCC)
-    m=re.match(r'.*(([123])[/of ]{1,6}3.{,20}fn[c]?l[c]?c).*',text,re.DOTALL)    
-    if m:
-        grade_set.add(grades[' '+m.group(1)+' '])
-        start_stops_set.add((m.start(1)+line_onset,m.end(1)+line_onset))
-    else: m=re.match(r'.*(fn[c]?l[c]?c .{,20}([123])[/of ]{1,6}3).*',text,re.DOTALL)
-    if m:
-        grade_set.add(grades[' '+m.group(1)+' '])
-        start_stops_set.add((m.start(1)+line_onset,m.end(1)+line_onset))
-    else: m=re.match(r'.*(fn[c]?l[c]?c .{,20}grade.{,5}([123])).*',text,re.DOTALL)
-    if m:
-        grade_set.add(grades[' '+m.group(1)+' '])
-        start_stops_set.add((m.start(1)+line_onset,m.end(1)+line_onset))
+    fnclcc_patterns=[r'(([123])[/of ]{1,6}3.{,20}fn[c]?l[c]?c)',r'(fn[c]?l[c]?c .{,20}([123])[/of ]{1,6}3)',r'(fn[c]?l[c]?c .{,20}grade.{,5}([123]))']
+    for pattern in fnclcc_patterns:
+        for m in re.finditer(pattern,text,re.DOTALL): 
+            grade_set.add(grades[' '+m.group(1)+' '])
+            start_stops_set.add((m.start(1)+line_onset,m.end(1)+line_onset))    
 
     ## discard substrings ##
     grade_list=sorted(grade_set,key=lambda x: len(x))    

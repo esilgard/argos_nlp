@@ -40,6 +40,15 @@ def get(disease_group,dictionary):
     def get_spec_histo(specimen,string_list,standardizations):        
         specimen_finding_set=set([])
         specimen_start_stops_set=set([])
+                    
+        ## helper method to find non-negated string matches ##
+        def find_histology_matches(short_text,finding):   
+            if re.search(r'([\W]|^)'+finding+r'([\W]|$)',short_text):        
+                if not re.search(r'( not | no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+finding+r'([\W]|$)',short_text) and \
+                   not re.search(r'([\W]|^)'+finding+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',short_text): 
+                    specimen_start_stops_set.add((short_text.find(finding),short_text.find(finding)+len(finding))   )                             
+                    specimen_finding_set.add(standardizations[finding])
+                    
         for section in sorted(dictionary):                
             section_specimen=section[3]                
             line_onset=section[2]
@@ -53,10 +62,9 @@ def get(disease_group,dictionary):
                         text=results.lower()
                         text=re.sub(r'[.,:;\\\/\-]',' ',text)
                         for each_string in string_list:                            
-                            finding,onset,offset=find_histology(text,each_string)                           
-                            if finding:                           
-                                specimen_start_stops_set.add((line_onset+onset,line_onset+offset))                                
-                                specimen_finding_set.add(standardizations[finding])                            
+                            find_histology_matches(text,each_string)                           
+                                                 
+                                                          
        
         return specimen_finding_set,specimen_start_stops_set
 ##############################################################################################################################################################        
@@ -94,12 +102,5 @@ def get(disease_group,dictionary):
     
     return (return_dictionary_list,list)        
                 
-            
-## check for the presence of a non-negated string ##
-def find_histology(short_text,finding):   
-    if re.search(r'([\W]|^)'+finding+r'([\W]|$)',short_text):        
-        if not re.search(r'( not | no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+finding+r'([\W]|$)',short_text) and \
-           not re.search(r'([\W]|^)'+finding+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',short_text):                
-            return (finding,short_text.find(finding),short_text.find(finding)+len(finding))
-    return None,None,None
+
                       

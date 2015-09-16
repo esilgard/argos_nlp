@@ -72,7 +72,7 @@ def get(disease_group,dictionary):
         else: return None
 
                                   
-###################################################################################################################   
+    ################################################################################################################   
     try:
         disease_group_sites,disease_group_standardizations=make_lists(disease_group+'/')
         general_sites,general_standardizations=make_lists('')
