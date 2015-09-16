@@ -11,7 +11,6 @@ import os
 import re
 import global_strings
 path= os.path.dirname(os.path.realpath(__file__))
-dirs=path.split('\\')
 
     
 def get(disease_group,dictionary):   
@@ -35,24 +34,24 @@ def get(disease_group,dictionary):
         return sites,standardizations  
     
     ###############################################################################################################
-    
-        
+          
     ###############################################################################################################    
     def get_site(site_list,standardizations,specimen):        
         specimen_site_set=set([])
         specimen_start_stops_set=set([])
     
-        def find_site(text):            
+        def find_site_match(text):            
             text=re.sub(r'[.,:;\\\/\-\)\(]',' ',text).lower()
             for each_site in site_list:  
                 for each_match in re.finditer(r'^.*( |^)('+each_site+r')( |$).*',text,re.MULTILINE):                    
                     if not re.search(r'( not | no |negative |free of)[\w ]{,50}'+each_match.group(2),text,re.MULTILINE) and \
-                       not re.search(each_match.group(2)+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',text,re.MULTILINE):
-                        if 'no hilar lymph nodes' in text and standardizations[each_site]=='Lymph Node':print 'not negated',each_site,each_match.group(2),'\n'
-                        if 'no hilar lymph nodes' in text and standardizations[each_site]=='Lymph Node':print text[text.find(each_match.group(2))-50:text.find(each_match.group(2))+50],'\n'
-                   
-                        specimen_site_set.add(standardizations[each_site])                              
-                        specimen_start_stops_set.add((each_match.start(2)+line_onset,each_match.end(2)+line_onset))
+                       not re.search(each_match.group(2)+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',text,re.MULTILINE):                                           
+                        specimen_site_set.add(standardizations[each_site])
+                        print each_site,each_match.group(2),(each_match.start(2)+line_onset,each_match.end(2)+line_onset)
+                        print text
+                        ## only return char offsets for the regular path text (not the SpecimenSource text)
+                        if line_onset:
+                            specimen_start_stops_set.add((each_match.start(2)+line_onset,each_match.end(2)+line_onset))
                      
         for section in dictionary:
             section_specimen=section[3]
@@ -60,16 +59,16 @@ def get(disease_group,dictionary):
             header=section[1]
             if section==(0,'SpecimenSource',0,None):          
                 if dictionary[section][0].get(specimen):
-                    find_site(dictionary[section][0].get(specimen))          
-            elif ('SPECIMEN' in header or 'DESCRIPTION' in header or 'IMPRESSION' in header or 'Specimen' in header or 'DIAGNOSIS' in header) and 'CLINICAL' not in header:
-              
+                    find_site_match(dictionary[section][0].get(specimen))          
+            elif ('SPECIMEN' in header or 'DESCRIPTION' in header or 'IMPRESSION' in header or 'Specimen' in header or 'DIAGNOSIS' in header) and 'CLINICAL' not in header:                  
                 for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):
                     if specimen in section_specimen:
+                        print header,specimen
                         ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                         ## these can contain confusing general statements about the cancer and/or patients in general ##
                         if re.search(r'[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',index):pass
                         else:
-                            find_site(results)                  
+                            find_site_match(results)                  
         if specimen_site_set:
             return {global_strings.NAME:"PathFindSite",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(specimen_site_set),
                     global_strings.CONFIDENCE:("%.2f" % .85), global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]}
