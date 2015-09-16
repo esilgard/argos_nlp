@@ -68,22 +68,26 @@ def get(disease_group,dictionary):
         
         for specimen,description in specimen_dictionary.items():
             spec_finding_set,spec_finding_start_stops_set=get_spec_histo(specimen,findings,findings_standardizations)
-            confidence=.7
-            if not spec_finding_set:
-                specimen='UNK'
-                confidence=.6
-                spec_finding_set,spec_finding_start_stops_set=get_spec_histo('',findings,findings_standardizations)
-            if spec_finding_set:                
-                return_dictionary_list.append({global_strings.NAME:"PathFindOther",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,
-                    global_strings.VALUE:';'.join(spec_finding_set),global_strings.CONFIDENCE:("%.2f" % confidence),global_strings.VERSION:__version__,
-                    global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in spec_finding_start_stops_set]})
-                
+            if spec_finding_set:
                 finding_set=finding_set.union(spec_finding_set)                
                 finding_start_stops_set=finding_start_stops_set.union(spec_finding_start_stops_set)
+                return_dictionary_list.append({global_strings.NAME:"PathFindOther",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,
+                    global_strings.VALUE:';'.join(spec_finding_set),global_strings.CONFIDENCE:("%.2f" % .80),global_strings.VERSION:__version__,
+                    global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in spec_finding_start_stops_set]})                
                 
+
+    ## back off model - to cover the case where there's no explicitly labeled specimen - assign to a general "UNK" specimen
+    if not spec_finding_set:    
+        spec_finding_set,spec_finding_start_stops_set=get_spec_histo('',findings,findings_standardizations)       
+        if spec_finding_set:           
+            finding_set=finding_set.union(spec_finding_set)                
+            finding_start_stops_set=finding_start_stops_set.union(spec_finding_start_stops_set)
+            return_dictionary_list.append({global_strings.NAME:"PathFindOther",global_strings.KEY:'UNK',global_strings.TABLE:global_strings.FINDING_TABLE,
+                    global_strings.VALUE:';'.join(spec_finding_set),global_strings.CONFIDENCE:("%.2f" % .70),global_strings.VERSION:__version__,
+                    global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in spec_finding_start_stops_set]})
+                    
     ## aggregate histologies of individual specimens for overall finding
-    if finding_set:
-        
+    if finding_set:        
         return_dictionary_list.append({global_strings.NAME:"PathFindingOther",global_strings.KEY:"ALL",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(finding_set),
             global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in return_dictionary_list])/len(return_dictionary_list))),
             global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in finding_start_stops_set]})     
@@ -92,8 +96,7 @@ def get(disease_group,dictionary):
                 
             
 ## check for the presence of a non-negated string ##
-def find_histology(short_text,finding):
-   
+def find_histology(short_text,finding):   
     if re.search(r'([\W]|^)'+finding+r'([\W]|$)',short_text):        
         if not re.search(r'( not | no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+finding+r'([\W]|$)',short_text) and \
            not re.search(r'([\W]|^)'+finding+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',short_text):                

@@ -46,9 +46,7 @@ def get(disease_group,dictionary):
                 for each_match in re.finditer(r'^.*( |^)('+each_site+r')( |$).*',text,re.MULTILINE):                    
                     if not re.search(r'( not | no |negative |free of)[\w ]{,50}'+each_match.group(2),text,re.MULTILINE) and \
                        not re.search(each_match.group(2)+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',text,re.MULTILINE):                                           
-                        specimen_site_set.add(standardizations[each_site])
-                        print each_site,each_match.group(2),(each_match.start(2)+line_onset,each_match.end(2)+line_onset)
-                        print text
+                        specimen_site_set.add(standardizations[each_site])                        
                         ## only return char offsets for the regular path text (not the SpecimenSource text)
                         if line_onset:
                             specimen_start_stops_set.add((each_match.start(2)+line_onset,each_match.end(2)+line_onset))
@@ -62,8 +60,7 @@ def get(disease_group,dictionary):
                     find_site_match(dictionary[section][0].get(specimen))          
             elif ('SPECIMEN' in header or 'DESCRIPTION' in header or 'IMPRESSION' in header or 'Specimen' in header or 'DIAGNOSIS' in header) and 'CLINICAL' not in header:                  
                 for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):
-                    if specimen in section_specimen:
-                        print header,specimen
+                    if specimen in section_specimen:                       
                         ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
                         ## these can contain confusing general statements about the cancer and/or patients in general ##
                         if re.search(r'[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',index):pass

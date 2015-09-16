@@ -29,8 +29,8 @@ Breast;mammary;axilliary;breasts
 Kidney;renal;kidneys
 Sacrum;sacral
 Bile Duct
-Brain and CNS;Frontoparietal;parietal;frontal;temporal;occipital;cns
+Brain and CNS;frontoparietal;parietal;frontal;temporal;occipital;cns
 Bladder
 Urine
 Adrenal
-Head and Neck;Head;Mouth;Tongue;Mandible;Nasopharynx;pharynx;pharyngeal;Oropharynx;Nasopharynx;Neck
+Head and Neck;mouth;tongue;mandible;nasopharynx;pharynx;pharyngeal;oropharynx;nasal;paranasal;sinus;salivary
