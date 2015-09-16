@@ -13,7 +13,7 @@ class PathStageT(PathStage):
     def __init__(self):
         self.stage_name='PathStageT'
         self.regex=r'.*(pT[012345][abc]?).*'
-        self.confidence=.8
+        self.confidence=("%.2f" % .8)
 		
 		
 	

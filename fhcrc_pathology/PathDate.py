@@ -17,7 +17,7 @@ def get(disease_group,dictionary):
     extract the first signed date (date of surgery)from normal cased text of the pathology report    
     '''
     
-    return_dictionary={global_strings.NAME:"PathDate",global_strings.KEY:"ALL",global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.VERSION:__version__,
+    return_dictionary={global_strings.NAME:"PathDate",global_strings.KEY:"ALL",global_strings.VALUE:None,global_strings.CONFIDENCE:("%.2f" % 0.0),global_strings.VERSION:__version__,
                        global_strings.STARTSTOPS:[],global_strings.TABLE:global_strings.PATHOLOGY_TABLE}
                        
     full_text=dictionary[(-1,'FullText',0,None)]
@@ -31,7 +31,7 @@ def get(disease_group,dictionary):
         if len(date_match.group(2))==1:               
             day='0'+date_match.group(2)                
         return_dictionary[global_strings.VALUE]=str(datetime.strptime(year+','+month+','+day,'%Y,%m,%d').isoformat())
-        return_dictionary[global_strings.CONFIDENCE]=1.0
+        return_dictionary[global_strings.CONFIDENCE]=("%.2f" % 1.0)
         return_dictionary[global_strings.KEY]="ALL"
         return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:date_match.start(1),global_strings.STOP:date_match.end(3)})
         

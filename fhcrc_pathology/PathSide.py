@@ -67,7 +67,7 @@ def get(disease_group,dictionary):
         if type(side_list)==str:    side_list=[side_list]
         if ('Right' in side_list and 'Left' in side_list) or 'Bilateral' in side_list: side_list=['Bilateral']
         return_dictionary_list.append({global_strings.NAME:"PathSide",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(side_list)),
-                                       global_strings.CONFIDENCE:0.97,global_strings.VERSION:__version__, global_strings.KEY:'ALL',
+                                       global_strings.CONFIDENCE:("%.2f" % 0.97),global_strings.VERSION:__version__, global_strings.KEY:'ALL',
                                        global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})
 
     ## if there were no specimens, or no specimen headers in the text - without reference to a specific specimen ##
@@ -79,6 +79,6 @@ def get(disease_group,dictionary):
                or 'Bilateral' in overall_side_dictionary[global_strings.VALUE]: overall_side_dictionary[global_strings.VALUE]=['Bilateral']
             if type(overall_side_dictionary[global_strings.VALUE])==str:   overall_side_dictionary[global_strings.VALUE]=[overall_side_dictionary[global_strings.VALUE]]
             return_dictionary_list.append({global_strings.NAME:"PathSide",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(set(overall_side_dictionary[global_strings.VALUE])),
-                  global_strings.CONFIDENCE:0.9,global_strings.VERSION:__version__,global_strings.KEY:'ALL',global_strings.STARTSTOPS:overall_side_dictionary[global_strings.STARTSTOPS]})
+                  global_strings.CONFIDENCE:("%.2f" % 0.9),global_strings.VERSION:__version__,global_strings.KEY:'ALL',global_strings.STARTSTOPS:overall_side_dictionary[global_strings.STARTSTOPS]})
             
     return (return_dictionary_list,list)

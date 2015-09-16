@@ -30,9 +30,9 @@ def get(disease_group,dictionary):
         start_stops_set.add((each.start(1),each.end(1)))
     if return_dictionary[global_strings.VALUE]:
         return_dictionary[global_strings.STARTSTOPS]=[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]    
-        return_dictionary[global_strings.CONFIDENCE]=.98
+        return_dictionary[global_strings.CONFIDENCE]=("%.2f" % .98)
     else:
          return_dictionary[global_strings.VALUE]='STD'
-         return_dictionary[global_strings.CONFIDENCE]=.90
+         return_dictionary[global_strings.CONFIDENCE]=("%.2f" % .90)
          return_dictionary[global_strings.STARTSTOPS]=[]
     return ([return_dictionary],list) 
