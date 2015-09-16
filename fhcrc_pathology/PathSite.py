@@ -41,13 +41,18 @@ def get(disease_group,dictionary):
     def get_site(site_list,standardizations,specimen):        
         specimen_site_set=set([])
         specimen_start_stops_set=set([])
-   
+    
         def find_site(text):            
             text=re.sub(r'[.,:;\\\/\-\)\(]',' ',text).lower()
             for each_site in site_list:  
-                for each_match in re.finditer('^.*( |^)('+each_site+')( |$).*',text,re.MULTILINE):                            
-                    specimen_site_set.add(standardizations[each_site])                              
-                    specimen_start_stops_set.add((each_match.start(2)+line_onset,each_match.end(2)+line_onset))
+                for each_match in re.finditer(r'^.*( |^)('+each_site+r')( |$).*',text,re.MULTILINE):                    
+                    if not re.search(r'( not | no |negative |free of)[\w ]{,50}'+each_match.group(2),text,re.MULTILINE) and \
+                       not re.search(each_match.group(2)+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',text,re.MULTILINE):
+                        if 'no hilar lymph nodes' in text and standardizations[each_site]=='Lymph Node':print 'not negated',each_site,each_match.group(2),'\n'
+                        if 'no hilar lymph nodes' in text and standardizations[each_site]=='Lymph Node':print text[text.find(each_match.group(2))-50:text.find(each_match.group(2))+50],'\n'
+                   
+                        specimen_site_set.add(standardizations[each_site])                              
+                        specimen_start_stops_set.add((each_match.start(2)+line_onset,each_match.end(2)+line_onset))
                      
         for section in dictionary:
             section_specimen=section[3]
@@ -101,7 +106,7 @@ def get(disease_group,dictionary):
         ## disease specific sites throughout the whole report ##
         overall_site_dictionary=get_site(disease_group_sites,disease_group_standardizations,'')        
         if overall_site_dictionary:            
-            return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:overall_site_dictionary[global_strings.VALUE],
+            return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.KEY:'ALL',global_strings.VALUE:overall_site_dictionary[global_strings.VALUE],
                     global_strings.CONFIDENCE:0.75,global_strings.VERSION:__version__, global_strings.STARTSTOPS:overall_site_dictionary[global_strings.STARTSTOPS]})
            
         else:

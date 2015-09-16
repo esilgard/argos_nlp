@@ -13,7 +13,7 @@ class PathStageM(PathStage):
     
     def __init__(self):
         self.stage_name='PathStageM'
-        self.regex=r'.*(pM[012x]).*'
+        self.regex=r'.*(pM[012Xx]).*'
         self.confidence=.8
 
 

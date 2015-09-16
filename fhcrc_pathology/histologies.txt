@@ -2,9 +2,5 @@ Cancer;cancerous
 Malignant;malignancy
 Metastatic Carcinoma
 Metastatic Cancer
-<<<<<<< HEAD
 Carcinoma
-Sarcoma
-=======
-Carcinoma
->>>>>>> 85cf54cc9e7e045fba01965771a96db9feae5336
+Sarcoma;[\w]+sarcoma
