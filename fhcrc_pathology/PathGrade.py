@@ -89,7 +89,7 @@ def get(disease_group,dictionary):
                     return_dictionary_list.append({global_strings.NAME:"PathFindGrade",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(grade_set),
                         global_strings.CONFIDENCE:("%.2f" % .90), global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]} )                
                     whole_grade_set=whole_grade_set.union(grade_set)
-                    whole_start_stops_set.union(start_stops_set)
+                    whole_start_stops_set=whole_start_stops_set.union(start_stops_set)
                         
         if whole_grade_set:       
             return_dictionary_list.append({global_strings.NAME:"PathGrade",global_strings.TABLE:global_strings.STAGE_GRADE_TABLE,global_strings.KEY:'ALL',global_strings.VALUE:';'.join(whole_grade_set),

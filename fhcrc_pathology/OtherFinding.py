@@ -42,12 +42,23 @@ def get(disease_group,dictionary):
         specimen_start_stops_set=set([])
                     
         ## helper method to find non-negated string matches ##
-        def find_histology_matches(short_text,finding):   
+        def find_histology_matches(short_text,finding,line_onset):
+            
             if re.search(r'([\W]|^)'+finding+r'([\W]|$)',short_text):        
-                if not re.search(r'( not | no |negative |free of |against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+finding+r'([\W]|$)',short_text) and \
+                if not re.search(r'( not | no |negative |free of |without|against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+finding+r'([\W]|$)',short_text) and \
                    not re.search(r'([\W]|^)'+finding+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',short_text): 
-                    specimen_start_stops_set.add((short_text.find(finding),short_text.find(finding)+len(finding))   )                             
-                    specimen_finding_set.add(standardizations[finding])
+                    start=short_text.find(finding)+line_onset
+                    stop=start+len(finding)                    
+                    ## only add char off sets of there is not a longer (overlapping) string
+                    ## this works because the histology list is sorted by length
+                    ## is there a faster way to do this than iterate through set items?
+                    substring=False                    
+                    for offsets in specimen_start_stops_set:
+                        if start >= offsets[0] and start <= offsets[1]:
+                            substring=True                   
+                    if substring==False:
+                        specimen_finding_set.add(standardizations[finding])
+                        specimen_start_stops_set.add((start,stop))
                     
         for section in sorted(dictionary):                
             section_specimen=section[3]                
@@ -62,10 +73,9 @@ def get(disease_group,dictionary):
                         text=results.lower()
                         text=re.sub(r'[.,:;\\\/\-]',' ',text)
                         for each_string in string_list:                            
-                            find_histology_matches(text,each_string)                           
+                            find_histology_matches(text,each_string,line_onset)                           
                                                  
-                                                          
-       
+                               
         return specimen_finding_set,specimen_start_stops_set
 ##############################################################################################################################################################        
     return_dictionary_list=[]

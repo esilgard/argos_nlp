@@ -3,4 +3,4 @@ Malignant;malignancy
 Metastatic Carcinoma
 Metastatic Cancer
 Carcinoma
-Sarcoma;[\w]+sarcoma
+Sarcoma;[a-zA-Z]+sarcoma
