@@ -85,17 +85,19 @@ def get(disease_group,dictionary):
                                 grade_set=grade_set.union(specimen_grade)                            
                                 start_stops_set=start_stops_set.union(offsets)                           
                             
-                if grade_set:                
+                if grade_set:
+                    confidence=.9
+                    if len(grade_set)>1:confidence-=.3
                     return_dictionary_list.append({global_strings.NAME:"PathFindGrade",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(grade_set),
-                        global_strings.CONFIDENCE:("%.2f" % .90), global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]} )                
+                        global_strings.CONFIDENCE:("%.2f" % confidence), global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]} )                
                     whole_grade_set=whole_grade_set.union(grade_set)
                     whole_start_stops_set=whole_start_stops_set.union(start_stops_set)
                         
-        if whole_grade_set:       
+        if whole_grade_set:          
             return_dictionary_list.append({global_strings.NAME:"PathGrade",global_strings.TABLE:global_strings.STAGE_GRADE_TABLE,global_strings.KEY:'ALL',global_strings.VALUE:';'.join(whole_grade_set),
-                                       global_strings.CONFIDENCE:("%.2f" % 0.85),global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in whole_start_stops_set]})
+                                       global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in return_dictionary_list])/len(return_dictionary_list))),global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in whole_start_stops_set]})
             return_dictionary_list.append({global_strings.NAME:"PathHistologyGrade",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.KEY:'ALL',global_strings.VALUE:';'.join(whole_grade_set),
-                                       global_strings.CONFIDENCE:("%.2f" % 0.85),global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in whole_start_stops_set]})
+                                       global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in return_dictionary_list])/len(return_dictionary_list))),global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in whole_start_stops_set]})
             
         ## if there were no grades listed under specific specimens - look at the text overall ##
         else:                              
@@ -106,10 +108,12 @@ def get(disease_group,dictionary):
                 whole_grade_set=whole_grade_set.union(specimen_grade)                            
                 whole_start_stops_set= whole_start_stops_set.union(offsets)                 
             if whole_grade_set:
+                confidence=.75
+                if len(whole_grade_set)>1:confidence-=.3
                 return_dictionary_list.append({global_strings.NAME:"PathGrade",global_strings.TABLE:global_strings.STAGE_GRADE_TABLE,global_strings.KEY:'ALL',global_strings.VALUE:';'.join(whole_grade_set),
-                    global_strings.CONFIDENCE:("%.2f" % 0.75),global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in whole_start_stops_set]})
+                    global_strings.CONFIDENCE:("%.2f" % confidence),global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in whole_start_stops_set]})
                 return_dictionary_list.append({global_strings.NAME:"PathHistologyGrade",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.KEY:'ALL',global_strings.VALUE:';'.join(whole_grade_set),
-                                       global_strings.CONFIDENCE:("%.2f" % 0.75),global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in whole_start_stops_set]})
+                    global_strings.CONFIDENCE:("%.2f" % confidence),global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in whole_start_stops_set]})
             
 
         return (return_dictionary_list,list)

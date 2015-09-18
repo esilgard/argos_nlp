@@ -95,7 +95,7 @@ def get(disease_group,dictionary):
 
     if site_set:
         return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.KEY:specimen,global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(site_set),
-                                       global_strings.CONFIDENCE:("%.2f" % 0.75),global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})
+                                       global_strings.CONFIDENCE:("%.2f" % 0.85),global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})
 
     ## if there were no specimens, or no specimen headers in the text - look at the text overall - first for disease specific, then for general sites ##
     else:
@@ -103,13 +103,13 @@ def get(disease_group,dictionary):
         overall_site_dictionary=get_site(disease_group_sites,disease_group_standardizations,'')        
         if overall_site_dictionary:            
             return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.KEY:'ALL',global_strings.VALUE:overall_site_dictionary[global_strings.VALUE],
-                    global_strings.CONFIDENCE:("%.2f" % 0.75),global_strings.VERSION:__version__, global_strings.STARTSTOPS:overall_site_dictionary[global_strings.STARTSTOPS]})
+                    global_strings.CONFIDENCE:("%.2f" % 0.80),global_strings.VERSION:__version__, global_strings.STARTSTOPS:overall_site_dictionary[global_strings.STARTSTOPS]})
            
         else:
             ## general sites throughout the whole report ##
             overall_site_dictionary=get_site(general_sites,general_standardizations,'')
             if overall_site_dictionary:            
                 return_dictionary_list.append({global_strings.NAME:"PathSite",global_strings.KEY:'ALL',global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:overall_site_dictionary[global_strings.VALUE],
-                    global_strings.CONFIDENCE:("%.2f" % 0.75),global_strings.VERSION:__version__, global_strings.STARTSTOPS:overall_site_dictionary[global_strings.STARTSTOPS]})
+                    global_strings.CONFIDENCE:("%.2f" % 0.70),global_strings.VERSION:__version__, global_strings.STARTSTOPS:overall_site_dictionary[global_strings.STARTSTOPS]})
                 
     return (return_dictionary_list,list)

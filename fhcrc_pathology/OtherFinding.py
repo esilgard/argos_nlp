@@ -90,7 +90,7 @@ def get(disease_group,dictionary):
                 finding_set=finding_set.union(spec_finding_set)                
                 finding_start_stops_set=finding_start_stops_set.union(spec_finding_start_stops_set)
                 return_dictionary_list.append({global_strings.NAME:"PathFindOther",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,
-                    global_strings.VALUE:';'.join(spec_finding_set),global_strings.CONFIDENCE:("%.2f" % .80),global_strings.VERSION:__version__,
+                    global_strings.VALUE:';'.join(spec_finding_set),global_strings.CONFIDENCE:("%.2f" % .85),global_strings.VERSION:__version__,
                     global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in spec_finding_start_stops_set]})                
                 
 

@@ -40,7 +40,7 @@ def get(table_list):
             for fields in table[global_strings.FIELDS]:               
                 
                 if fields[global_strings.NAME]=="PathFindHistology" and fields[global_strings.VALUE]:                   
-                    specimen_histology_found.add(fields[global_strings.KEY])                    
+                    specimen_histology_found.add(fields[global_strings.KEY])            
             ## iterate through fields again and only append those that have histologies to the final field list            
             for fields in table[global_strings.FIELDS]:
                 if fields[global_strings.KEY] in specimen_histology_found:
