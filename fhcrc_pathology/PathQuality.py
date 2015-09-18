@@ -23,16 +23,16 @@ def get(disease_group,dictionary):
     full_text=dictionary[(-1,'FullText',0,None)]
     
     ## make this match non greedy so that the first date is picked out
-    review_match=re.finditer(r'.*( consult |outside institution|reviewed at uwmc|reviewed at university of washington|slide review).*',full_text.lower(),re.DOTALL)
+    review_match=re.finditer(r' (consult|outside institution|reviewed at uwmc|reviewed at university of washington|slide review) ',full_text.lower(),re.DOTALL)
     start_stops_set=set([])
     for each in review_match:                               
         return_dictionary[global_strings.VALUE]='REV'        
         start_stops_set.add((each.start(1),each.end(1)))
     if return_dictionary[global_strings.VALUE]:
         return_dictionary[global_strings.STARTSTOPS]=[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]    
-        return_dictionary[global_strings.CONFIDENCE]=.98
+        return_dictionary[global_strings.CONFIDENCE]=("%.2f" % .98)
     else:
          return_dictionary[global_strings.VALUE]='STD'
-         return_dictionary[global_strings.CONFIDENCE]=.90
+         return_dictionary[global_strings.CONFIDENCE]=("%.2f" % .90)
          return_dictionary[global_strings.STARTSTOPS]=[]
     return ([return_dictionary],list) 

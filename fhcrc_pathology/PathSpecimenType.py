@@ -12,9 +12,9 @@ import os
 import global_strings
 path= os.path.dirname(os.path.realpath(__file__))+'/'
 
-#############################################################################################################################################################
+####################################################################################################################
 
-################################################################################
+####################################################################################################################
 
 def get(disease_group,dictionary):  
     '''
@@ -65,7 +65,8 @@ def get(disease_group,dictionary):
                         if proc in each and len(proc)<len(each):                            
                             general_proc=True
                     if not general_proc:
-                        procedures.add(standardizations[each_spec_type])                       
+                        procedures.add(standardizations[each_spec_type])
+                        ## only return char offsets for the regular path text (not the SpecimenSource text)
                         if line_onset:                                
                             procedure_start_stops_set.add((each_match.start(2)+line_onset,each_match.end(2)+line_onset))
                    
@@ -97,7 +98,7 @@ def get(disease_group,dictionary):
                 specimen_procedure_set,specimen_procedure_start_stops_set=get_procedures(specimen,general_procedures,general_standardizations)                
             if specimen_procedure_set:                
                 return_dictionary_list.append({global_strings.NAME:"PathSpecimenType",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(specimen_procedure_set),
-                                               global_strings.CONFIDENCE:("%.2f" % .7),global_strings.VERSION:__version__,
+                                               global_strings.CONFIDENCE:("%.2f" % .70),global_strings.VERSION:__version__,
                                                global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_procedure_start_stops_set]})
                 procedure_set=procedure_set.union(specimen_procedure_set)             
                 procedure_start_stops_set=procedure_start_stops_set.union(specimen_procedure_start_stops_set)
@@ -111,8 +112,8 @@ def get(disease_group,dictionary):
         if specimen_procedure_set:
             procedure_set=procedure_set.union(specimen_procedure_set)
             procedure_start_stops_set=procedure_start_stops_set.union(specimen_procedure_start_stops_set)
-            return_dictionary_list.append({global_strings.NAME:"PathSpecimenType",global_strings.KEY:"UNK",global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(specimen_procedure_set),global_strings.CONFIDENCE:("%.2f" % .50),
-                                      global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_procedure_start_stops_set]})
+            return_dictionary_list.append({global_strings.NAME:"PathSpecimenType",global_strings.KEY:"UNK",global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(specimen_procedure_set),
+                                           global_strings.CONFIDENCE:("%.2f" % .50),global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_procedure_start_stops_set]})
    
     ## aggregate procedures of individual specimens for overall histology
     if procedure_set:       

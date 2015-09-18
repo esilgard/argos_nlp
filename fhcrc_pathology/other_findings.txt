@@ -4,6 +4,7 @@ Granuloma;granulomas
 Mucinous;mucin producing
 Necrosis;necrotic;necroses
 Dysplasia;dysplastic
+Metaplasia
 Hyperplasia;hyperplastic
 Adenoma;adenomas
 Fibroma;fibromas

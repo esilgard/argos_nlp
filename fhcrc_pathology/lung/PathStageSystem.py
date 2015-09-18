@@ -12,7 +12,8 @@ class PathStageSystem(PathStage):
     __version__='PathStageSystem1.0' 	
     def __init__(self):
         self.stage_name='PathStageSystem'
-        self.regex=r'.*(AJCC[ ,]+[0-9]{1,2})[ thsnd]+ed.*'   
+        self.regex=r'.*(AJCC[ ,]+[0-9]{1,2})[ thsnd]+ed.*'
+        self.confidence= ("%.2f" % .95)
 		
 		
 	

@@ -34,9 +34,10 @@ class PathStage(object):
                            dict_keys.STARTSTOPS:[],dict_keys.TABLE:dict_keys.STAGE_GRADE_TABLE}        
         
             stage=re.match(self.regex, full_text, re.DOTALL)
-            if stage:            
+            if stage:
+                self.return_dictionary[dict_keys.KEY]='ALL'
                 self.return_dictionary[dict_keys.CONFIDENCE]=self.confidence
-                self.return_dictionary[dict_keys.VALUE]=stage.group(1)
+                self.return_dictionary[dict_keys.VALUE]=stage.group(1).replace(',','')
                 self.return_dictionary[dict_keys.STARTSTOPS].append({dict_keys.START:stage.start(1),dict_keys.STOP:stage.end(1)})
             return ([self.return_dictionary],list)
            

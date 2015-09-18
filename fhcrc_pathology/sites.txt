@@ -1,4 +1,4 @@
-Liver;hepatic
+Liver
 Skin
 Abdomen
 Stomach;gastric
@@ -12,10 +12,16 @@ Spleen
 Tonsil;tonsils
 Chest
 Back
+Endometrium;endometrial
+Vagina;vaginal
+Vulva;vulvar
+Cervix;cervical
+Uterus;uterine
 Spine;spinal;paraspinal
 Bone;osteo
 Leg;thigh;calf
 Arm;ulna;ulnar
+Anal;anus
 Torso;thoracic
 Diaphragm
 Acetabulum
@@ -29,7 +35,9 @@ Breast;mammary;axilliary;breasts
 Kidney;renal;kidneys
 Sacrum;sacral
 Bile Duct
-Brain and CNS;Frontoparietal;parietal;frontal;temporal;occipital;cns
+Brain and CNS;frontoparietal;parietal;frontal;temporal;occipital;cns
 Bladder
+Urine
+Bowel
 Adrenal
-Head and Neck;Head;Mouth;Tongue;Mandible;Nasopharynx;pharynx;pharyngeal;Oropharynx;Nasopharynx;Neck
+Head and Neck;mouth;tongue;mandible;nasopharynx;pharynx;pharyngeal;oropharynx;nasal;paranasal;sinus;salivary

@@ -9,5 +9,5 @@ Bronchi;bronchial;bronchus
 Pleura;pleurum;pleural
 Retroperitoneum;retroperitoneal
 Upper/Middle Lobe;Upper/Middle Lobes;middle/upper lobes;middle/upper lobe
-Lymph Node;nodes;nodal;1l;1r;2l;2r;3a;3p;4l;4r;5l;5r;6l;6r;7r;7l;8r;8l;9r;9l;10l;10r;11l;11r;station 7;station 8;station 9;station 12;station 13;station 14;station 10;station 11;station 1;station 2;station 3; station 4; station 5; station 6;
+Lymph Node;1l;1r;2l;2r;3a;3p;4l;4r;5l;5r;6l;6r;7r;7l;8r;8l;9r;9l;10l;10r;11l;11r;station 7;station 8;station 9;station 12;station 13;station 14;station 10;station 11;station 1;station 2;station 3; station 4; station 5; station 6
 Chest Wall
