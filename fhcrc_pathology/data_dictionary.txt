@@ -1,9 +1,13 @@
-PathSpecimenType	SpecimenSource
-PathSite	SpecimenSource
-PathSide	GROSS DESCRIPTION
-PathHistology	FINAL DIAGNOSIS
-PathDate	DEMOGRAPHICS
-Pathologist	NULL
-PathGrade	NULL
-OtherFinding	NULL
-PathQuality	NULL
+PathSpecimenType	Module
+PathSite	Module
+PathSide	Module
+PathHistology	Module
+PathDate	Class
+Pathologist	Class
+PathGrade	Module
+OtherFinding	Module
+PathQuality	Class
+PathStageT	Class
+PathStageN	Class
+PathStageM	Class
+PathStageSystem	Class

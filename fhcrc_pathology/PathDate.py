@@ -5,35 +5,20 @@
 #
 
 '''author@esilgard'''
-__version__='PathDate1.0'
 
+from OneFieldPerReport import OneFieldPerReport
+import global_strings as dict_keys
 
-import re
-import global_strings
-from datetime import datetime
-
-def get(disease_group,dictionary):
-    '''
-    extract the first signed date (date of surgery)from normal cased text of the pathology report    
-    '''
+class PathDate(OneFieldPerReport):
+    __version__='PathDate1.0'
     
-    return_dictionary={global_strings.NAME:"PathDate",global_strings.KEY:"ALL",global_strings.VALUE:None,global_strings.CONFIDENCE:("%.2f" % 0.0),global_strings.VERSION:__version__,
-                       global_strings.STARTSTOPS:[],global_strings.TABLE:global_strings.PATHOLOGY_TABLE}
-                       
-    full_text=dictionary[(-1,'FullText',0,None)]
- 
-    ## make this match non greedy so that the first date is picked out
-    date_match=re.match(r'.*?Electronically signed[ ]*([\d]{1,2})[\-/]([\d]{1,2})[\-/]([\d]{4}).*',full_text,re.DOTALL)
-    if date_match:
-        year=date_match.group(3)
-        month=date_match.group(1)
-        day=date_match.group(2)
-        if len(date_match.group(2))==1:               
-            day='0'+date_match.group(2)                
-        return_dictionary[global_strings.VALUE]=str(datetime.strptime(year+','+month+','+day,'%Y,%m,%d').isoformat())
-        return_dictionary[global_strings.CONFIDENCE]=("%.2f" % 1.0)
-        return_dictionary[global_strings.KEY]="ALL"
-        return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:date_match.start(1),global_strings.STOP:date_match.end(3)})
-        
-           
-    return ([return_dictionary],list) 
+    def __init__(self):
+        self.field_name='PathDate'
+        self.regex=r'Electronically signed[ ]*([\d]{1,2})[\-/]([\d]{1,2})[\-/]([\d]{4})'
+        self.confidence=1
+        self.match_style='first'
+        self.table=dict_keys.PATHOLOGY_TABLE
+        self.value_type='match'
+
+    
+

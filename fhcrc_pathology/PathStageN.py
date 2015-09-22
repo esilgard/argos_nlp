@@ -5,18 +5,17 @@
 #
 
 '''author@esilgard'''
-__version__='Pathologist1.0'
 
 from OneFieldPerReport import OneFieldPerReport
 import global_strings as dict_keys
 
-class Pathologist(OneFieldPerReport):
-    __version__='Pathologist1.0'
+class PathStageN(OneFieldPerReport):
+    __version__='PathStageN1.0'
     
     def __init__(self):
-        self.field_name='Pathologist'
-        self.regex=r'\n([A-Za-z\'\-,. ]+) MD(, PhD)?[ ]*\n[ ]*Pathologist[ ]*\n'
-        self.confidence=1
-        self.match_style='first'
-        self.table=dict_keys.PATHOLOGY_TABLE
+        self.field_name='PathStageN'
+        self.regex=r'((pN|yN)[0123Xx][abc]?)'
+        self.confidence=.92
+        self.match_style='all'
+        self.table=dict_keys.STAGE_GRADE_TABLE
         self.value_type='match'

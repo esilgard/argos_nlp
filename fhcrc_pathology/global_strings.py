@@ -23,3 +23,5 @@ FINDING_TABLE="PathologyFinding"
 TEST_TABLE="PathTest"
 ERR_STR="errorString"
 ERR_TYPE="errorType"
+ALL='ALL'
+UNK='UNK'

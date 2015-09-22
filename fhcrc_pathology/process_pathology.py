@@ -42,25 +42,29 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
     error_list=[]
     data_elements=dict.fromkeys(path_data_dictionary.keys()+disease_group_data_dictionary.keys())
     for field in data_elements:        
-        ## import the CLASSES for the fields in the disease specific data dictionary, back off to general MODULE if there is no disease specific version ##
-        try:
-            exec ('from '+disease_group+' import '+field)
-            exec("fieldClass=return_exec_code("+field+"."+field+"())")
-            field_value,return_type=fieldClass.get(disease_group,report_dictionary)
-            if not field_value:
-                exec('import '+field)
-                exec("field_value,return_type=return_exec_code("+field+".get(disease_group,report_dictionary))")
-        
-        except:
+        ## import the CLASSES and MODULES for the fields in the disease specific data dictionary, back off to general if there is no disease specific version ##
+        if field in disease_group_data_dictionary:
+            try:
+                exec ('from '+disease_group+' import '+field)
+                if disease_group_data_dictionary.get(field)=='Class':                                   
+                    exec("fieldClass=return_exec_code("+field+"."+field+"())")
+                    field_value,return_type=fieldClass.get(disease_group,report_dictionary)
+                ## module import
+                else:                
+                    exec("field_value,return_type=return_exec_code("+field+".get(disease_group,report_dictionary))")
+            except:                
+                return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not import disease specific '+field+' module or class --- program aborted. '+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])},Exception)
+        else:
             try:
                 exec('import '+field)
-                
-                try:
+                if path_data_dictionary.get(field)=='Class':                    
+                    exec("fieldClass=return_exec_code("+field+"."+field+"())")                   
+                    field_value,return_type=fieldClass.get(disease_group,report_dictionary)                    
+                else:
                     exec("field_value,return_type=return_exec_code("+field+".get(disease_group,report_dictionary))")                    
-                except:
-                     return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not complete '+field+' module --- program aborted. '+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])},Exception)
-            except:                
-                return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not import '+field+' module --- program aborted. '+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])},Exception)
+            except:
+                return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not complete '+field+' module or class--- program aborted. '+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])},Exception)
+            
         ## organize fields by tables, then individual records, then individual fields
         
         if return_type==list:
