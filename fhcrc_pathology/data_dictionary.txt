@@ -1,11 +1,11 @@
-PathSpecimenType	Module
-PathSite	Module
+PathSpecimenType	Class
+PathSite	Class
 PathSide	Module
-PathHistology	Module
+PathHistology	Class
 PathDate	Class
 Pathologist	Class
 PathGrade	Module
-OtherFinding	Module
+OtherFinding	Class
 PathQuality	Class
 PathStageT	Class
 PathStageN	Class
