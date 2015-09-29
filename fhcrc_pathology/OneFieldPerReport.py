@@ -29,7 +29,7 @@ class OneFieldPerReport(object):
         return self.__version__
     
     def get(self, disease_group,dictionary):
-        try:                  
+        try:                
                       
             full_text=dictionary[(-1,'FullText',0,None)]           
             self.return_dictionary={global_strings.NAME:self.field_name,global_strings.VALUE:None,global_strings.CONFIDENCE:0.0,global_strings.KEY:global_strings.ALL,

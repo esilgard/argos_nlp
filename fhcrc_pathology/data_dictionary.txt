@@ -1,6 +1,6 @@
 PathSpecimenType	Class
 PathSite	Class
-PathSide	Module
+PathSide	Class
 PathHistology	Class
 PathDate	Class
 Pathologist	Class

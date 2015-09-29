@@ -1,5 +1,5 @@
 Liver
-Skin
+Skin;nevus;nevi;epidermal;dermal;dermis;epidermis
 Abdomen
 Stomach;gastric
 Esophagus;esophageal
@@ -35,7 +35,7 @@ Breast;mammary;axilliary;breasts
 Kidney;renal;kidneys
 Sacrum;sacral
 Bile Duct
-Brain and CNS;frontoparietal;parietal;frontal;temporal;occipital;cns
+Brain and CNS;frontoparietal lobe;parietal lobe;frontal lobe;temporal lobe;occipital lobe;cns
 Bladder
 Urine
 Bowel
