@@ -10,7 +10,7 @@ from OneFieldPerSpecimen import OneFieldPerSpecimen
 import global_strings
 
 class PathSite(OneFieldPerSpecimen):
-    __version__='PathSite.0'
+    __version__='PathSite1.0'
     
     def __init__(self):
         self.specimen_field_name ='PathFindSite'
@@ -32,6 +32,6 @@ class PathSite(OneFieldPerSpecimen):
         self.general_standardizations = {}
 
         ## relevant sections of the report ##
-        self.good_section = 'SPECIMEN|Specimen|IMPRESSION|DIAGNOSIS|COMMENT'
+        self.good_section = 'SPECIMEN|Specimen|IMPRESSION|DIAGNOSIS|COMMENT|DX'
         self.bad_section = 'CLINICAL'
        

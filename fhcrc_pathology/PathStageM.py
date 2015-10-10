@@ -14,7 +14,7 @@ class PathStageM(OneFieldPerReport):
 
     def __init__(self):
         self.field_name='PathStageM'
-        self.regex=r'((pM|yM)[012Xx])'
+        self.regex=r'((p|y|[pP]athological)[ ]*M[012Xx])'
         self.confidence=.90
         self.match_style='all'
         self.table=dict_keys.STAGE_GRADE_TABLE

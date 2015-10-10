@@ -1,0 +1,26 @@
+Frontal
+Upper Lobe
+Temporal
+Suboccipital
+Lower Lobe
+Parietal
+Frontotemporal
+Pituitary
+Middle Lobe
+Occipital
+Fossa
+Frontoparietal
+Parietooccipital
+Temporoparietal
+Cerebellar
+Frontotemporoparietal
+Temporooccipital
+Cerebellopontine 
+Sellar
+Pineal Gland
+Middle Fossa
+Occipitoparietal
+Temporofrontal
+Cerebellum
+Posterior fossa
+Skull

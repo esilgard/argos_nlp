@@ -1,0 +1,22 @@
+Arterio-Venous Malformation
+Benign Vascular Proliferation
+Chondroma
+Chordoma
+Enchondroma
+Epidermoid Cyst
+Fibroma of Tendon Sheath
+Follicular Hyperplasia
+Giant Cell Granuloma
+Giant Cell Tumor Bone
+Hemangioma
+Hibernoma
+Leiomyoma
+Lipoma
+Myofibroblastoma
+Myolipoma
+Myxoma
+Neurofibroma
+Osteochondroma
+Perineruioma
+Schwannoma
+Solitary Fibrous Tumor

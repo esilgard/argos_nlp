@@ -1,0 +1,15 @@
+Lower Extremity;leg;calf;thigh;shin;foot;toe;ankle
+Upper Extremity;arm;forearm;shoulder;elbow;hand;finger;thumb
+Pelvis
+Abdomen;stomach;flank
+Torso;thorax;chest;back
+Spine
+Retroperitoneal
+Neck
+Head;face
+Lung
+Heart
+Peritoneum
+Liver
+Kidney
+Diaphragm 

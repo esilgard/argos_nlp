@@ -13,7 +13,7 @@ class PathStageT(OneFieldPerReport):
     __version__='PathStageT1.0' 	
     def __init__(self):
         self.field_name='PathStageT'
-        self.regex=r'((pT|yT)[012345][abc]?)'
+        self.regex=r'((p|y|[pP]athological)[ ]*T[012345][abc]?)'
         self.confidence=.98
 	self.match_style='all'
 	self.table=dict_keys.STAGE_GRADE_TABLE

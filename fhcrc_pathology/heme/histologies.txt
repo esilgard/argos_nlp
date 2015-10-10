@@ -1,0 +1,4 @@
+AML;acute myeloid leukemia
+CML;chronic myeloid leukemia
+Multiple Myeloma
+MDS;dysplastic syndrome

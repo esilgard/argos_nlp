@@ -1,0 +1,20 @@
+Gallbladder
+Stomach;gastric
+Rectum;rectal
+Colon;colonic
+Colorectal
+Sigmoid Colon
+Pancreas;pancreatic
+Omentum
+Ileum
+Transverse Colon
+Ascending Colon
+Descending Colon
+Cecum;cecal
+Antrum
+Rectosigmoid Colon
+Appendix
+Esophagus;esophageal
+Intestine;intestinal
+Duodenum
+Bowel

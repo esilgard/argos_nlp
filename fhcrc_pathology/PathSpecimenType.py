@@ -30,6 +30,6 @@ class PathSpecimenType(OneFieldPerSpecimen):
         self.general_standardizations = {}
 
         ## relevant sections of the report ##
-        self.good_section = 'DIAGNOSIS|Specimen'
+        self.good_section = 'DIAGNOSIS|Specimen|DX|SPECIMEN'
         self.bad_section = 'CLINICAL'
 
