@@ -1,1 +1,3 @@
-Nevus;nevi;mole
+Nevus;nevi
+Lentigo
+Scar

@@ -11,3 +11,4 @@ PathStageT	Class
 PathStageN	Class
 PathStageM	Class
 PathStageSystem	Class
+Behavior	Class

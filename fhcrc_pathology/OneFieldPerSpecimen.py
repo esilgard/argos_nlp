@@ -147,7 +147,7 @@ class OneFieldPerSpecimen(object):
             self.return_dictionary_list.append({global_strings.NAME:self.overall_field_name,global_strings.KEY:global_strings.ALL,global_strings.TABLE:self.overall_table,global_strings.VALUE:';'.join(finding_set),
                                            global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in self.return_dictionary_list])/len(self.return_dictionary_list))),
                                           global_strings.VERSION:self.get_version(),global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})     
-        
+        if self.specimen_field_name =='Behavior':print self.return_dictionary_list
         return (self.return_dictionary_list,list)        
                     
             
