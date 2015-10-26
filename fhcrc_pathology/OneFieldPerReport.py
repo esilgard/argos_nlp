@@ -53,13 +53,13 @@ class OneFieldPerReport(object):
                 ## the field value will be based on the string match itself
                 if type(match) is SRE_MATCH_TYPE:
                     ## making the value into a datetime -- TODO this should be moved into a separate class which handles multiple date formats
-                    if self.field_name=='PathDate':                    
+                    if self.field_name=='PathDate':                        
                         year=match.group(3)
                         month=match.group(1)
                         day=match.group(2)                    
                         if len(match.group(2))==1:               
                             day='0'+match.group(2)                    
-                        self.return_dictionary[global_strings.VALUE]=str(datetime.strptime(year+','+month+','+day,'%Y,%m,%d').isoformat())
+                        self.return_dictionary[global_strings.VALUE]=year+'-'+month+'-'+day                        
                         self.return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:match.start(1),global_strings.STOP:match.end(3)})
                     
                     else:
