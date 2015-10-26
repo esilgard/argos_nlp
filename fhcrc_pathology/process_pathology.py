@@ -15,7 +15,7 @@
 #
 
 import sys,path_parser,final_logic,re
-import os,global_strings
+import os,global_strings,PathClassifier
 path2= os.path.dirname(os.path.realpath(__file__))+'/'
 '''author@esilgard'''
 __version__='process_pathology1.0'
@@ -79,6 +79,14 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
     report_table_list=report_table_d.values()
     
     return report_table_list,error_list,list
+
+def get_disease_specific_dictionary(disease_group):
+    ## disease group data dictionary ##
+    try:
+         return dict((y.split('\t')[0],y.split('\t')[1].strip()) for y in open(path2+'/'+disease_group+'/data_dictionary.txt','r').readlines())
+    except:
+        return {global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR: could not access or parse disease specific pathology data dictionary at '+path2+'/'+disease_group+'/data_dictionary.txt '}
+
         
 ### MAIN CLASS ###
 def main(arguments,path):
@@ -100,10 +108,7 @@ def main(arguments,path):
     try:    path_data_dictionary=dict((y.split('\t')[0],y.split('\t')[1].strip()) for y in open(path2+'/data_dictionary.txt','r').readlines())
     except: return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR: could not access or parse pathology data dictionary at '+path2+'/data_dictionary.txt --- program aborted'},Exception)
    
-    ## disease group data dictionary ##
-    try:    disease_group_data_dictionary=dict((y.split('\t')[0],y.split('\t')[1].strip()) for y in open(path2+'/'+disease_group+'/data_dictionary.txt','r').readlines())
-    except: return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR: could not access or parse disease specific pathology data dictionary at '+path2+'/'+disease_group+'/data_dictionary.txt '},Exception)
-    
+    disease_group_data_dictionary = get_disease_specific_dictionary(disease_group)
     field_value_output=[]
     error_output=[]
     i=0
@@ -113,13 +118,20 @@ def main(arguments,path):
             field_value_dictionary={}
             field_value_dictionary[global_strings.REPORT]=accession
             field_value_dictionary[global_strings.MRN]=mrn
-            
+            ## write out cannonical version of text file
             try:                
                 with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+accession+'.txt','wb') as out:
                           out.write(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])
             except:
                 return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_pathology attempting to write text to file at'+ \
                         arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed. '+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])}],list)
+
+            ## find disease group in the case of unknown/all --- this is currently simply looking for keywords in the full text
+            ## of the pathology report - future work to include section specific search and stochastic language model
+            if arguments.get('-g')=='all':
+                disease_group,derived_disease_group_confidence = PathClassifier.classify(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])               
+                disease_group_data_dictionary = get_disease_specific_dictionary(disease_group)
+                field_value_dictionary[global_strings.DZ_GROUP]={global_strings.VALUE:disease_group,global_strings.CONFIDENCE:('%.2f' % derived_disease_group_confidence)}
             return_fields,return_errors,return_type=get_fields(disease_group,pathology_dictionary[mrn][accession],disease_group_data_dictionary,path_data_dictionary)
 
             i+=1
@@ -127,7 +139,7 @@ def main(arguments,path):
             if return_type!=Exception:
                 if arguments.get('-a')=='n':
                     pass
-                else:
+                else:                    
                     field_value_dictionary[global_strings.TABLE+'s']=final_logic.get(return_fields)                  
                 field_value_output.append(field_value_dictionary)
             else:                
