@@ -41,7 +41,6 @@ class PathSide(OneFieldPerSpecimen):
 
 
     def infer(self,finding_set):
-        #print 'in infer',finding_set, ('Right' in finding_set and 'Left' in finding_set),finding_set==(['Right','Left'])
         ## infer 'bilateral' if the finding set is specifically only 'right' and 'left'
         if finding_set==set(['Right','Left']):            
             finding_set=set(['Bilateral'])
