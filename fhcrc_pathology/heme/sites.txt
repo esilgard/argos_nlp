@@ -1,0 +1,2 @@
+Marrow;bone marrow
+Peripheral;peripheral blood

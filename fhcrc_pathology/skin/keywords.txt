@@ -1,0 +1,1 @@
+skin;dermal;dermis;epidermis;nevus;nevi;scar;lentigo;keratinous

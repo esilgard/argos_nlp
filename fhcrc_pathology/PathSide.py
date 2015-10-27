@@ -10,7 +10,7 @@ from OneFieldPerSpecimen import OneFieldPerSpecimen
 import global_strings
 
 class PathSide(OneFieldPerSpecimen):
-    __version__='PathSide.0'
+    __version__='PathSide1.0'
     
     def __init__(self):
         self.specimen_field_name ='PathFindSide'
@@ -32,7 +32,7 @@ class PathSide(OneFieldPerSpecimen):
         self.general_standardizations = {}
 
         ## relevant sections of the report ##
-        self.good_section = 'SPECIMEN|Specimen|DESCRIPTION|IMPRESSION|DIAGNOSIS'
+        self.good_section = 'SPECIMEN|Specimen|DESCRIPTION|IMPRESSION|DIAGNOSIS|DX|DESC'
         self.bad_section = 'CLINICAL'
        
         ## ability to infer new value from one or more existing ones
@@ -40,8 +40,9 @@ class PathSide(OneFieldPerSpecimen):
 
 
 
-    def infer(self,finding_set):       
+
+    def infer(self,finding_set):
         ## infer 'bilateral' if the finding set is specifically only 'right' and 'left'
         if finding_set==set(['Right','Left']):            
-            finding_set=set(['Bilateral']
+            finding_set=set(['Bilateral'])
         return finding_set

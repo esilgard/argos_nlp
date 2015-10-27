@@ -120,7 +120,7 @@ class OneFieldPerSpecimen(object):
                 if not specimen_finding_set:                
                     specimen_finding_set,specimen_start_stops_set=self.get_specimen_finding(specimen,self.general_list,self.general_standardizations,dictionary)          
                 if specimen_finding_set:
-                    if self.inference_flag: specimen_finding_set=self.infer(specimen_finding_set);print 1,specimen_finding_set
+                    if self.inference_flag: specimen_finding_set=self.infer(specimen_finding_set)
                     self.return_dictionary_list.append({global_strings.NAME:self.specimen_field_name,global_strings.KEY:specimen,global_strings.TABLE:self.specimen_table,
                                                         global_strings.VALUE:';'.join(specimen_finding_set),global_strings.CONFIDENCE:("%.2f" % self.specimen_confidence),global_strings.VERSION:self.get_version(),
                                                        global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]})
@@ -135,7 +135,7 @@ class OneFieldPerSpecimen(object):
                 specimen_finding_set,specimen_start_stops_set=self.get_specimen_finding('',self.general_list,self.general_standardizations,dictionary)                
             if specimen_finding_set:         
                 finding_set=finding_set.union(specimen_finding_set)
-                if self.inference_flag: specimen_finding_set=self.infer(specimen_finding_set);print 2,specimen_finding_set
+                if self.inference_flag: specimen_finding_set=self.infer(specimen_finding_set)
                 start_stops_set=start_stops_set.union(specimen_start_stops_set)
                 self.return_dictionary_list.append({global_strings.NAME:self.specimen_field_name,global_strings.KEY:global_strings.UNK,global_strings.TABLE:self.specimen_table,global_strings.VERSION:self.get_version(),
                                             global_strings.VALUE:';'.join(specimen_finding_set),global_strings.CONFIDENCE:("%.2f" % self.unlabled_specimen_confidence),
@@ -143,7 +143,7 @@ class OneFieldPerSpecimen(object):
       
         ## aggregate histologies of individual specimens for overall finding
         if finding_set:       
-            if self.inference_flag: finding_set=self.infer(finding_set);print 3,finding_set            
+            if self.inference_flag: finding_set=self.infer(finding_set)           
             self.return_dictionary_list.append({global_strings.NAME:self.overall_field_name,global_strings.KEY:global_strings.ALL,global_strings.TABLE:self.overall_table,global_strings.VALUE:';'.join(finding_set),
                                            global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in self.return_dictionary_list])/len(self.return_dictionary_list))),
                                           global_strings.VERSION:self.get_version(),global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})     

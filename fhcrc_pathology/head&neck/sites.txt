@@ -1,0 +1,29 @@
+Tongue
+Neck
+Mouth
+Tonsil
+Mandible 
+Salivary Gland
+Larynx
+Lip;labial
+Tongue;lingual
+Submandibular Gland
+Buccal
+Perifacial Node
+Palate
+Teeth;tooth
+Supraglottis
+Epiglottis;epiglottal
+Forehead
+Alveolar Ridge
+Trachea
+Maxillary Sinus
+Cheek
+Maxilla
+Vocal Cord
+Pharynx;pharyngeal
+Jugular
+Gingiva
+Hypopharynx
+Face
+Jaw

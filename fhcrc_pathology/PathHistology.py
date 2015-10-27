@@ -32,5 +32,5 @@ class PathHistology(OneFieldPerSpecimen):
         self.general_standardizations = {}
 
         ## relevant sections of the report ##
-        self.good_section = 'IMPRESSION|FINAL DIAGNOSIS|COMMENT'
+        self.good_section = 'IMPRESSION|FINAL DIAGNOSIS|COMMENT|DX'
         self.bad_section = 'CLINICAL'

@@ -52,21 +52,24 @@ class OneFieldPerReport(object):
 
                 ## the field value will be based on the string match itself
                 if type(match) is SRE_MATCH_TYPE:
-                    ## making the value into a datetime -- TODO this should be moved into a seperate class which handles multiple date formats
-                    if self.field_name=='PathDate':                    
+                    ## making the value into a datetime -- TODO this should be moved into a separate class which handles multiple date formats
+                    if self.field_name=='PathDate':                        
                         year=match.group(3)
                         month=match.group(1)
                         day=match.group(2)                    
                         if len(match.group(2))==1:               
                             day='0'+match.group(2)                    
-                        self.return_dictionary[global_strings.VALUE]=str(datetime.strptime(year+','+month+','+day,'%Y,%m,%d').isoformat())
+                        self.return_dictionary[global_strings.VALUE]=year+'-'+month+'-'+day                        
                         self.return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:match.start(1),global_strings.STOP:match.end(3)})
-                    elif type(self.value_type)!=dict:                        
-                        self.return_dictionary[global_strings.VALUE]=match.group(1)
+                    
                     else:
-                        self.return_dictionary[global_strings.VALUE]=self.value_type.get(True)[0]
-                        self.return_dictionary[global_strings.CONFIDENCE]=('%.2f' % self.value_type.get(True)[1])
-                    self.return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:match.start(1),global_strings.STOP:match.end(1)})        
+                        if type(self.value_type)!=dict:                        
+                            self.return_dictionary[global_strings.VALUE]=match.group(1).replace('  ',' ')## hacky string normalization for Pathologist
+                        else:
+                            self.return_dictionary[global_strings.VALUE]=self.value_type.get(True)[0]                        
+                            self.return_dictionary[global_strings.CONFIDENCE]=('%.2f' % self.value_type.get(True)[1])
+                    
+                        self.return_dictionary[global_strings.STARTSTOPS].append({global_strings.START:match.start(1),global_strings.STOP:match.end(1)})        
 
                 ## iterate through match iterator for 'all' style fields, which may have multiple
                 else:                     

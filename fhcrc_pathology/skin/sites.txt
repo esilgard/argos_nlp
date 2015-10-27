@@ -1,0 +1,7 @@
+Face;nose;cheek;forehead
+Neck
+Arm;forearm;shoulder;elbow
+Leg;calf;thigh;knee;shin
+Torso;back;stomach;abdomen
+Foot
+Hand;finger

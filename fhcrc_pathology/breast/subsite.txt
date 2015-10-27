@@ -1,0 +1,17 @@
+1 O'clock;1:00;1 o?clock
+2 O'clock;2:00;2 o?clock
+3 O'clock;3:00;3 o?clock
+4 O'clock;4:00;4 o?clock
+5 O'clock;5:00;5 o?clock
+6 O'clock;6:00;6 o?clock
+7 O'clock;7:00;7 o?clock
+8 O'clock;8:00;8 o?clock
+9 O'clock;9:00;9 o?clock
+10 O'clock;10:00;10 o?clock
+11 O'clock;11:00;11 o?clock
+12 O'clock;12:00;12 o?clock
+LIQ;left inner quadrant
+LUQ;left upper quadrant
+RIQ;right inner quadrant
+RUQ;right upper quadrant
+UIQ;upper inner quadrant
