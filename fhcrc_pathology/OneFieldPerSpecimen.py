@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2015 Fred Hutchinson Cancer Research Center
 #
@@ -16,12 +17,14 @@ class OneFieldPerSpecimen(object):
         extract the value of a field which has one or more values per specimen from lower cased text of the pathology report        
     ''' 
     __version__='OneFieldPerSpecimen1.0'
-    pre_negation=r'( not | no |negative |free of |without|against |(hx|history) of | to rule out|preclud)[\w ]{,50}'
-    post_negation=r'[\w ]{,40}( unlikely| not (likely|identif)| negative)'
+    pre_negation=r'( not | no |negative |free of |without|against |(hx|history) of | to rule out|preclud| insufficient|suboptimal).{,75}'
+    post_negation=r'.{,50}( unlikely| not (likely|identif)| negative)'
     ## default False flag; true means the slgorithm will infer some other value based on given input
     inference_flag=False
-
-    
+    ## default False secondary element; true means there's another data element that should
+    ## be searched for based on either position or value of the first
+    has_secondary_data_element = False
+    secondary_data_elements = None
     def __init__(self):
         self.specimen_field_name ='Default'
         self.overall_field_name='Default'
@@ -42,7 +45,7 @@ class OneFieldPerSpecimen(object):
         self.good_section = 'Default'
         self.bad_section = 'Default'
         
-        
+    
     def get_version(self):
         return self.__version__
 
@@ -59,13 +62,14 @@ class OneFieldPerSpecimen(object):
         return string_list,standardizations
 
     ## loop through relevant sections findings PER SPECIMEN
-    def get_specimen_finding(self,specimen,string_list,standardizations,dictionary):       
+    def get_specimen_finding(self,specimen,string_list,standardizations,dictionary):
+       
         specimen_finding_set=set([])
         specimen_start_stops_set=set([])
         def find_string_match(text):            
             text=text.lower()
             text=re.sub(r'[.,:;\\\/\-]',' ',text)       
-            for finding in string_list:         
+            for finding in string_list:             
                 if re.search(r'([\W]|^)'+finding+r'([\W]|$)',text) and \
                    not re.search(self.pre_negation+finding+r'([\W]|$)',text) and \
                    not re.search(r'([\W]|^)'+finding+self.post_negation,text):                 
@@ -88,8 +92,9 @@ class OneFieldPerSpecimen(object):
         for section in sorted(dictionary):        
             section_specimen=section[3]                
             line_onset=section[2]
-            header=section[1]        
-            if re.search(self.good_section,header) and not re.search(self.bad_section,header):        
+            header=section[1]
+            
+            if re.search(self.good_section,header) and not re.search(self.bad_section,header):                
                 for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):                   
                     ## this is a special case for getting info from the SpecimenSource data field (not the regular path report)
                     if section==(0,'SpecimenSource',0,None):                      
@@ -102,6 +107,22 @@ class OneFieldPerSpecimen(object):
                         find_string_match(results)                       
                                
         return specimen_finding_set,specimen_start_stops_set
+
+
+   #helper method to retrieve the returned field value from each module
+    def return_exec_code(self,x):        
+        return x
+
+    
+    ## call secondary data element class where applicable
+    def add_secondary_data_elements(self,each_field_dictionary,full_text):        
+        for each_secondary_element in self.secondary_data_elements:            
+            exec("import "+each_secondary_element)              
+            exec("secondaryClass=self.return_exec_code("+each_secondary_element+"."+each_secondary_element+"())")
+            return_d =  secondaryClass.get(each_field_dictionary,full_text)
+            if return_d:
+                self.return_dictionary_list.append(return_d)  
+   
 
 
     def get(self,disease_group,dictionary):
@@ -121,12 +142,16 @@ class OneFieldPerSpecimen(object):
                     specimen_finding_set,specimen_start_stops_set=self.get_specimen_finding(specimen,self.general_list,self.general_standardizations,dictionary)          
                 if specimen_finding_set:
                     if self.inference_flag: specimen_finding_set=self.infer(specimen_finding_set)
-                    self.return_dictionary_list.append({global_strings.NAME:self.specimen_field_name,global_strings.KEY:specimen,global_strings.TABLE:self.specimen_table,
+                    specimen_finding_dictionary = {global_strings.NAME:self.specimen_field_name,global_strings.KEY:specimen,global_strings.TABLE:self.specimen_table,
                                                         global_strings.VALUE:';'.join(specimen_finding_set),global_strings.CONFIDENCE:("%.2f" % self.specimen_confidence),global_strings.VERSION:self.get_version(),
-                                                       global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]})
+                                                       global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]}
+                    self.return_dictionary_list.append(specimen_finding_dictionary)
                     finding_set=finding_set.union(specimen_finding_set)             
-                    start_stops_set=start_stops_set.union(specimen_start_stops_set)
-       
+                    start_stops_set=start_stops_set.union(specimen_start_stops_set)              
+                    if self.has_secondary_data_element == True:                        
+                        self.add_secondary_data_elements(specimen_finding_dictionary,dictionary[(-1,'FullText',0,None)])
+                        
+        ## NOTE - this back off model only happens when specimen specific values, which means it will not currently pick up "summary cancer data" if specimen values were found
         ## back off model - to cover the case where there's no explicitly labeled specimen - assign to a general "UNK" specimen
         if not finding_set:            
             specimen_finding_set,specimen_start_stops_set=self.get_specimen_finding('',self.dz_specific_list,self.dz_specific_standardizations,dictionary)
@@ -137,17 +162,25 @@ class OneFieldPerSpecimen(object):
                 finding_set=finding_set.union(specimen_finding_set)
                 if self.inference_flag: specimen_finding_set=self.infer(specimen_finding_set)
                 start_stops_set=start_stops_set.union(specimen_start_stops_set)
-                self.return_dictionary_list.append({global_strings.NAME:self.specimen_field_name,global_strings.KEY:global_strings.UNK,global_strings.TABLE:self.specimen_table,global_strings.VERSION:self.get_version(),
+                unk_finding_dictionary = {global_strings.NAME:self.specimen_field_name,global_strings.KEY:global_strings.UNK,global_strings.TABLE:self.specimen_table,global_strings.VERSION:self.get_version(),
                                             global_strings.VALUE:';'.join(specimen_finding_set),global_strings.CONFIDENCE:("%.2f" % self.unlabled_specimen_confidence),
-                                            global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]})
-      
+                                            global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]}
+                self.return_dictionary_list.append(unk_finding_dictionary)         
+                if self.has_secondary_data_element == True:                   
+                    self.add_secondary_data_elements(unk_finding_dictionary,dictionary[(-1,'FullText',0,None)])                   
+
+                    
         ## aggregate histologies of individual specimens for overall finding
         if finding_set:       
-            if self.inference_flag: finding_set=self.infer(finding_set)           
-            self.return_dictionary_list.append({global_strings.NAME:self.overall_field_name,global_strings.KEY:global_strings.ALL,global_strings.TABLE:self.overall_table,global_strings.VALUE:';'.join(finding_set),
+            if self.inference_flag: finding_set=self.infer(finding_set)
+            overall_finding_dictionary={global_strings.NAME:self.overall_field_name,global_strings.KEY:global_strings.ALL,global_strings.TABLE:self.overall_table,global_strings.VALUE:';'.join(finding_set),
                                            global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in self.return_dictionary_list])/len(self.return_dictionary_list))),
-                                          global_strings.VERSION:self.get_version(),global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})     
-        
+                                          global_strings.VERSION:self.get_version(),global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]}
+            self.return_dictionary_list.append(overall_finding_dictionary) 
+            if self.has_secondary_data_element == True:               
+                self.add_secondary_data_elements(overall_finding_dictionary,dictionary[(-1,'FullText',0,None)])               
+            
+                    
         return (self.return_dictionary_list,list)        
                     
             

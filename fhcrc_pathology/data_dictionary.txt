@@ -4,7 +4,7 @@ PathSide	Class
 PathHistology	Class
 PathDate	Class
 Pathologist	Class
-PathGrade	Module
+PathGrade	SecondaryClass
 OtherFinding	Class
 PathQuality	Class
 PathStageT	Class

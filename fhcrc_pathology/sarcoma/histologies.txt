@@ -8,7 +8,7 @@ Synovial Sarcoma;synovial
 Hemangiopericytomal
 Epithelioid Sarcoma
 Myofibrosarcoma
-Leiomyosarcoma
+Leiomyosarcoma;Leimyosarcoma
 Lipoma
 Ewing Sarcoma;ewings sarcoma;ewing s sarcoma;PNET;Primitive Neuroectodermal Tumor
 GIST;Gastrointestinal Stromal Tumor

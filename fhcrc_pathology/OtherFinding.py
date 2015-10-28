@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2013-2015 Fred Hutchinson Cancer Research Center
 #

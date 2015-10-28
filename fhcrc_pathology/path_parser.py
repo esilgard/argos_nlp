@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2013-2015 Fred Hutchinson Cancer Research Center
 #
@@ -37,7 +38,6 @@ def parse(obx_file):
     section_order=0
     try:
         OBX=open(obx_file,'rU').readlines()
-        #OBX=codecs.open(obx_file,'r',encoding='utf-8').readlines()
         OBX=[re.sub(r'[\r\n]','',a).split('\t') for a in OBX]
         
         header_set= set(OBX[0])

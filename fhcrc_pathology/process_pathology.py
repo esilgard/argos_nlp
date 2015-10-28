@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Fred Hutchinson Cancer Research Center
 #
@@ -41,7 +42,7 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
     report_table_d={}
     error_list=[]
     data_elements=dict.fromkeys(path_data_dictionary.keys()+disease_group_data_dictionary.keys())
-    for field in data_elements:        
+    for field in data_elements:       
         ## import the CLASSES and MODULES for the fields in the disease specific data dictionary, back off to general if there is no disease specific version ##
         if field in disease_group_data_dictionary:
             try:
@@ -49,21 +50,22 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
                 if disease_group_data_dictionary.get(field)=='Class':                                   
                     exec("fieldClass=return_exec_code("+field+"."+field+"())")
                     field_value,return_type=fieldClass.get(disease_group,report_dictionary)
-                ## module import
-                else:                
+               ## module import (note there's no final else, which means "SecondaryClass" types do not get called here (imported above)
+                elif disease_group_data_dictionary.get(field)=='Module':                 
                     exec("field_value,return_type=return_exec_code("+field+".get(disease_group,report_dictionary))")
             except:                
-                return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not import disease specific '+field+' module or class --- program aborted. '+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])},Exception)
-        else:
+                return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not import disease specific '+field+' module or class --- program aborted. '+str(sys.exc_info()[1])},Exception)
+        else:           
             try:
                 exec('import '+field)
-                if path_data_dictionary.get(field)=='Class':                    
+                if path_data_dictionary.get(field)=='Class':                   
                     exec("fieldClass=return_exec_code("+field+"."+field+"())")                   
-                    field_value,return_type=fieldClass.get(disease_group,report_dictionary)                    
-                else:
+                    field_value,return_type=fieldClass.get(disease_group,report_dictionary)                   
+                ## module import (note there's no final else, which means "SecondaryClass" types do not get called here (imported above)
+                elif disease_group_data_dictionary.get(field)=='Module':  
                     exec("field_value,return_type=return_exec_code("+field+".get(disease_group,report_dictionary))")                    
             except:
-                return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not complete '+field+' module or class--- program aborted. '+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])},Exception)
+                return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not complete '+field+' module or class--- program aborted. '+str(sys.exc_info()[1])},Exception)
             
         ## organize fields by tables, then individual records, then individual fields
         
@@ -114,7 +116,7 @@ def main(arguments,path):
     i=0
     ## create a list of output field dictionaries ##
     for mrn in pathology_dictionary:            
-        for accession in pathology_dictionary[mrn]:           
+        for accession in pathology_dictionary[mrn]:            
             field_value_dictionary={}
             field_value_dictionary[global_strings.REPORT]=accession
             field_value_dictionary[global_strings.MRN]=mrn
@@ -124,7 +126,7 @@ def main(arguments,path):
                           out.write(pathology_dictionary[mrn][accession][(-1,'FullText',0,None)])
             except:
                 return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_pathology attempting to write text to file at'+ \
-                        arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed. '+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])}],list)
+                        arguments.get('-f')[:arguments.get('-f').find('.nlp')] +'/'+accession+'.txt - unknown number of reports completed. '+str(sys.exc_info()[1])}],list)
 
             ## find disease group in the case of unknown/all --- this is currently simply looking for keywords in the full text
             ## of the pathology report - future work to include section specific search and stochastic language model
@@ -144,7 +146,7 @@ def main(arguments,path):
                 field_value_output.append(field_value_dictionary)
             else:                
                 return (field_value_output,[{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR in process_pathology.get(fields) -  \
-                        unknown number of reports completed.  Return error string: '+return_errors[global_strings.ERR_STR]+';'+str(sys.exc_info()[0])+","+str(sys.exc_info()[1])}],list)           
+                        unknown number of reports completed.  Return error string: '+return_errors[global_strings.ERR_STR]}],list)           
 
     return (field_value_output,return_errors,list)
 
