@@ -21,7 +21,7 @@ __version__='path_parser1.0'
 import re,sys,global_strings,os,codecs
 
 ## header names exptected to be coming from the Amalga Import ##
-required_header_set=set([global_strings.SET_ID,global_strings.OBSERVATION_VALUE,global_strings.SPECIMEN_SOURCE,global_strings.FILLER_ORDER_NO,global_strings.MRN_CAPS])
+required_header_set=set([global_strings.SET_ID,global_strings.OBSERVATION_VALUE,global_strings.FILLER_ORDER_NO,global_strings.MRN_CAPS])
 
 def parse(obx_file):
     '''
@@ -36,6 +36,7 @@ def parse(obx_file):
     pathology_dictionary={}
     section='NULL'
     section_order=0
+    specimen=None
     try:
         OBX=open(obx_file,'rU').readlines()
         OBX=[re.sub(r'[\r\n]','',a).split('\t') for a in OBX]
@@ -61,7 +62,7 @@ def parse(obx_file):
                     if global_strings.FILLER_ORDER_NO in line:
                         pass                                                                  # ignore duplicate header lines
                     elif  text=='NULL':
-                        # maintain readability of fully constituted text by keeping empty 'NULL' lines 
+                        # maintain readability of fully constituted text by keeping empty 'NULL' lines that have been converted to string
                         pathology_dictionary[mrn]=pathology_dictionary.get(mrn,{})
                         pathology_dictionary[mrn][accession]=pathology_dictionary[mrn].get(accession,{})
                         pathology_dictionary[mrn][accession][(-1,'FullText',0,None)]=pathology_dictionary[mrn][accession].get((-1,'FullText',0,None),'')  +'\n'
@@ -74,8 +75,8 @@ def parse(obx_file):
                             chars_onset=0
                             ## create a specimen source dictionary for each labeled specimen (in the same format as the regular pathology section dictionary ##
                             ## catch NULL or empty string specimenSources 
-                            if not line[headers.get(global_strings.SPECIMEN_SOURCE)] or line[headers.get(global_strings.SPECIMEN_SOURCE)]=='NULL':
-                                specimen_dictionary = {'NO SPECIMEN SOURCE LISTED':'NO SPECIMEN SOURCE LISTED'}                                
+                            if not headers.get(global_strings.SPECIMEN_SOURCE) or line[headers.get(global_strings.SPECIMEN_SOURCE)]=='NULL':
+                                specimen_dictionary = {}                                
                             else:
                                 specimen_dictionary=dict((x.split(')')[0],x.split(')')[1].replace('(',' ')) for x in  line[headers.get(global_strings.SPECIMEN_SOURCE)].strip('"').split('~'))                            
                             pathology_dictionary[mrn][accession][(0,global_strings.SPECIMEN_SOURCE,0,None)]={}                            
@@ -86,14 +87,16 @@ def parse(obx_file):
                         # reassign the section variable if you find a section pattern match, reset specimen and increment section order
                         if section_header: section=section_header.group(1).strip();section_order+=1;specimen=''
                         specimen_header=re.match(r'[\s\"]{,4}([,A-Z\- and&]+?)[\s]*(FS)?((-[A-Z])[\s]*FS)?[\s]*[)].*',text)                        
-                        if specimen_header:                          
+                        if specimen_header:
+                           
                             specimen='' ## reset specimen if there is a new specimen header match
                             M=specimen_header.group(1).replace(' ','')
                             ## catch specimens listed in surgical notes in path eg "AFS-EFS: negative for..."
                             if specimen_header.group(4) and '-' in specimen_header.group(4):M=M+specimen_header.group(4)
                             for each in  specimen_dictionary.keys():                                
                                 if each and re.search('['+M+']',each):
-                                    specimen+=each                                
+                                    specimen+=each
+                        
                         pathology_dictionary[mrn][accession][(section_order,section,chars_onset,specimen)]=pathology_dictionary[mrn][accession].get((section_order,section,chars_onset,specimen),{})                
                         pathology_dictionary[mrn][accession][(section_order,section,chars_onset,specimen)][index]=text
                         pathology_dictionary[mrn][accession][(-1,'FullText',0,None)]=pathology_dictionary[mrn][accession].get((-1,'FullText',0,None),'')+text+'\n'
