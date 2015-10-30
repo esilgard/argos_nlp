@@ -141,6 +141,7 @@ class OneFieldPerSpecimen(object):
                 if not specimen_finding_set:                
                     specimen_finding_set,specimen_start_stops_set=self.get_specimen_finding(specimen,self.general_list,self.general_standardizations,dictionary)          
                 if specimen_finding_set:
+                    
                     if self.inference_flag: specimen_finding_set=self.infer(specimen_finding_set)
                     specimen_finding_dictionary = {global_strings.NAME:self.specimen_field_name,global_strings.KEY:specimen,global_strings.TABLE:self.specimen_table,
                                                         global_strings.VALUE:';'.join(specimen_finding_set),global_strings.CONFIDENCE:("%.2f" % self.specimen_confidence),global_strings.VERSION:self.get_version(),
@@ -162,6 +163,7 @@ class OneFieldPerSpecimen(object):
                 finding_set=finding_set.union(specimen_finding_set)
                 if self.inference_flag: specimen_finding_set=self.infer(specimen_finding_set)
                 start_stops_set=start_stops_set.union(specimen_start_stops_set)
+             
                 unk_finding_dictionary = {global_strings.NAME:self.specimen_field_name,global_strings.KEY:global_strings.UNK,global_strings.TABLE:self.specimen_table,global_strings.VERSION:self.get_version(),
                                             global_strings.VALUE:';'.join(specimen_finding_set),global_strings.CONFIDENCE:("%.2f" % self.unlabled_specimen_confidence),
                                             global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]}
@@ -171,16 +173,16 @@ class OneFieldPerSpecimen(object):
 
                     
         ## aggregate histologies of individual specimens for overall finding
-        if finding_set:       
+        if finding_set:
+           
             if self.inference_flag: finding_set=self.infer(finding_set)
             overall_finding_dictionary={global_strings.NAME:self.overall_field_name,global_strings.KEY:global_strings.ALL,global_strings.TABLE:self.overall_table,global_strings.VALUE:';'.join(finding_set),
                                            global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in self.return_dictionary_list])/len(self.return_dictionary_list))),
                                           global_strings.VERSION:self.get_version(),global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]}
             self.return_dictionary_list.append(overall_finding_dictionary) 
-            if self.has_secondary_data_element == True:               
+            if self.has_secondary_data_element == True:                
                 self.add_secondary_data_elements(overall_finding_dictionary,dictionary[(-1,'FullText',0,None)])               
             
-                    
         return (self.return_dictionary_list,list)        
                     
             

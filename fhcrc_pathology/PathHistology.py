@@ -32,7 +32,7 @@ class PathHistology(OneFieldPerSpecimen):
 
         ## relevant sections of the report ##
         self.good_section = 'IMPRESSION|FINAL DIAGNOSIS|COMMENT|DX|SUMMARY CANCER'
-        self.bad_section = 'CLINICAL'
+        self.bad_section = 'CLINICAL|Note'
 
         ## there is a secondary data element that should be searched for
         ## based on either position or value of the first e.g. PathGrade

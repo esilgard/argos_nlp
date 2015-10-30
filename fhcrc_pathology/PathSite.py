@@ -32,6 +32,6 @@ class PathSite(OneFieldPerSpecimen):
         self.general_standardizations = {}
 
         ## relevant sections of the report ##
-        self.good_section = 'SPECIMEN|Specimen|IMPRESSION|DIAGNOSIS|COMMENT|DX'
-        self.bad_section = 'CLINICAL'
+        self.good_section = 'SPECIMEN|Specimen|IMPRESSION|DIAGNOSIS|COMMENT|DX|DESCRIPTION|DESC|GROSS'
+        self.bad_section = 'CLINICAL|Note'
        

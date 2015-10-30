@@ -82,7 +82,7 @@ def parse(obx_file):
                             pathology_dictionary[mrn][accession][(0,global_strings.SPECIMEN_SOURCE,0,None)]={}                            
                             pathology_dictionary[mrn][accession][(0,global_strings.SPECIMEN_SOURCE,0,None)][0]=specimen_dictionary                                                  
 
-                        section_header=re.match(r'[\*\" ]*([A-Z ]+)[\*:]+',text)              # match general section header patterns
+                        section_header=re.match(r'^[\*\"\<\( ]*([A-Z \\\-\(\)]{4,})[\*:#\>\) ]*$',text)              # match general section header patterns
                         
                         # reassign the section variable if you find a section pattern match, reset specimen and increment section order
                         if section_header: section=section_header.group(1).strip();section_order+=1;specimen=''

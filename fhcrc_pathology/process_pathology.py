@@ -42,17 +42,18 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
     report_table_d={}
     error_list=[]
     data_elements=dict.fromkeys(path_data_dictionary.keys()+disease_group_data_dictionary.keys())
-    for field in data_elements:       
+    for field in data_elements:
         ## import the CLASSES and MODULES for the fields in the disease specific data dictionary, back off to general if there is no disease specific version ##
         if field in disease_group_data_dictionary:
             try:
-                exec ('from '+disease_group+' import '+field)
+                exec ('from '+disease_group+' import '+field)                
                 if disease_group_data_dictionary.get(field)=='Class':                                   
                     exec("fieldClass=return_exec_code("+field+"."+field+"())")
-                    field_value,return_type=fieldClass.get(disease_group,report_dictionary)
+                    field_value,return_type=fieldClass.get(disease_group,report_dictionary)                    
                ## module import (note there's no final else, which means "SecondaryClass" types do not get called here (imported above)
                 elif disease_group_data_dictionary.get(field)=='Module':                 
                     exec("field_value,return_type=return_exec_code("+field+".get(disease_group,report_dictionary))")
+                    
             except:                
                 return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not import disease specific '+field+' module or class --- program aborted. '+str(sys.exc_info()[1])},Exception)
         else:           
@@ -60,26 +61,29 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
                 exec('import '+field)
                 if path_data_dictionary.get(field)=='Class':                   
                     exec("fieldClass=return_exec_code("+field+"."+field+"())")                   
-                    field_value,return_type=fieldClass.get(disease_group,report_dictionary)                   
+                    field_value,return_type=fieldClass.get(disease_group,report_dictionary)
+                    
                 ## module import (note there's no final else, which means "SecondaryClass" types do not get called here (imported above)
                 elif disease_group_data_dictionary.get(field)=='Module':  
-                    exec("field_value,return_type=return_exec_code("+field+".get(disease_group,report_dictionary))")                    
+                    exec("field_value,return_type=return_exec_code("+field+".get(disease_group,report_dictionary))")
+                   
             except:
                 return ({},{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'FATAL ERROR could not complete '+field+' module or class--- program aborted. '+str(sys.exc_info()[1])},Exception)
             
         ## organize fields by tables, then individual records, then individual fields
         
         if return_type==list:
+            
             for each_field in field_value:                
                 table=each_field.get(global_strings.TABLE)
                 report_table_d[table]=report_table_d.get(table,{})
                 report_table_d[table][global_strings.TABLE]=table
                 report_table_d[table][global_strings.FIELDS]= report_table_d[table].get(global_strings.FIELDS,[])
                 report_table_d[table][global_strings.FIELDS].append(each_field)
+            
         else:
             error_list+=field_value
-    report_table_list=report_table_d.values()
-    
+    report_table_list=report_table_d.values()    
     return report_table_list,error_list,list
 
 def get_disease_specific_dictionary(disease_group):
@@ -116,7 +120,7 @@ def main(arguments,path):
     i=0
     ## create a list of output field dictionaries ##
     for mrn in pathology_dictionary:            
-        for accession in pathology_dictionary[mrn]:            
+        for accession in pathology_dictionary[mrn]:
             field_value_dictionary={}
             field_value_dictionary[global_strings.REPORT]=accession
             field_value_dictionary[global_strings.MRN]=mrn
@@ -135,7 +139,7 @@ def main(arguments,path):
                 disease_group_data_dictionary = get_disease_specific_dictionary(disease_group)
                 field_value_dictionary[global_strings.DZ_GROUP]={global_strings.VALUE:disease_group,global_strings.CONFIDENCE:('%.2f' % derived_disease_group_confidence)}
             return_fields,return_errors,return_type=get_fields(disease_group,pathology_dictionary[mrn][accession],disease_group_data_dictionary,path_data_dictionary)
-
+            
             i+=1
             ## if there are no Exceptions and the "no algorithm" isn't there, then run appropriate algorithms
             if return_type!=Exception:

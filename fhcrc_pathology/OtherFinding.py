@@ -31,6 +31,6 @@ class OtherFinding(OneFieldPerSpecimen):
         self.general_standardizations = {}
 
         ## relevant sections of the report ##
-        self.good_section = 'IMPRESSION|FINAL DIAGNOSIS|COMMENT|DX'
-        self.bad_section = 'CLINICAL'
+        self.good_section = 'IMPRESSION|FINAL DIAGNOSIS|COMMENT|FINAL DX|SUMMARY CANCER'
+        self.bad_section = 'CLINICAL|Note'
 

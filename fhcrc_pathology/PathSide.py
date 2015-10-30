@@ -32,8 +32,8 @@ class PathSide(OneFieldPerSpecimen):
         self.general_standardizations = {}
 
         ## relevant sections of the report ##
-        self.good_section = 'SPECIMEN|Specimen|DESCRIPTION|IMPRESSION|DIAGNOSIS|DX|DESC'
-        self.bad_section = 'CLINICAL'
+        self.good_section = 'SPECIMEN|Specimen|DESCRIPTION|IMPRESSION|DIAGNOSIS|DX|DESC|GROSS'
+        self.bad_section = 'CLINICAL|Note'
        
         ## ability to infer new value from one or more existing ones
         self.inference_flag=True
