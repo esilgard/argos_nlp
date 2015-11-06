@@ -11,3 +11,4 @@ PathStageN	Class
 PathStageM	Class
 PathStageSystem	Class
 Behavior	Class
+Her2FISH	Class
