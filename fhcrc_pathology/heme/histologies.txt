@@ -1,4 +1,7 @@
 AML;acute myeloid leukemia
 CML;chronic myeloid leukemia
-Multiple Myeloma
+MM;Multiple Myeloma
 MDS;dysplastic syndrome
+CCL;Chronic Lymphocytic Leukemia
+Lymphoma
+Leukemia

@@ -1,6 +1,6 @@
 Tongue
 Neck
-Mouth
+Mouth;oral cavity
 Tonsil
 Mandible 
 Salivary Gland
@@ -26,4 +26,4 @@ Jugular
 Gingiva
 Hypopharynx
 Face
-Jaw
+Skull
