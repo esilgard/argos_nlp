@@ -1,5 +1,6 @@
+'''author@esilgard'''
 #
-# Copyright (c) 2014-2015 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2013-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +15,8 @@
 # limitations under the License.
 #
 
-import sys,path_parser,global_strings
-import os
-path2= os.path.dirname(os.path.realpath(__file__))+'/'
-'''author@esilgard'''
-__version__='final_pathology_logic1.0'
+import global_strings
+__version__ = 'final_pathology_logic1.0'
 
 def get(table_list):
     '''
@@ -26,31 +24,27 @@ def get(table_list):
     add/delete values for the final output
     table_list = list of table dictionaries where
                 table dictionary: tableName and a dictionary
-                    
-    '''   
-    return_list=[]
-
-    ## iterate through the tables 
+    '''
+    return_list = []
+    ## iterate through the tables
     for table in table_list:
-        field_list=[]
-        
-        ## iterate through the PathFinding values to find the specimen (recordKey) PathFindingHistology
-        if table[global_strings.TABLE]==global_strings.FINDING_TABLE:            
-            specimen_histology_found=set([])
-            for fields in table[global_strings.FIELDS]:               
-                
-                if fields[global_strings.NAME]=="PathFindHistology" and fields[global_strings.VALUE]:                   
-                    specimen_histology_found.add(fields[global_strings.KEY])            
-            ## iterate through fields again and only append those that have histologies to the final field list            
+        field_list = []
+        ## iterate through PathFinding values, find the specimen (recordKey) PathFindingHistology
+        if table[global_strings.TABLE] == global_strings.FINDING_TABLE:
+            specimen_histology_found = set([])
+            for fields in table[global_strings.FIELDS]:
+                if fields[global_strings.NAME] == "PathFindHistology" \
+                   and fields[global_strings.VALUE]:
+                    specimen_histology_found.add(fields[global_strings.KEY])
+            ## iterate through fields again, only ones that have histologies to the final list
             for fields in table[global_strings.FIELDS]:
                 if fields[global_strings.KEY] in specimen_histology_found:
-                    field_list.append(fields)        
+                    field_list.append(fields)
         else:
-            for fields in table[global_strings.FIELDS]:                
+            for fields in table[global_strings.FIELDS]:
                 if fields[global_strings.VALUE]:
                     field_list.append(fields)
         if field_list:
-            table[global_strings.FIELDS]=field_list
+            table[global_strings.FIELDS] = field_list
             return_list.append(table)
-
-    return return_list      
+    return return_list
