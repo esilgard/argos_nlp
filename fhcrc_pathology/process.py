@@ -15,17 +15,13 @@
 # limitations under the License.
 #
 
-import sys, path_parser, final_logic
+import sys, parser, final_logic
 import os, PathClassifier
 import global_strings as gb
 PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
 __version__ = 'process_pathology1.0'
 
 ####################################################################################
-def return_exec_code(x):
-    ''' helper method to retrieve the returned field value from each module '''
-    return x
-
 def get_fields(disease_group, report_d, disease_group_data_d, path_data_d):
     '''
     import modules (either general pathology modules, or disease specific depending on parameters)
@@ -39,38 +35,29 @@ def get_fields(disease_group, report_d, disease_group_data_d, path_data_d):
     data_elements = dict.fromkeys(path_data_d.keys() + disease_group_data_d.keys())
     for field in data_elements:
         # import the CLASSES and MODULES for the fields in the disease specific data dictionary
-        # back off to general if there is no disease specific version
-        if field in disease_group_data_d:
-            try:
-                exec ('from ' + disease_group + ' import ' + field)
+        try:
+            if field in disease_group_data_d:
+                module = __import__(field, globals(), locals(), [field])
                 if disease_group_data_d.get(field) == 'Class':
-                    exec("fieldClass = return_exec_code(" + field + "." + field + "())")
-                    field_value, return_type = fieldClass.get(disease_group, report_d)
-               # module import - no final else, which means SecondaryClasses aren't called
-                elif disease_group_data_d.get(field) == 'Module':
-                    exec("field_value, return_type = return_exec_code(" + field + \
-                         ".get(disease_group, report_d))")
-            except:
-                return ({}, {gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
-                        'FATAL ERROR could not import disease specific ' + field + ' module \
-                        or class --- program aborted. ' + str(sys.exc_info()[1])}, Exception)
-        else:
-            try:
-                exec('import ' + field)
+                    field_class = getattr(module, field)
+                    module = field_class()
+            else:
+                module = __import__(field, globals(), locals(), [])
                 if path_data_d.get(field) == 'Class':
-                    exec("fieldClass = return_exec_code(" + field + "." + field + "())")
-                    field_value, return_type = fieldClass.get(disease_group, report_d)
-
-                # module import - no final else, which means SecondaryClasses aren't called
-                elif disease_group_data_d.get(field) == 'Module':
-                    exec("field_value, return_type = return_exec_code(" + field + \
-                         ".get(disease_group,report_d))")
-
-            except:
-                return ({}, {gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
+                    field_class = getattr(module, field)
+                    module = field_class()
+        except EnvironmentError:
+            return ({}, {gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
+                         'FATAL ERROR could not import ' + field + ' module or class--- \
+                         program aborted. ' + str(sys.exc_info()[1])}, Exception)
+        try:
+            # return fields regardless from module or class
+            field_value, return_type = module.get(disease_group, report_d)
+        except RuntimeError:
+            return ({}, {gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
                              'FATAL ERROR could not complete ' + field + ' module or class--- \
                              program aborted. ' + str(sys.exc_info()[1])}, Exception)
-
+        
         ## organize fields by tables, then individual records, then individual fields
         if return_type == list:
             for each_field in field_value:
@@ -89,11 +76,11 @@ def get_disease_specific_d(disease_group):
     try:
         return dict((y.split('\t')[0], y.split('\t')[1].strip()) for y in \
             open(PATH + '/' + disease_group + '/data_dictionary.txt', 'r').readlines())
-    except:
+    except IOError:
         return {gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not access or parse \
             disease specific pathology data dictionary at ' + PATH + '/' + disease_group + '/data_dictionary.txt '}
 
-def main(arguments, path):
+def main(arguments):
     '''
     current minimum required flags for the pathology parsing in the "arguments" d are:
         -f input pathology file
@@ -101,9 +88,10 @@ def main(arguments, path):
     '''
     ## get dictionaries/gazeteers needed for processing
     try:
-        pathology_d, return_type = path_parser.parse(arguments.get('-f'))
-        if return_type != dict: return ({}, pathology_d, Exception)
-    except:
+        pathology_d, return_type = parser.parse(arguments.get('-f'))
+        if return_type != dict:
+            return ({}, pathology_d, Exception)
+    except IOError:
         return({}, {gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not parse \
                 input pathology file ' + arguments.get('-f') + ' --- program aborted'}, Exception)
     disease_group = arguments.get('-g')
@@ -112,13 +100,13 @@ def main(arguments, path):
     try:
         path_data_d = dict((y.split('\t')[0], y.split('\t')[1].strip()) for y in open\
                            (PATH + '/data_dictionary.txt', 'r').readlines())
-    except:
+    except IOError:
         return ({}, {gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not access or parse \
                     pathology data dictionary at ' + PATH + '/data_dictionary.txt --- program aborted'}, Exception)
 
     disease_group_data_d = get_disease_specific_d(disease_group)
     field_value_output = []
-    error_output = []
+    # report counting index (used for timeit tests)
     i = 0
     ## create a list of output field dictionaries ##
     for mrn in pathology_d:
@@ -129,8 +117,8 @@ def main(arguments, path):
             ## write out cannonical version of text file
             try:
                 with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.txt', 'wb') as out:
-                          out.write(pathology_d[mrn][accession][(-1, 'FullText', 0, None)])
-            except:
+                    out.write(pathology_d[mrn][accession][(-1, 'FullText', 0, None)])
+            except IOError:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
                     'FATAL ERROR in process_pathology attempting to write text to file at'+ \
                     arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + \
@@ -139,11 +127,11 @@ def main(arguments, path):
             ## find disease group in the case of unknown/all --- currently simple keyword/voting
             ## future work to include section specific search and stochastic language model
             if arguments.get('-g') == 'all' or arguments.get('-g') == '*':
-                disease_group, derived_disease_group_confidence = PathClassifier.classify\
+                disease_group, dz_group_confidence = PathClassifier.classify\
                                 (pathology_d[mrn][accession][(-1, 'FullText', 0, None)])
                 disease_group_data_d = get_disease_specific_d(disease_group)
                 field_value_d[gb.DZ_GROUP] = {gb.VALUE:disease_group, gb.CONFIDENCE: \
-                                        ('%.2f' % derived_disease_group_confidence)}
+                                        ('%.2f' % dz_group_confidence)}
             return_fields, return_errors, return_type = get_fields\
                     (disease_group, pathology_d[mrn][accession], disease_group_data_d, path_data_d)
 

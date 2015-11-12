@@ -12,20 +12,15 @@ class PathHistology(OneFieldPerSpecimen):
     ''' find a disease specific (or back off to a general) histology from the path text '''
     __version__ = 'PathHistology1.0'
     def __init__(self):
+        super(PathHistology, self).__init__()
         self.specimen_field_name = 'PathFindHistology'
         self.overall_field_name = 'PathHistology'
         self.specimen_table = gb.FINDING_TABLE
         self.overall_table = gb.PATHOLOGY_TABLE
         self.specimen_confidence = 0.9
         self.unlabled_specimen_confidence = 0.7
-        self.return_d_list = []
         ## reference lists & dictionaries ##
         self.file_name_string = 'histologies'
-        self.dz_specific_list = []
-        self.dz_specific_standardizations = {}
-        self.general_list = []
-        self.general_standardizations = {}
-
         ## relevant sections of the report ##
         self.good_section = r'IMPRESSION|FINAL DIAGNOSIS|COMMENT|DX|SUMMARY CANCER'
         self.bad_section = r'CLINICAL|Note'

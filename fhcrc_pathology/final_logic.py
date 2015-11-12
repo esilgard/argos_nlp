@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-import global_strings
+from . import global_strings
 __version__ = 'final_pathology_logic1.0'
 
 def get(table_list):

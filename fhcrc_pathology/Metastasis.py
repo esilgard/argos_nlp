@@ -13,10 +13,10 @@ class Metastasis(SecondaryField):
     '''
     __version__ = 'Metastasis1.0'
     def __init__(self):
+        super(Metastasis, self).__init__()
         self.field_name = 'Metastasis'
         self.pre_window = 30
         self.post_window = 0
-        self.return_d = {}
         self.strings1 = r'(metastasis|metastases|metastatic)'
         ## each tuple represents a match string and it's appropriate match group
         self.patterns = [(r'.*([\W]|^)(' + self.strings1 + r').*', 2)]

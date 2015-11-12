@@ -12,6 +12,7 @@ class PathQuality(OneFieldPerReport):
     ''' determine if the pathology report is a review, or in house (based on lack of evidence) '''
     __version__ = 'PathQuality1.0'
     def __init__(self):
+        super(PathQuality, self).__init__()
         self.field_name = 'PathQuality'
         self.regex = r'(Consult|[Oo]utside institution|[Rr]eviewed at UWMC|\
                         [Rr]eviewed at University of Washington|[Ss]lide review)'

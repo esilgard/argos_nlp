@@ -64,9 +64,11 @@ class OneFieldPerSpecimen(object):
 
     ## loop through relevant sections findings PER SPECIMEN
     def get_specimen_finding(self, specimen, string_list, standardizations, d):
+        ''' loop through specimens in the specimenSource to get data elements for each '''
         specimen_finding_set = set([])
         specimen_start_stops_set = set([])
         def find_string_match(text):
+            ''' helper method for finding the string match instances '''
             text = text.lower()
             text = re.sub(r'[.,:;\\\/\-]', ' ', text)
             for finding in string_list:
@@ -121,10 +123,10 @@ class OneFieldPerSpecimen(object):
         call the secondary class and add returned data elements to return list
         '''
         for each_secondary_element in self.secondary_data_elements:
-            exec("import " + each_secondary_element)
-            exec("secondaryClass = self.return_exec_code(" + each_secondary_element + "." + \
-                 each_secondary_element + "())")
-            return_d = secondaryClass.get(each_field_d, full_text)
+            module = __import__(each_secondary_element, globals(), locals(), [])
+            field_class = getattr(module, each_secondary_element)
+            instance = field_class()
+            return_d = instance.get(each_field_d, full_text)
             if return_d:
                 self.return_d_list.append(return_d)
 

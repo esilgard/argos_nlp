@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 
-__version__ = 'path_parser1.0'
-import re, sys, os, codecs
+__version__ = 'parser1.0'
+import re, sys
 import global_strings as gb
 
 ## header names exptected to be coming from the Amalga Import ##
@@ -25,7 +25,7 @@ REQUIRED_HEADER_SET = set([gb.SET_ID, gb.OBSERVATION_VALUE, gb.FILLER_ORDER_NO, 
 def parse(obx_file):
     '''
     this is a basic parser and sectioner for  Amalga pathology reports
-    input = "obx_file" = a tab delimited text version of an Amalga OBX table
+    input = "obx_file" = a tab delimited text version of an Amalga obx table
     output = "path_d" = a dictionary of {unique mrns:{unique acc_nums:
         {(section order, section heading, character onset of section):{row num/index:texts}}}}
     **to work correctly first line must contain the expected headers**
@@ -37,21 +37,21 @@ def parse(obx_file):
     section_order = 0
     specimen = None
     try:
-        OBX = open(obx_file, 'rU').readlines()
-        OBX = [re.sub(r'[\r\n]', '', a).split('\t') for a in OBX]
-        header_set = set(OBX[0])
+        obx = open(obx_file, 'rU').readlines()
+        obx = [re.sub(r'[\r\n]', '', a).split('\t') for a in obx]
+        header_set = set(obx[0])
         if set(header_set) >= REQUIRED_HEADER_SET:
-            headers = dict((k, v) for v, k in enumerate(OBX[0]))
+            headers = dict((k, v) for v, k in enumerate(obx[0]))
             try:
                 # sort by mrn, acc, and then setid, ignore null mrns,acc nums,setids
-                OBX = sorted([y for y in OBX[1:] if (y[headers.get(gb.MRN_CAPS)] != 'NULL' \
+                obx = sorted([y for y in obx[1:] if (y[headers.get(gb.MRN_CAPS)] != 'NULL' \
                             and y[headers.get(gb.FILLER_ORDER_NO)] != 'NULL' and \
                             y[headers.get(gb.SET_ID)] != 'NULL')], key=lambda x: \
                             (x[headers.get(gb.MRN_CAPS)], x[headers.get(gb.FILLER_ORDER_NO)], \
                              int(x[headers.get(gb.SET_ID)])))
 
                 chars_onset = 0
-                for line in OBX:
+                for line in obx:
                     mrn = line[headers.get(gb.MRN_CAPS)]
                     acc = line[headers.get(gb.FILLER_ORDER_NO)]
                     index = line[headers.get(gb.SET_ID)]
@@ -97,16 +97,15 @@ def parse(obx_file):
                             section = section_header.group(1).strip()
                             section_order += 1
                             specimen = ''
-                        specimen_header = re.match\
-                        (r'[\s\"]{,4}([,A-Z\- and&]+?)[\s]*(FS)?((-[A-Z])[\s]*FS)?[\s]*[)].*',text)
+                        specimen_header = re.match(r'[\s\"]{,4}([,A-Z\- and&]+?)[\s]*(FS)?((-[A-Z])[\s]*FS)?[\s]*[)].*', text)
                         if specimen_header:
-                            specimen='' ## reset specimen if there is a new specimen header match
-                            M = specimen_header.group(1).replace(' ', '')
+                            specimen = '' ## reset specimen if there is a new specimen header match
+                            specimen_match = specimen_header.group(1).replace(' ', '')
                             ## catch specimens listed in interop consults eg 'AFS-EFS: negative..'
                             if specimen_header.group(4) and '-' in specimen_header.group(4):
-                                M = M + specimen_header.group(4)
+                                specimen_match = specimen_match + specimen_header.group(4)
                             for each in  specimen_dictionary.keys():
-                                if each and re.search('[' + M + ']', each):
+                                if each and re.search('[' + specimen_match + ']', each):
                                     specimen += each
 
                         path_d[mrn][acc][(section_order, section, chars_onset, specimen)] = \
@@ -118,8 +117,7 @@ def parse(obx_file):
                         chars_onset += len(text) + 1
 
                 return path_d, dict
-            except:
-
+            except RuntimeError:
                 return ({gb.ERR_TYPE: 'Exception', gb.ERR_STR: "FATAL ERROR: " + \
                          str(sys.exc_info()[0]) + "," + str(sys.exc_info()[1]) + \
                          " trouble parsing " + str(obx_file) + " -- program aborted"}, Exception)
@@ -128,7 +126,7 @@ def parse(obx_file):
                      + "," + str(sys.exc_info()[1]) + " required headers not found in inital \
                     line of " + str(obx_file) + " -- must include " + ','.join\
                     (REQUIRED_HEADER_SET - header_set) + " -- program aborted"}, Exception)
-    except:
+    except EnvironmentError:
         return ({gb.ERR_TYPE: 'Exception', gb.ERR_STR: "FATAL ERROR: " + str(sys.exc_info()[0]) + \
                  "," + str(sys.exc_info()[1]) + " -- could not find input file " + str(obx_file) + \
                  " -- program aborted"}, Exception)
