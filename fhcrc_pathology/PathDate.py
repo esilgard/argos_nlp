@@ -12,6 +12,7 @@ class PathDate(OneFieldPerReport):
     ''' find the signed date in the pathology report '''
     __version__ = 'PathDate1.0'
     def __init__(self):
+        super(PathDate, self).__init__()
         self.field_name = 'PathDate'
         self.regex = r'Electronically signed[ ]*([\d]{1,2})[\-/]([\d]{1,2})[\-/]([\d]{4})'
         self.confidence = 1

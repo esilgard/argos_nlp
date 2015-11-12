@@ -11,6 +11,7 @@ class Pathologist(OneFieldPerReport):
     ''' extract the name of the pathologist who initially signed the report '''
     __version__ = 'Pathologist1.0'
     def __init__(self):
+        super(Pathologist, self).__init__()
         self.field_name = 'Pathologist'
         self.regex = r'\n([A-Za-z\'\-,. ]+) MD(, PhD)?[ ]*\n[ ]*Pathologist[ ]*\n'
         self.confidence = 1

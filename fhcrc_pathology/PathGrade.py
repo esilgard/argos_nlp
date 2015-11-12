@@ -12,6 +12,7 @@ class PathGrade(SecondaryField):
     __version__ = 'PathGrade1.0'
 
     def __init__(self):
+        super(PathGrade, self).__init__()
         self.field_name = 'PathGrade'
         self.standardization_dictionary = {'high': 'high', 'low': 'low', 'intermediate': \
                                            'intermediate', '3': 'high', '1': 'low', '2': \
@@ -20,7 +21,6 @@ class PathGrade(SecondaryField):
 
         self.pre_window = 30
         self.post_window = 30
-        self.return_d = {}
         self.strings1 = r'(high|low|intermediate|1|2|3|4|i|ii|iii|iv)'
         self.strings2 = r'(who|fnclcc)'
         self.strings3 = r'(well|poor|moderate)'

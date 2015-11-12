@@ -13,6 +13,7 @@ class PathStageT(OneFieldPerReport):
     ''' extract explicit mentions of pathological tumor staging '''
     __version__ = 'PathStageT1.0'
     def __init__(self):
+        super(PathStageT, self).__init__()
         self.field_name = 'PathStageT'
         self.regex = r'((p|y|[pP]athological)[ ]*T[012345][abc]?)'
         self.confidence = .98

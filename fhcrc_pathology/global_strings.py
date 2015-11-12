@@ -1,5 +1,7 @@
 '''author@esilgard'''
 ## global strings for output dictionaries ##
+ERRS = "errors"
+REPORTS = "reports"
 NAME = "name"
 TABLE = "table"
 VALUE = "value"
