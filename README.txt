@@ -29,4 +29,6 @@ metadata.py
 	a script to create a dictionary/json object that lists relevant metadata for the batch run (potential fields values, etc)
 	this document and disease group specific metadata (full version read in from metadata.json) will be used to population dropdowns in the front end/abstraction interface
 
+global_strings.py
+	a set of string variables used in various scripts in this directory
 

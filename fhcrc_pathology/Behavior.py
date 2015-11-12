@@ -5,28 +5,24 @@
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
 
-from OneFieldPerSpecimen import OneFieldPerSpecimen
-import global_strings as gb
+from .OneFieldPerSpecimen import OneFieldPerSpecimen
+from . import global_strings as gb
 
 class Behavior(OneFieldPerSpecimen):
     '''
     general behavior class - finding values like 'in situ', 'malignant', 'benign', etc
     '''
-    __version__='Behavior1.0'
+    __version__ = 'Behavior1.0'
     def __init__(self):
+        super(Behavior, self).__init__()
         self.specimen_field_name = 'Behavior'
         self.overall_field_name = 'Behavior'
         self.specimen_table = gb.FINDING_TABLE
         self.overall_table = gb.PATHOLOGY_TABLE
         self.specimen_confidence = 0.5
         self.unlabled_specimen_confidence = 0.3
-        self.return_d_list = []
-        ## reference lists & dictionaries ##
+         ## reference lists & dictionaries ##
         self.file_name_string = 'behavior'
-        self.dz_specific_list = []
-        self.dz_specific_standardizations = {}
-        self.general_list = []
-        self.general_standardizations = {}
         ## relevant sections of the report ##
-        self.good_section = 'IMPRESSION|FINAL DIAGNOSIS|COMMENT|FINAL DX|SUMMARY CANCER'
-        self.bad_section = 'CLINICAL|Note'
+        self.good_section = r'IMPRESSION|FINAL DIAGNOSIS|COMMENT|FINAL DX|SUMMARY CANCER'
+        self.bad_section = r'CLINICAL|Note'

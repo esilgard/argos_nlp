@@ -12,6 +12,7 @@ class PathStageM(OneFieldPerReport):
     ''' extract the explicit metastasis stage (different than finding evidence of metastasis'''
     __version__ = 'PathStageM1.0'
     def __init__(self):
+        super(PathStageM, self).__init__()
         self.field_name = 'PathStageM'
         self.regex = r'((p|y|[pP]athological)[ ]*M[012Xx])'
         self.confidence = .90

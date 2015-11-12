@@ -47,10 +47,10 @@ class OneFieldPerReport(object):
             elif self.match_style == 'all':
                 match = re.finditer(self.regex, full_text, re.DOTALL)
             if match:
-                if type(self.value_type) != dict:
+                if (self.value_type) != dict:
                     self.return_d[gb.CONFIDENCE] = ('%.2f' % self.confidence)
                 ## the field value will be based on the string match itself
-                if type(match) is sre_match_type:
+                if isinstance(match, sre_match_type):
                     ## making the value into a datetime --
                     ## TODO this should be moved into a separate class to handle other date formats
                     if self.field_name == 'PathDate':
@@ -63,7 +63,7 @@ class OneFieldPerReport(object):
                         self.return_d[gb.STARTSTOPS].append\
                                     ({gb.START: match.start(1), gb.STOP: match.end(3)})
                     else:
-                        if type(self.value_type) != dict:
+                        if (self.value_type) != dict:
                             ## hacky string normalization for Pathologist
                             self.return_d[gb.VALUE] = match.group(1).replace('  ', ' ')
                         else:
@@ -73,20 +73,20 @@ class OneFieldPerReport(object):
                                         ({gb.START: match.start(1), gb.STOP:match.end(1)})
                 ## iterate through match iterator for 'all' style fields, which may have multiple
                 else:
-                    for m in match:
-                        if type(self.value_type) != dict:
+                    for each_match in match:
+                        if not isinstance(self.value_type, dict):
                             ## hacky string normalization for PathStageSystem
-                            self.return_d[gb.VALUE] = m.group(1).replace(',', '')
+                            self.return_d[gb.VALUE] = each_match.group(1).replace(',', '')
                         else:
                             self.return_d[gb.VALUE] = self.value_type.get(True)[0]
                             self.return_d[gb.CONFIDENCE] = ('%.2f' % self.value_type.get(True)[1])
-                        self.return_d[gb.STARTSTOPS].append({gb.START:m.start(1), gb.STOP: m.end(1)})
+                        self.return_d[gb.STARTSTOPS].append({gb.START:each_match.start(1), gb.STOP: each_match.end(1)})
 
             ## no match && value_type && dictionary -> value is based on lack of evidence (reviews)
-            if type(self.value_type) == dict and self.return_d[gb.VALUE] is None:
+            if isinstance(self.value_type, dict) and self.return_d[gb.VALUE] is None:
                 self.return_d[gb.VALUE] = self.value_type.get(False)[0]
                 self.return_d[gb.CONFIDENCE] = ('%.2f' % self.value_type.get(False)[1])
             return ([self.return_d], list)
-        except:
+        except RuntimeError:
             return ([{gb.ERR_TYPE: 'Warning', gb.ERR_STR: 'ERROR in %s module.' \
                       % self.field_name}], Exception)

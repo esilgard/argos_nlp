@@ -15,37 +15,37 @@
 # limitations under the License.
 #
 
+import sys, os, codecs
+import output_results, make_text_output_directory, metadata
+from datetime import datetime
+import global_strings as gb
 
 '''
 initial script of the Argos/NLP engine do deal with command line parsing and module outputs
 should exit with a non-zero status for any fatal errors and
-output warnings and results in json format to CWD in the file provided in cmd line ARGUMENTS
+output warnings and results in json format to CWD in the file provided in cmd line args
 '''
-
-import sys, os, codecs
-import output_results, make_text_output_directory, metadata
-from datetime import datetime
 
 ## declare output dictionary for values, warnings, and metadata
 OUTPUT_DICTIONARY = {}
 
 ## path to the nlp_engine.py script ##
-NLP_ENGINE_PATH = os.path.dirname(os.path.realpath(__file__))+'/'
+NLP_ENGINE_PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
 ORIGINAL_WD = os.getcwd()
 
 ## timeit variable for performance testing ##
 BEGIN = datetime.today()
 
-## grab version number from txt file which updates with git post-commit hook script
-##(assume utf-8, but back up to utf-16)
 try:
+    ## grab version number from txt file which updates with git post-commit hook script
+    ##(assume utf-8, but back up to utf-16)
     __version__ = codecs.open(NLP_ENGINE_PATH + 'version', 'rb', encoding='utf-8')\
                   .readlines()[0].strip()
-except Exception:
+except UnicodeError:
     try:
         __version__ = codecs.open(NLP_ENGINE_PATH + 'version', 'rb', encoding='utf-16')\
                       .readlines()[0].strip()
-    except Exception:
+    except IOError:
         sys.stderr.write('FATAL ERROR: could not locate or parse version file.')
         sys.exit(1)
 
@@ -67,14 +67,13 @@ try:
             COMMAND_LINE_FLAGS[line[0]] = (line[2], line[3])
         COMMAND_LINE_FLAG_FILE.close()
         ARGS = sys.argv[1:]
-    except Exception:
+    except IOError:
         sys.stderr.write('FATAL ERROR: command line flag dictionary could not be established \
                         from file, potential formatting error.  program aborted.')
         sys.exit(1)
-except Exception:
+except EnvironmentError:
     sys.stderr.write('FATAL ERROR: command line flag file not found.  program aborted.')
     sys.exit(1)
-
 
 ## parse the ARGUMENTS from arg1 on into a dictionary - notify user of unrecognized flags
 ## NOTE - this does assume that flags start in the first position
@@ -83,78 +82,63 @@ for index in range(0, len(ARGS)-1, 2):
     if ARGS[index] in COMMAND_LINE_FLAGS:
         ARGUMENTS[ARGS[index]] = ARGS[index+1]
     else:
-        OUTPUT_DICTIONARY["errors"].append({'errorType': 'Warning', \
-        'errorString': 'nonfatal error:  unrecognized flag: ' + ARGS[index] + \
-        ' this flag will be excluded from the ARGUMENTS refer to ' + \
+        OUTPUT_DICTIONARY[gb.ERRS].append({gb.ERR_TYPE: 'Warning', gb.ERR_STR: 'nonfatal error: \
+        unrecognized flag: ' + ARGS[index] + ', this flag will not be excluded. Refer to ' + \
         COMMAND_LINE_FLAG_FILE + ' for a complete list and description of command line flags'})
 
-
-############################################################################################
-def return_exec_code(string_to_execute):
-    '''
-        helper method to retrieve the returned field value from each module
-    '''
-    return string_to_execute
-
-############################################################################
 ## build the dictionary for the json output ##
-
-OUTPUT_DICTIONARY["controlInfo"] = {}
-OUTPUT_DICTIONARY["controlInfo"]["engineVersion"] = __version__
-OUTPUT_DICTIONARY["controlInfo"]["referenceId"] = "12345"
-OUTPUT_DICTIONARY["controlInfo"]["docVersion"] = "document version"
-OUTPUT_DICTIONARY["controlInfo"]["source"] = "document source"
-OUTPUT_DICTIONARY["controlInfo"]["docDate"] = "doc date"
-OUTPUT_DICTIONARY["controlInfo"]["processDate"] = str(datetime.today().isoformat())
-OUTPUT_DICTIONARY["controlInfo"]["metadata"] = metadata.get(NLP_ENGINE_PATH, ARGUMENTS)
-OUTPUT_DICTIONARY["errors"] = []
-OUTPUT_DICTIONARY["reports"] = []
+OUTPUT_DICTIONARY[gb.CNTL] = {}
+OUTPUT_DICTIONARY[gb.CNTL]["engineVersion"] = __version__
+OUTPUT_DICTIONARY[gb.CNTL]["referenceId"] = "12345"
+OUTPUT_DICTIONARY[gb.CNTL]["docVersion"] = "document version"
+OUTPUT_DICTIONARY[gb.CNTL]["source"] = "document source"
+OUTPUT_DICTIONARY[gb.CNTL]["docDate"] = "doc date"
+OUTPUT_DICTIONARY[gb.CNTL]["processDate"] = str(datetime.today().isoformat())
+OUTPUT_DICTIONARY[gb.CNTL]["metadata"] = metadata.get(NLP_ENGINE_PATH, ARGUMENTS)
+OUTPUT_DICTIONARY[gb.ERRS] = []
+OUTPUT_DICTIONARY[gb.REPORTS] = []
 
 ## add in flag info to the json output dictionary
-OUTPUT_DICTIONARY["controlInfo"]["docName"] = ARGUMENTS.get('-f')
-OUTPUT_DICTIONARY["controlInfo"]["docType"] = ARGUMENTS.get('-t')
-OUTPUT_DICTIONARY["controlInfo"]["diseaseGroup"] = ARGUMENTS.get('-g')
+OUTPUT_DICTIONARY[gb.CNTL]["docName"] = ARGUMENTS.get('-f')
+OUTPUT_DICTIONARY[gb.CNTL]["docType"] = ARGUMENTS.get('-t')
+OUTPUT_DICTIONARY[gb.CNTL]["diseaseGroup"] = ARGUMENTS.get('-g')
 
 ## ERR out for missing flags that are required ##
 MISSING_FLAGS = REQUIRED_FLAGS-set(ARGUMENTS.keys())
 if len(MISSING_FLAGS) > 0:
     for each_flag in MISSING_FLAGS:
-        sys.stderr.write('FATAL ERROR: missing required flag: ' + each_flag + ' ' + \
-        COMMAND_LINE_FLAGS[each_flag][1])
+        sys.stderr.write('FATAL ERROR: missing required flag: ' + each_flag + ' ' + COMMAND_LINE_FLAGS[each_flag][1])
     sys.exit(1)
 else:
 
     ## import and call appropriate module ##
     try:
-        exec 'from fhcrc_' + ARGUMENTS.get('-t') + ' import process_' + ARGUMENTS.get('-t')
-    except Exception:
-        sys.stderr.write('FATAL ERROR:  could not import module process_' + \
-        ARGUMENTS.get('-t'))
+        DOCUMENT_PROCESSER = __import__('fhcrc_'+ARGUMENTS.get('-t'), globals(), locals(), ['process'])
+    except ImportError:
+        sys.stderr.write('FATAL ERROR: could not import module ' + ARGUMENTS.get('-t'))
         sys.exit(1)
     MKDIR_ERRORS = make_text_output_directory.main(ARGUMENTS.get('-f'))
     if MKDIR_ERRORS[0] == Exception:
         sys.stderr.write(MKDIR_ERRORS[1])
         sys.exit(1)
-    exec ('output, errors, return_type = return_exec_code(process_' + ARGUMENTS.get('-t') + \
-          '.main(ARGUMENTS, NLP_ENGINE_PATH ))')
 
-    if return_type == Exception:
-        sys.stderr.write(errors['errorString'])
+    OUTPUT, ERRORS, RETURN_TYPE = DOCUMENT_PROCESSER.process.main(ARGUMENTS)
+    if RETURN_TYPE == Exception:
+        sys.stderr.write(ERRORS[gb.ERR_STR])
         sys.exit(1)
     else:
-        OUTPUT_DICTIONARY["reports"] = output
-        OUTPUT_DICTIONARY["errors"] = errors
+        OUTPUT_DICTIONARY[gb.REPORTS] = OUTPUT
+        OUTPUT_DICTIONARY[gb.ERRS] = ERRORS
 
     if MKDIR_ERRORS[0] == dict:
-        OUTPUT_DICTIONARY["errors"].append(MKDIR_ERRORS[1])
-
+        OUTPUT_DICTIONARY[gb.ERRS].append(MKDIR_ERRORS[1])
     ## iterate through errors - CRASH for Exceptions and output Warnings
-    if OUTPUT_DICTIONARY["errors"]:
+    if OUTPUT_DICTIONARY[gb.ERRS]:
         CRASH = False
-        for error_dictionary in OUTPUT_DICTIONARY["errors"]:
-            if error_dictionary and error_dictionary['errorType'] == 'Exception':
+        for error_dictionary in OUTPUT_DICTIONARY[gb.ERRS]:
+            if error_dictionary and error_dictionary[gb.ERR_TYPE] == 'Exception':
                 CRASH = True
-                sys.stderr.write(error_dictionary['errorString'])
+                sys.stderr.write(error_dictionary[gb.ERR_STR])
         if CRASH == True:
             sys.exit(1)
     ## output results to file ##
