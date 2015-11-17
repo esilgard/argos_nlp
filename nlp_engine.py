@@ -99,7 +99,9 @@ output_dictionary["controlInfo"]["docVersion"]="document version"
 output_dictionary["controlInfo"]["source"]="document source"
 output_dictionary["controlInfo"]["docDate"]="doc date"
 output_dictionary["controlInfo"]["processDate"]=str(datetime.today().isoformat())
-output_dictionary["controlInfo"]["metadata"]=metadata.get(nlp_engine_path,arguments)                                                                                                      
+metadata, groupings = metadata.get(nlp_engine_path,arguments)
+output_dictionary["controlInfo"]["metadata"]= metadata
+output_dictionary["controlInfo"]["groupings"]= groupings
 output_dictionary["errors"]=[]
 output_dictionary["reports"]=[]
 

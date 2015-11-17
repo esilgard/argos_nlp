@@ -118,7 +118,7 @@
 				},
 				{
 				"field":"PathDate",
-				"datatype":"datetime",
+				"datatype":"date",
 				"closedClass":"False",
 				"diseaseProperties":
 					[
@@ -411,7 +411,7 @@
 			{"table":"PathTest",
 			"fields":[
 				{"field":"PathDate",
-				"datatype":"datetime",
+				"datatype":"date",
 				"closedClass":"False",
 				"diseaseProperties":
 						[
@@ -498,7 +498,7 @@
 			{"table":"ClinicalStages",
 			"fields":[
 				{"field":"ClinStageDate",
-				"datatype":"datetime",
+				"datatype":"date",
 				"closedClass":"False",
 				"diseaseProperties":
 					[
