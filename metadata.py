@@ -1,4 +1,3 @@
-''' author@esilgard '''
 #
 # Copyright (c) 2013-2015 Fred Hutchinson Cancer Research Center
 #
@@ -7,6 +6,7 @@
 # You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
+''' author@esilgard '''
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,55 +16,30 @@
 #
 
 import sys, json
-import global_strings as gb
 
 def get(nlp_engine_path, arguments):
     '''
-        read in full json metadata dictionary from resource file
-        return metadata dictionary of relavent fields for the given
-        document and disease group
+    read in full json metadata dictionary from resource file
+    return metadata dictionary of relavent fields for the given
+    document and disease group
     '''
     ## path to file containing the metadata dictionary (in json format) ##
     try:
         meta_data_file = open(nlp_engine_path + 'metadata.json', 'r')
+        groupings_file = open(nlp_engine_path + 'grouping.json', 'r')
         try:
             metadata_d = json.load(meta_data_file)
             meta_data_file.close()
-        except SyntaxError:
-            sys.stderr.write('FATAL ERROR: json could not load metadata dictionary file, \
-                            potential formatting error.  program aborted.')
+            grouping_d = json.load(groupings_file)
+            groupings_file.close()
+        except RuntimeError:
+            sys.stderr.write('FATAL ERROR: json could not load metadata dictionary \
+                    file or the UI groupings file, potential formatting error')
             sys.exit(1)
     except IOError:
-        sys.stderr.write('FATAL ERROR: metadata dictionary not found.  program aborted.')
+        sys.stderr.write('FATAL ERROR: either metadata dictionary or groupings file not found')
         sys.exit(1)
-    return_metadata_d = {}
-    ## only return list of relevant tables
-    return_table_list = []
-    ## only output the appropriate metadata for the given document type and disease group
-    for table_dictionary in metadata_d.get(arguments.get('-t'))[gb.TABLES]:
-        ## table_dictionary has two keys - "table":table_name and
-        ## "fields": [multiple_field_dictionaries]
-        return_field_list = []
-        for field_dictionary in table_dictionary[gb.FIELDS]:
-            ## only return relevant fields in that table
-            return_field_dictionary = {}
-            return_disease_properties_list = []
-            for disease_group_dictionary in field_dictionary.get(gb.DZ_PRP):
-                ## only return relevant values for that disease group  (or general '*'
-                ## patients/all disease groups)
-                if arguments.get('-g') in disease_group_dictionary.get(gb.DZ_GROUP) or \
-                   '*' in disease_group_dictionary.get(gb.DZ_GROUP):
-                    return_disease_properties_list.append(disease_group_dictionary)
-            if return_disease_properties_list:
-                return_field_dictionary = field_dictionary
-                return_field_dictionary[gb.DZ_PRP] = return_disease_properties_list
-            if return_field_dictionary:
-                return_field_list.append(return_field_dictionary)
-        if return_field_list:
-            return_table_dictionary = {gb.FIELDS: return_field_list, \
-                                       gb.TABLE: table_dictionary[gb.TABLE]}
-            return_table_list.append(return_table_dictionary)
-    if return_table_list:
-        return_metadata_d[gb.TABLES] = return_table_list
+    ## only output the appropriate metadata for the given document type
+    metadata_d = metadata_d.get(arguments.get('-t'))
 
-    return return_metadata_d
+    return metadata_d, grouping_d
