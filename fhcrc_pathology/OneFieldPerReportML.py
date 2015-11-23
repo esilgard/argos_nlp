@@ -36,7 +36,8 @@ class OneFieldPerReportML(object):
         rudimentry tokenization and a hardcoded skip(2)gram model
         the window around the keyword is variable
         '''
-        text = re.sub(r'[.,:;\"\'\(\)\*]', ' ', full_text.lower())
+        text = re.sub('[\"\'\(\)\*_]', ' ', full_text.lower())
+        text = re.sub(r'([.,:;\?!+=])', ' \g<1>', text)
         token = text.split()
         vec = set([])
         word = False
@@ -91,13 +92,15 @@ class OneFieldPerReportML(object):
         ## map string features to svm integers according to the feature mapping in the model
         feat_array = [self.feature_mapping.get(feat) for feat in feat_vector if feat in self.feature_mapping]
         ## dictionary of keys type sparse array is easily confertable to sparse column matrix
-        instances = dok_matrix((1, self.features_in_model), dtype=np.float64)
+        instances = dok_matrix((1, len(self.feature_mapping)), dtype=np.float64)
         for f in feat_array:
             instances[0, f] = 1
         ## convert dictionary of keys into a sparse column matrix (sparse features)
         instances.tocsc()
         class_label = self.model.predict(instances)[0]
-        if class_label:
-            self.return_d[gb.VALUE] = self.class_label_mapping[class_label]
+        string_class_label = self.class_label_mapping[class_label]
+
+        if string_class_label:
+            self.return_d[gb.VALUE] = string_class_label
             self.return_d[gb.CONFIDENCE] = ('%.2f' % self.confidence)
         return ([self.return_d], list)
