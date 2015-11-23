@@ -20,26 +20,21 @@ def main(input_file):
             try:
                 os.rmdir(output_directory)
                 os.mkdir(output_directory)
-                return  (dict, {gb.ERR_TYPE: 'Warning', gb.ERR_STR: 'Output directory already\
-                                existed at program runtime. It was empty and was deleted'})
+                return  (dict, {gb.ERR_TYPE: 'Warning', gb.ERR_STR: 'Output directory already existed at program runtime. It was empty and was deleted'})
             except EnvironmentError:
                 try:
                     shutil.rmtree(output_directory)
                     os.mkdir(output_directory)
-                    return (dict, {gb.ERR_TYPE: 'Warning', gb.ERR_STR: 'Output directory already\
-                                    existed at program runtime. It was not empty and was deleted'})
+                    return (dict, {gb.ERR_TYPE: 'Warning', gb.ERR_STR: 'Output directory already existed at program runtime. It was not empty and was deleted'})
                 except EnvironmentError:
-                    return (Exception, 'FATAL ERROR: Output directory already existed at \
-                                        program runtime: ' + output_directory + '. \
+                    return (Exception, 'FATAL ERROR: Output directory already existed at program runtime: ' + output_directory + '. \
                                         It could not be deleted' + str(sys.exc_info()[1]))
         else:
             try:
                 os.mkdir(output_directory)
                 return None, None
             except EnvironmentError:
-                return (Exception, 'FATAL ERROR: failed to create directory: ' + output_directory +\
-                        ' based on input filename ' + input_file)
+                return (Exception, 'FATAL ERROR: failed to create directory: ' + output_directory + ' based on input filename ' + input_file)
     else:
-        return (Exception, 'FATAL ERROR: bad input file name: ' + input_file + ' program aborted;\
-                            expects in file name to end with ".nlp.tsv" in order to appropriately\
+        return (Exception, 'FATAL ERROR: bad input file name: ' + input_file + ' program aborted; expects in file name to end with ".nlp.tsv" in order to appropriately\
                             label text file directory')

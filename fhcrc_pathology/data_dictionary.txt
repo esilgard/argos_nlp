@@ -12,3 +12,6 @@ PathStageM	Class
 PathStageSystem	Class
 Behavior	Class
 Her2FISH	Class
+Her2IHC	Class
+Nottingham	Class
+Mitotic	Class
