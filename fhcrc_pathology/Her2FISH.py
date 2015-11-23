@@ -23,7 +23,6 @@ class Her2FISH(OneFieldPerReportML):
         self.confidence = .9885
         ## pickled model and feature/label mappings
         self.model = joblib.load(PATH + "models/Her2FISH/svm_model_window7skip2.pkl")
-        self.features_in_model = 184974
         self.feature_mapping = dict((x.split('\t')[0], int(x.strip().split('\t')[1])) for x in \
                                open(PATH + "models/Her2FISH/feature_mapping.txt", 'r').readlines())
         self.class_label_mapping = {0: 'NO_HER2NEU', 1: 'Equivocal', 2: 'Positive', 3: 'Negative',\
