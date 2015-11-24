@@ -1,5 +1,22 @@
 {    
 	"pathology": {
+		"groupings": [
+				{
+					"level": "table",
+					"order": "alpha",
+					"orientation": "horizontal"
+				},
+				{
+					"level": "recordKey",
+					"order": "alpha",
+					"orientation": "horizontal"
+				},
+				{
+					"level": "field",
+					"order": "alpha",
+					"orientation": "horizontal"
+				}
+			],
 		"tables":[
 			{"table":"Pathology",
 			"fields":[
