@@ -140,7 +140,7 @@ def get(cell_list,karyotype_string):
             ## there are no abnormalities - add up the "normal" cells
             else:              
                 aml_swog_mutations['normal']+=cell_count                
-                aml_swog_offsets['normal'].append((karyotype_string.find('4'),karyotype_string.find(']')))
+                aml_swog_offsets['normal'].append((cell_offset,cell_offset+karyotype_string.find(']')))
                 
          ## catch trouble with cell counts etc       
         except:
@@ -205,4 +205,5 @@ def get(cell_list,karyotype_string):
     for each_variation in aml_swog_mutations:
         return_dictionary_list.append({global_strings.NAME:each_variation,global_strings.VALUE:aml_swog_mutations[each_variation],global_strings.CONFIDENCE:1.0,
                      global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:a[0],global_strings.STOP:a[1]} for a in aml_swog_offsets[each_variation]] })
+    
     return cell_list,return_dictionary_list,return_errors

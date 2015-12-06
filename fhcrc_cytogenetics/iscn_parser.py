@@ -96,5 +96,16 @@ def get(karyotype_string,karyo_offset):
             d['Warning']='PARSING ERROR' 
         return_list.append(d)        
         cell_type_order+=1
-   
+    if '47,XX,inv(16)(p13.1q22),+22[15]/' in karyotype_string:
+        print '\n\n'
+        for each in return_list:
+            for k,v in each.items():
+                if type(v)==list:
+                    print '\t',k,':'
+                    for each in v:
+                        print '\t\t',each
+                    print ''
+                else:
+                    print '\t',k,':',v
+            print '\n'
     return return_list,None,list
