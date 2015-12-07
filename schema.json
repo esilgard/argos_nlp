@@ -1,0 +1,124 @@
+{
+    "$schema": "schema_url",
+    "title": "NLP Engine Output",
+    "description": "Output from the natural language processing engine.",
+    "type": "object",
+	"properties": {
+        "ControlInfo": {
+            "description": "The information about the batch run along with relevant metadata and groupings to inform the UI.",
+            "type": "object",			
+			"properties": {
+				"diseaseGroup": {"type":"string"},
+				"docDate": {"type":"string"},
+				"docName": {"type":"string"},
+				"docType": {"type":"string"},
+				"docVersion": {"type":"string"},
+				"engineVersion": {"type":"string"},
+				"groupings": {
+							"type":"array",
+							"items": {
+									"type":"object",
+									"properties": {
+										"level": {
+													"type": "string", 
+													"description": "The title in the output of the metadata being grouped e.g. 'table' or 'recordKey'."
+												},
+										"order": {
+													"type":"string",
+													"description": "The mechanism for ordering the data e.g. 'alpha'."
+												},
+										"orientation": {
+													"type":"string",
+													"description": "The orientation in the UI of the grouped items e.g. 'horizontal'."
+												}									
+										},
+									"required": ["level", "order", "orientation"]
+								}
+						},								
+				"metadata": {
+					"type":"object",
+					"properties": {
+						"tables": {
+							"type": "array",
+							"description": "Relevant metadata for the document type processed (based on input parameter -t), organized by tables in target destination.",
+							"items": {
+									"type":"object",
+									"properties": {
+										"table": {
+													"type": "string", 
+													"description": "The name of the destination table'."
+												},
+										"fields": {
+													"type": "array",
+													"description": "The possible fields in the destination table.",
+													"items": {
+														"type": "object",
+														"properties": {
+															"field": {
+																"type": "string",
+																"description": "The name of the field in the destination table."
+															},
+															"closedClass": {
+																"type": "string",
+																"description": "A binary choice of whether or not their is a closed class of possible values for the field e.g. 'False' means there is no given limit to the field values."
+															},
+															"datatype": {
+																"type": "string",
+																"description": "The datatype of the output filed e.g. 'string' or 'integer'."
+															},
+															"diseaseProperties": {
+																"type": "array",
+																"description": "A list of different 'disease properties' objects, which will dictate possible outputs for various disease groups.",
+																"items": {																	
+																	"properties": {
+																		"diseaseGroup": {
+																			"type": "array",
+																			"description": "the name(s) of the appropriate disease group, or '*' for all disease groups."
+																			},
+																		"values": {
+																			"type": "array",
+																			"description": "An array (possibly empty in the case of an open class) of potential values for this field given the disease group."
+																			}
+																	},
+																	"required": ["diseaseGroup", "values"]
+																}
+															}
+														},
+														"required": ["diseaseProperties", "datatype", "closedClass", "field"]
+														
+													}
+												}																			
+									},
+									"required": ["table", "fields"]
+							}
+						}
+					}					
+				}				
+			},
+			"required": ["docType", "docName", "engineVersion", "groupings", "metadata"]
+        },
+		"errors": {
+            "description": "An array of any errors or warnings encountered in processing the batch",
+            "type": "array",
+			"items": {
+				"type":"object",
+				"properties": {
+					"errorString": {
+								"type": "string", 
+								"description": "A string describing the source or cause of the error."
+							},
+					"errorType": {
+								"type":"string",
+								"description": "The type of error encountered e.g. 'Warning' (most Errors will crash the engine before anything is outtput)."
+							}									
+					},
+				"required": ["errorString", "errorType"]
+			}
+        },
+		"reports": {
+            "description": "Output information for the documents themselves",
+            "type": "array"
+		}
+	},
+	"required": ["ControlInfo", "errors"]
+}
