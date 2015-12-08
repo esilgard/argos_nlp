@@ -1,3 +1,4 @@
+'''author@esilgard'''
 #
 # Copyright (c) 2014-2015 Fred Hutchinson Cancer Research Center
 #
@@ -17,7 +18,7 @@
 import sys,path_parser,final_logic,re
 import os,global_strings
 path2= os.path.dirname(os.path.realpath(__file__))+'/'
-'''author@esilgard'''
+
 __version__='process_pathology1.0'
 
 #################################################################################################################################################
@@ -77,7 +78,7 @@ def get_fields(disease_group,report_dictionary,disease_group_data_dictionary,pat
     return report_table_list,error_list,list
         
 ### MAIN CLASS ###
-def main(arguments,path):
+def main(arguments):
     '''
     current minimum required flags for the pathology parsing in the "arguments" dictionary are:
         -f input pathology file

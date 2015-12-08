@@ -6,35 +6,14 @@
 	"properties": {
         "ControlInfo": {
             "description": "The information about the batch run along with relevant metadata and groupings to inform the UI.",
-            "type": "object",			
+            "type": "object",
 			"properties": {
 				"diseaseGroup": {"type":"string"},
 				"docDate": {"type":"string"},
 				"docName": {"type":"string"},
 				"docType": {"type":"string"},
 				"docVersion": {"type":"string"},
-				"engineVersion": {"type":"string"},
-				"groupings": {
-							"type":"array",
-							"items": {
-									"type":"object",
-									"properties": {
-										"level": {
-													"type": "string", 
-													"description": "The title in the output of the metadata being grouped e.g. 'table' or 'recordKey'."
-												},
-										"order": {
-													"type":"string",
-													"description": "The mechanism for ordering the data e.g. 'alpha'."
-												},
-										"orientation": {
-													"type":"string",
-													"description": "The orientation in the UI of the grouped items e.g. 'horizontal'."
-												}									
-										},
-									"required": ["level", "order", "orientation"]
-								}
-						},								
+				"engineVersion": {"type":"string"},	
 				"metadata": {
 					"type":"object",
 					"properties": {
@@ -69,7 +48,7 @@
 															"diseaseProperties": {
 																"type": "array",
 																"description": "A list of different 'disease properties' objects, which will dictate possible outputs for various disease groups.",
-																"items": {																	
+																"items": {
 																	"properties": {
 																		"diseaseGroup": {
 																			"type": "array",
@@ -87,15 +66,37 @@
 														"required": ["diseaseProperties", "datatype", "closedClass", "field"]
 														
 													}
-												}																			
+												}
 									},
 									"required": ["table", "fields"]
 							}
+						},
+						"groupings": {
+							"type":"array",
+							"items": {
+									"type":"object",
+									"properties": {
+										"level": {
+													"type": "string", 
+													"description": "The title in the output of the metadata being grouped e.g. 'table' or 'recordKey'."
+												},
+										"order": {
+													"type":"string",
+													"description": "The mechanism for ordering the data e.g. 'alpha'."
+												},
+										"orientation": {
+													"type":"string",
+													"description": "The orientation in the UI of the grouped items e.g. 'horizontal'."
+												}
+										},
+									"required": ["level", "order", "orientation"]
+								}
 						}
-					}					
-				}				
+					},
+					"required": ["groupings","tables"]
+				}
 			},
-			"required": ["docType", "docName", "engineVersion", "groupings", "metadata"]
+			"required": ["docType", "docName", "engineVersion", "metadata"]
         },
 		"errors": {
             "description": "An array of any errors or warnings encountered in processing the batch",
@@ -109,8 +110,8 @@
 							},
 					"errorType": {
 								"type":"string",
-								"description": "The type of error encountered e.g. 'Warning' (most Errors will crash the engine before anything is outtput)."
-							}									
+								"description": "The type of error encountered e.g. 'Warning' (most Errors will crash the engine before anything is output)."
+							}
 					},
 				"required": ["errorString", "errorType"]
 			}
