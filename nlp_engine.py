@@ -101,9 +101,7 @@ OUTPUT_DICTIONARY[gb.CNTL]["source"] = "document source"
 OUTPUT_DICTIONARY[gb.CNTL]["docDate"] = "doc date"
 OUTPUT_DICTIONARY[gb.CNTL]["processDate"] = str(datetime.today().isoformat())
 metadata = metadata.get(NLP_ENGINE_PATH, ARGUMENTS)
-#metadata, groupings = metadata.get(NLP_ENGINE_PATH, ARGUMENTS)
 OUTPUT_DICTIONARY[gb.CNTL]["metadata"]= metadata
-#OUTPUT_DICTIONARY[gb.CNTL]["groupings"]= groupings
 OUTPUT_DICTIONARY[gb.ERRS] = []
 OUTPUT_DICTIONARY[gb.REPORTS] = []
 
