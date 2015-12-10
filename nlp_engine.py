@@ -25,7 +25,6 @@ initial script of the Argos/NLP engine do deal with command line parsing and mod
 should exit with a non-zero status for any fatal errors and
 output warnings and results in json format to CWD in the file provided in cmd line args
 '''
-
 ## declare output dictionary for values, warnings, and metadata
 OUTPUT_DICTIONARY = {}
 
@@ -94,12 +93,10 @@ OUTPUT_DICTIONARY[gb.CNTL]["docVersion"] = "document version"
 OUTPUT_DICTIONARY[gb.CNTL]["source"] = "document source"
 OUTPUT_DICTIONARY[gb.CNTL]["docDate"] = "doc date"
 OUTPUT_DICTIONARY[gb.CNTL]["processDate"] = str(datetime.today().isoformat())
-metadata, groupings = metadata.get(NLP_ENGINE_PATH, ARGUMENTS)
-OUTPUT_DICTIONARY[gb.CNTL]["metadata"]= metadata
-OUTPUT_DICTIONARY[gb.CNTL]["groupings"]= groupings
+metadata = metadata.get(NLP_ENGINE_PATH, ARGUMENTS)
+OUTPUT_DICTIONARY[gb.CNTL]["metadata"] = metadata
 OUTPUT_DICTIONARY[gb.ERRS] = []
 OUTPUT_DICTIONARY[gb.REPORTS] = []
-
 ## add in flag info to the json output dictionary
 OUTPUT_DICTIONARY[gb.CNTL]["docName"] = ARGUMENTS.get('-f')
 OUTPUT_DICTIONARY[gb.CNTL]["docType"] = ARGUMENTS.get('-t')
@@ -123,8 +120,8 @@ else:
     if MKDIR_ERRORS[0] == Exception:
         sys.stderr.write(MKDIR_ERRORS[1])
         sys.exit(1)
-
     OUTPUT, ERRORS, RETURN_TYPE = DOCUMENT_PROCESSER.process.main(ARGUMENTS)
+
     if RETURN_TYPE == Exception:
         sys.stderr.write(ERRORS[gb.ERR_STR])
         sys.exit(1)
