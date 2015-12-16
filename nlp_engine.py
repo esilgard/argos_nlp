@@ -27,6 +27,7 @@ output warnings and results in json format to CWD in the file provided in cmd li
 '''
 ## declare output dictionary for values, warnings, and metadata
 OUTPUT_DICTIONARY = {}
+OUTPUT_DICTIONARY[gb.ERRS] = []
 
 ## path to the nlp_engine.py script ##
 NLP_ENGINE_PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
@@ -83,7 +84,7 @@ for index in range(0, len(ARGS)-1, 2):
     else:
         OUTPUT_DICTIONARY[gb.ERRS].append({gb.ERR_TYPE: 'Warning', gb.ERR_STR: 'nonfatal error: \
         unrecognized flag: ' + ARGS[index] + ', this flag will not be excluded. Refer to ' + \
-        COMMAND_LINE_FLAG_FILE + ' for a complete list and description of command line flags'})
+        NLP_ENGINE_PATH + 'COMMAND_LINE_FLAGS.txt for a complete list and description of command line flags'})
 
 ## build the dictionary for the json output ##
 OUTPUT_DICTIONARY[gb.CNTL] = {}
@@ -95,7 +96,6 @@ OUTPUT_DICTIONARY[gb.CNTL]["docDate"] = "doc date"
 OUTPUT_DICTIONARY[gb.CNTL]["processDate"] = str(datetime.today().isoformat())
 metadata = metadata.get(NLP_ENGINE_PATH, ARGUMENTS)
 OUTPUT_DICTIONARY[gb.CNTL]["metadata"] = metadata
-OUTPUT_DICTIONARY[gb.ERRS] = []
 OUTPUT_DICTIONARY[gb.REPORTS] = []
 ## add in flag info to the json output dictionary
 OUTPUT_DICTIONARY[gb.CNTL]["docName"] = ARGUMENTS.get('-f')
