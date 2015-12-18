@@ -83,10 +83,14 @@ def parse(obx_file):
                                line[headers.get(gb.SPECIMEN_SOURCE)] == 'NULL':
                                 specimen_dictionary = {}
                             else:
-                                specimen_dictionary = dict((x.split(')')[0], x.split(')')[1].\                                                    
-                                                    replace('(', ' ').strip('~') for x in  line[headers.get\
-                                                    (gb.SPECIMEN_SOURCE)].strip('"').split('~'))
-                                
+                                try:
+                                    specimen_dictionary = dict((x.split(')')[0], x.split(')')[1].\
+                                                    replace('(', ' ')) for x in  line[headers.get\
+                                                    (gb.SPECIMEN_SOURCE)].strip('"').strip('~').split('~'))
+                                except:
+                                    print line
+                                    print headers.get(gb.SPECIMEN_SOURCE)
+                                    sys.exit()
                             path_d[mrn][acc][(0, gb.SPECIMEN_SOURCE, 0, None)] = {}
                             path_d[mrn][acc][(0, gb.SPECIMEN_SOURCE, 0, None)][0] = specimen_dictionary
                         # match general section header patterns

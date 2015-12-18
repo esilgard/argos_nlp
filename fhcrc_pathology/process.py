@@ -106,6 +106,7 @@ def main(arguments):
 
     disease_group_data_d = get_disease_specific_d(disease_group)
     field_value_output = []
+    return_errors = []
     # report counting index (used for timeit tests)
     i = 0
     ## create a list of output field dictionaries ##
@@ -114,13 +115,14 @@ def main(arguments):
             field_value_d = {}
             field_value_d[gb.REPORT] = accession
             field_value_d[gb.MRN] = mrn
+           
             ## write out cannonical version of text file
             try:
                 with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.txt', 'wb') as out:
                     out.write(pathology_d[mrn][accession][(-1, 'FullText', 0, None)])
             except IOError:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
-                    'FATAL ERROR in process_pathology attempting to write text to file at'+ \
+                    'FATAL ERROR in process.py attempting to write text to file at'+ \
                     arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + \
                     '.txt - unknown number of reports completed. ' + str(sys.exc_info()[1])}], list)
 
@@ -132,20 +134,20 @@ def main(arguments):
                 disease_group_data_d = get_disease_specific_d(disease_group)
                 field_value_d[gb.DZ_GROUP] = {gb.VALUE:disease_group, gb.CONFIDENCE: \
                                         ('%.2f' % dz_group_confidence)}
-            return_fields, return_errors, return_type = get_fields\
-                    (disease_group, pathology_d[mrn][accession], disease_group_data_d, path_data_d)
-
+            
             i += 1
             ## if no Exceptions and "no algorithm" isn't there, then run appropriate algorithms
             if return_type != Exception:
                 if arguments.get('-a') == 'n':
                     pass
                 else:
+                    return_fields, return_errors, return_type = get_fields\
+                    (disease_group, pathology_d[mrn][accession], disease_group_data_d, path_data_d)
                     field_value_d[gb.TABLE+'s'] = final_logic.get(return_fields)
                 field_value_output.append(field_value_d)
             else:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR \
-                        in process_pathology.get(fields) -unknown number of reports completed.  \
+                        in process.get(fields) -unknown number of reports completed.  \
                         Return error string: ' + return_errors[gb.ERR_STR]}], list)
 
     return (field_value_output, return_errors, list)
