@@ -58,7 +58,7 @@ git-revision.cmd
 #sample de-identified data for smoke test
 sampleData/
 
-#any text feature files
+#any text feature file
 feature_mapping.txt
 
 #ignore back-up files
