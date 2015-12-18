@@ -83,8 +83,8 @@ def parse(obx_file):
                                line[headers.get(gb.SPECIMEN_SOURCE)] == 'NULL':
                                 specimen_dictionary = {}
                             else:
-                                specimen_dictionary = dict((x.split(')')[0], x.split(')')[1].\
-                                                    replace('(', ' ')) for x in  line[headers.get\
+                                specimen_dictionary = dict((x.split(')')[0], x.split(')')[1].\                                                    
+                                                    replace('(', ' ').strip('~') for x in  line[headers.get\
                                                     (gb.SPECIMEN_SOURCE)].strip('"').split('~'))
                                 
                             path_d[mrn][acc][(0, gb.SPECIMEN_SOURCE, 0, None)] = {}
