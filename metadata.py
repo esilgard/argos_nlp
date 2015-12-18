@@ -1,4 +1,4 @@
-#
+#''' author@esilgard '''
 # Copyright (c) 2013-2015 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -6,7 +6,6 @@
 # You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
-''' author@esilgard '''
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,20 +25,17 @@ def get(nlp_engine_path, arguments):
     ## path to file containing the metadata dictionary (in json format) ##
     try:
         meta_data_file = open(nlp_engine_path + 'metadata.json', 'r')
-        groupings_file = open(nlp_engine_path + 'grouping.json', 'r')
         try:
             metadata_d = json.load(meta_data_file)
             meta_data_file.close()
-            grouping_d = json.load(groupings_file)
-            groupings_file.close()
         except RuntimeError:
             sys.stderr.write('FATAL ERROR: json could not load metadata dictionary \
                     file or the UI groupings file, potential formatting error')
             sys.exit(1)
     except IOError:
-        sys.stderr.write('FATAL ERROR: either metadata dictionary or groupings file not found')
+        sys.stderr.write('FATAL ERROR: metadata dictionary file not found.  program aborted.')
         sys.exit(1)
     ## only output the appropriate metadata for the given document type
     metadata_d = metadata_d.get(arguments.get('-t'))
 
-    return metadata_d, grouping_d
+    return metadata_d
