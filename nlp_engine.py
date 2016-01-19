@@ -53,7 +53,7 @@ except UnicodeError:
 ## path to file containing command line flags and descriptions ##
 ## in the format -char<tab>description<tab>verbose_description(for help and error messages) ##
 try:
-    COMMAND_LINE_FLAG_FILE = open(NLP_ENGINE_PATH + 'COMMAND_LINE_FLAGS.txt', 'r')
+    COMMAND_LINE_FLAG_FILE = open(NLP_ENGINE_PATH + 'command_line_flags.txt', 'r')
     try:
         ## set of required flags for program to run successfully ##
         REQUIRED_FLAGS = set([])
