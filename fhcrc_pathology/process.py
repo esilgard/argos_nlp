@@ -150,4 +150,4 @@ def main(arguments):
                         in process.get(fields) -unknown number of reports completed.  \
                         Return error string: ' + return_errors[gb.ERR_STR]}], list)
 
-    return (field_value_output, return_errors, list)
+    return (field_value_output, [return_errors], list)
