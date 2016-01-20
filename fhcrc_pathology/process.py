@@ -115,7 +115,7 @@ def main(arguments):
             field_value_d = {}
             field_value_d[gb.REPORT] = accession
             field_value_d[gb.MRN] = mrn
-           
+            field_value_d[gb.TABLES] = []
             ## write out cannonical version of text file
             try:
                 with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.txt', 'wb') as out:
@@ -129,11 +129,9 @@ def main(arguments):
             ## find disease group in the case of unknown/all --- currently simple keyword/voting
             ## future work to include section specific search and stochastic language model
             if arguments.get('-g') == 'all' or arguments.get('-g') == '*':
-                disease_group, dz_group_confidence = PathClassifier.classify\
-                                (pathology_d[mrn][accession][(-1, 'FullText', 0, None)])
+                disease_group, report_info_table = PathClassifier.classify(pathology_d[mrn][accession][(-1, 'FullText', 0, None)])                
                 disease_group_data_d = get_disease_specific_d(disease_group)
-                field_value_d[gb.DZ_GROUP] = {gb.VALUE:disease_group, gb.CONFIDENCE: \
-                                        ('%.2f' % dz_group_confidence)}
+                field_value_d[gb.TABLES].append(report_info_table)
             
             i += 1
             ## if no Exceptions and "no algorithm" isn't there, then run appropriate algorithms
@@ -143,7 +141,7 @@ def main(arguments):
                 else:
                     return_fields, return_errors, return_type = get_fields\
                     (disease_group, pathology_d[mrn][accession], disease_group_data_d, path_data_d)
-                    field_value_d[gb.TABLE+'s'] = final_logic.get(return_fields)
+                    field_value_d[gb.TABLES].append(final_logic.get(return_fields))
                 field_value_output.append(field_value_d)
             else:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR \
