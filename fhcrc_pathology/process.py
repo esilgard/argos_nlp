@@ -118,13 +118,27 @@ def main(arguments):
             field_value_d[gb.TABLES] = []
             ## write out cannonical version of text file
             try:
-                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.txt', 'wb') as out:
-                    out.write(pathology_d[mrn][accession][(-1, 'FullText', 0, None)])
+                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.txt', 'wb') as out_text:
+                    out_text.write(pathology_d[mrn][accession][(-1, 'FullText', 0, None)])
+                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.nlp.tsv', 'wb') as out_tsv:
+                    specimen_source = pathology_d[mrn][accession].get((0, 'SpecimenSource', 0, None))                   
+                    specimen_source_string = '~'.join([')'.join(a) for a in specimen_source.get(0).items()])                    
+                    
+                    out_tsv.write(gb.MRN_CAPS+'\t'+gb.FILLER_ORDER_NO+'\t'+gb.SET_ID+'\t'+gb.OBSERVATION_VALUE+'\t'+gb.SPECIMEN_SOURCE+'\n')
+                    for k,v in pathology_d[mrn][accession].items():
+                        if 'SpecimenSource' not in k and 'FullText' not in k and type(v)== dict:
+                            for a,b in v.items():
+                                try:
+                                    out_tsv.write(mrn+'\t'+accession+'\t'+str(a)+'\t'+b+'\t'+specimen_source_string+'\n')
+                                except:
+                                    print a,b
+                                    sys.exit()
+                   
             except IOError:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
-                    'FATAL ERROR in process.py attempting to write text to file at'+ \
+                    'FATAL ERROR in process.py attempting to write text and tsv to files at'+ \
                     arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + \
-                    '.txt - unknown number of reports completed. ' + str(sys.exc_info()[1])}], list)
+                    ' - unknown number of reports completed. ' + str(sys.exc_info()[1])}], list)
 
             ## find disease group in the case of unknown/all --- currently simple keyword/voting
             ## future work to include section specific search and stochastic language model
