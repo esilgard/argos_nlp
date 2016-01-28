@@ -1,43 +1,43 @@
-Liver
-Skin;nevus;nevi;epidermal;dermal;dermis;epidermis
 Abdomen
-Stomach;gastric
-Esophagus;esophageal
-Lymph Node;nodes;nodal;lymph;lymph nodes
-Heart;coronary
-Pancreas;pancreatic
+Acetabulum
+Adrenal
 Ampulla
-Pelvis;pelvic
-Spleen
-Tonsil;tonsils
-Chest
+Anal;anus
+Arm;ulna;ulnar
 Back
+Bile Duct
+Bladder
+Bone;osteo
+Bowel
+Brain and CNS;frontoparietal lobe;parietal lobe;frontal lobe;temporal lobe;occipital lobe;cns
+Breast;mammary;axilliary;breasts
+Cervix;cervical
+Chest
+Colorectal;colon;colonic;sigmoid;rectum;rectal;rectosigmoid
+Diaphragm
 Endometrium;endometrial
+Esophagus;esophageal
+Head and Neck
+Heart;coronary
+Kidney;renal;kidneys
+Leg;thigh;calf
+Liver
+Lung;pulmonary;pulmonic;lungs
+Lymph Node;nodes;nodal;lymph;lymph nodes
+Ovary;ovarian;ovaries
+Pancreas;pancreatic
+Pelvis;pelvic
+Penis;penile
+Prostate;prostatic
+Sacrum;sacral
+Skin;nevus;nevi;epidermal;dermal;dermis;epidermis
+Spine;spinal;paraspinal
+Spleen
+Stomach;gastric
+Testis;testicular;testicle
+Tonsil;tonsils
+Torso;thoracic
+Urine
+Uterus;uterine
 Vagina;vaginal
 Vulva;vulvar
-Cervix;cervical
-Uterus;uterine
-Spine;spinal;paraspinal
-Bone;osteo
-Leg;thigh;calf
-Arm;ulna;ulnar
-Anal;anus
-Torso;thoracic
-Diaphragm
-Acetabulum
-Prostate;prostatic
-Colorectal;colon;colonic;sigmoid;rectum;rectal;rectosigmoid
-Ovary;ovarian;ovaries
-Lung;pulmonary;pulmonic;lungs
-Penis;penile
-Testis;testicular;testicle
-Breast;mammary;axilliary;breasts
-Kidney;renal;kidneys
-Sacrum;sacral
-Bile Duct
-Brain and CNS;frontoparietal lobe;parietal lobe;frontal lobe;temporal lobe;occipital lobe;cns
-Bladder
-Urine
-Bowel
-Adrenal
-Head and Neck;mouth;tongue;mandible;nasopharynx;pharynx;pharyngeal;oropharynx;nasal;paranasal;sinus;salivary

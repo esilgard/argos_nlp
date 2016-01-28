@@ -1,0 +1,14 @@
+Anterior
+Base
+Central
+Deep
+Lateral
+Superior
+Posterior
+Distal
+Margin
+Lower
+Upper
+Medial
+Inferior
+Proximal

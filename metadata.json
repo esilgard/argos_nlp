@@ -22,39 +22,93 @@
 			"fields":[
 				{"field":"PathHistology",
 				"datatype":"string",
-				"closedClass":"True",
+				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["lung"],
-						"values":["Adenocarcinoma","Adenosquamous Carcinoma","Alveolar Fibrosis","Atypical Cells","Atypical Epithelial Cells","Bronchioloalveolar Carcinoma","Interstitial Pulmonary Fibrosis","Large Cell Carcinoma","Metastatic Adenocarcinoma","Metastatic Carcinoma","Non Small Cell Carcinoma","Non-Necrotizing Granulomas","Small Cell Carcinoma","Squamous Cell Carcinoma","Lymphoepithelial Carcinoma"]
+						"values":["Adenocarcinoma","Adenosquamous Carcinoma","Bronchioloalveolar Carcinoma","Large Cell Carcinoma","Non Small Cell Carcinoma","Small Cell Carcinoma","Squamous Cell Carcinoma","Lymphoepithelial Carcinoma","Neuroendocrine Carcinoma"]
 						},
 						{"diseaseGroup":["*"],
-						"values":["Carcinoma, NOS","Non-Cancerous","Cancer","Dysplasia","Atypia","Carcinoma In Situ"]
+						"values":["Carcinoma, NOS","Cancer","Sarcoma"]
 						},
 						{"diseaseGroup":["brain"],
-						"values":["Anaplastic Astrocytoma","Anaplastic Ependymoma","Anaplastic Ganglioglioma","Anaplastic Meningioma","Anaplastic Oligoastrocytoma","Anaplastic Oligodendroglioma","Astroblastoma","Atypical Meningioma","Carcinoma","Carcinoma ","Central Neurocytoma","Chondrosarcoma","Chordoid Meningioma","Chordoma","Craniopharyngioma, adamantinomatous type","Diffuse Astrocytoma","Dysembryoplastic Neuroepithelial Tumor (DNET)","Dysembryoplastic Neuroepithelial Tumor (DNT)","Esthesioneuroblastoma","Extraventricular Neurocytoma","Fibrillary Astrocytoma","Ganglioglioma","Gemistocytic Astrocytoma","Glioblastoma","Glioblastoma with Oligodendroglioma component","Glioma, NOS","Gliosarcoma","Hemangioblastoma","Hemangiopericytoma","High-Grade Astrocytoma","High-Grade Glioma","Low-grade Astrocytoma","Low-Grade Glioma","Low-Grade Sarcoma","Malignant ","Malignant Astrocytic Neoplasm","Meningioma","Metastatic Adenocarcinoma","Metastatic Carcinoma","Neurofibroma","Non-Cancer","Non-Diagnostic","Non-Neoplastic","Olfactory Neuroblastoma","Oligoastrocytoma","Oligodendroglioma","Papillary Glioneuronal Tumor","Pilocytic Astrocytoma","Pituitary Adenoma","Pleomorphic Xanthoastrocytoma","Primitive Neuroectodermal Tumor (PNET)","Recurrent/residual glioblastoma","Recurrent/Residual Glioblastoma With Treatment Effect","Recurrent/residual high-grade glioma","Recurrent/Residual High-Grade Glioma With Treatment Effect","Schwannoma","Small Cell Glioblastoma","Subependymoma","Undifferentiated Neuroepithelial Tumor"]
+						"values":["Anaplastic Astrocytoma","Anaplastic Ependymoma","Anaplastic Ganglioglioma","Anaplastic Meningioma","Anaplastic Oligoastrocytoma","Anaplastic Oligodendroglioma","Astroblastoma","Astrocytoma","Atypical Meningioma","Central Neurocytoma","Chondrosarcoma","Chordoid Meningioma","Chordoma","Craniopharyngioma","Dysembryoplastic Neuroepithelial Tumor (DNET)","Ependymoma","Esthesioneuroblastoma","Ganglioglioma","Glioblastoma","Glioma","Gliosarcoma","Hemangioblastoma","Hemangiopericytoma","Meningioma","Medulloblastoma","Neurofibroma","Neuroblastoma","Oligoastrocytoma","Oligodendroglioma","Papillary Glioneuronal Tumor","Pilocytic Astrocytoma","Pituitary Adenoma","Pleomorphic Xanthoastrocytoma","Primitive Neuroectodermal Tumor (PNET)","Schwannoma","Small Cell Glioblastoma","Subependymoma","Undifferentiated Neuroepithelial Tumor"]
+						},
+						{"diseaseGroup":["breast"],
+						"values":["Adenocarcinoma","Ductal Carcinoma","Lobular Carcinoma"]
+						},
+						{"diseaseGroup":["GI"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma"]
+						},
+						{"diseaseGroup":["GU"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Urothelial Carcinoma"]
+						},
+						{"diseaseGroup":["gyn"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Neuroendocrine Carcinoma"]
 						},
 						{"diseaseGroup":["head&neck"],
-						"values":["Adenocarcinoma","Adenocarcinoma, Metastatic","Basaloid Squamous Cell Carcinoma","Carcinoma","Dysplasia","High grade intraepithelial neoplasia","Malignant","Metastatic Carcinoma","Metastatic Squamous Cell Carcinoma","Non-Cancer","Non-Diagnostic","Non-Small Cell Carcinoma","Small Cell Carcinoma","Squamous Cell Carcinoma","Squamous Cell Carcinoma, In Situ","Squamous Papilloma"]
-						}
+						"values":["Adenocarcinoma","Basaloid Squamous Cell Carcinoma","Squamous Cell Carcinoma","Non-Small Cell Carcinoma","Small Cell Carcinoma","Salivary Gland Carcinoma"]
+						},
+						{"diseaseGroup":["heme"],
+						"values":["AML","CML","MM","MDS","CCL","Lymphoma","Leukemia"]
+						},
+						{"diseaseGroup":["male_cancers"],
+						"values":["Adenocarcinoma"]
+						},
+						{"diseaseGroup":["other"],
+						"values":[]
+						},
+						{"diseaseGroup":["sarcoma"],
+						"values":["Alveolar Soft Part Sarcoma", "Angiosarcoma", "Chondrosarcoma", "Clear Cell Sarcoma", "Dendritic Cell Tumor", "Dermatofibrosarcoma Protuberans", "Desmoplastic Small Round Cell Tumor", "Dysplastic Gangliocytoma of the Cerebellem (Lhermitte-Duclos Disease)", "Epithelioid Sarcoma", "Ewing Sarcoma", "Fibrosarcoma", "Ganglioneuroma", "GIST", "Hemangioblastoma", "Hemangiopericytomal", "Leiomyoma", "Leiomyosarcoma", "Lipoma", "Liposarcoma", "Malignant Peripheral Nerve Sheath Tumor", "Malignant Solitary Fibrous Tumor", "Myofibroblastoma", "Myofibrosarcoma", "Myxofibrosarcoma", "Myxoma", "Osteochondroma", "Osteosarcoma", "Rhabdomyosarcoma", "Round Blue Cell Sarcoma", "Sarcoma", "Smooth Muscle Tumor of Uncertain Malignant Potential (STUMP)", "Solitary Fibrous Tumor", "Synovial Sarcoma", "Undifferentiated Pleomorphic Sarcoma"]
+						},
+						{"diseaseGroup":["skin"],
+						"values":["Melanoma","Basal Cell Carcinoma","Merkel Cell Carcinoma","Squamous Cell Carcinoma"]
+						}						
 					]
 				},
 				{"field":"PathHistology2",
 				"datatype":"string",
-				"closedClass":"True",
+				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["lung"],
-						"values":["Adenocarcinoma","Adenosquamous Carcinoma","Alveolar Fibrosis","Atypical Cells","Atypical Epithelial Cells","Bronchioloalveolar Carcinoma","Interstitial Pulmonary Fibrosis","Large Cell Carcinoma","Metastatic Adenocarcinoma","Metastatic Carcinoma","Non Small Cell Carcinoma","Non-Necrotizing Granulomas","Small Cell Carcinoma","Squamous Cell Carcinoma","Lymphoepithelial Carcinoma"]
+						"values":["Adenocarcinoma","Adenosquamous Carcinoma","Bronchioloalveolar Carcinoma","Large Cell Carcinoma","Non Small Cell Carcinoma","Small Cell Carcinoma","Squamous Cell Carcinoma","Lymphoepithelial Carcinoma","Neuroendocrine Carcinoma"]
 						},
 						{"diseaseGroup":["*"],
-						"values":["Carcinoma, NOS","Non-Cancerous","Cancer","Dysplasia","Atypia","Carcinoma In Situ"]
+						"values":["Carcinoma, NOS","Cancer","Sarcoma"]
 						},
 						{"diseaseGroup":["brain"],
-						"values":["Anaplastic Astrocytoma","Anaplastic Ependymoma","Anaplastic Ganglioglioma","Anaplastic Meningioma","Anaplastic Oligoastrocytoma","Anaplastic Oligodendroglioma","Astroblastoma","Atypical Meningioma","Carcinoma","Carcinoma ","Central Neurocytoma","Chondrosarcoma","Chordoid Meningioma","Chordoma","Craniopharyngioma, adamantinomatous type","Diffuse Astrocytoma","Dysembryoplastic Neuroepithelial Tumor (DNET)","Dysembryoplastic Neuroepithelial Tumor (DNT)","Esthesioneuroblastoma","Extraventricular Neurocytoma","Fibrillary Astrocytoma","Ganglioglioma","Gemistocytic Astrocytoma","Glioblastoma","Glioblastoma with Oligodendroglioma component","Glioma, NOS","Gliosarcoma","Hemangioblastoma","Hemangiopericytoma","High-Grade Astrocytoma","High-Grade Glioma","Low-grade Astrocytoma","Low-Grade Glioma","Low-Grade Sarcoma","Malignant ","Malignant Astrocytic Neoplasm","Meningioma","Metastatic Adenocarcinoma","Metastatic Carcinoma","Neurofibroma","Non-Cancer","Non-Diagnostic","Non-Neoplastic","Olfactory Neuroblastoma","Oligoastrocytoma","Oligodendroglioma","Papillary Glioneuronal Tumor","Pilocytic Astrocytoma","Pituitary Adenoma","Pleomorphic Xanthoastrocytoma","Primitive Neuroectodermal Tumor (PNET)","Recurrent/residual glioblastoma","Recurrent/Residual Glioblastoma With Treatment Effect","Recurrent/residual high-grade glioma","Recurrent/Residual High-Grade Glioma With Treatment Effect","Schwannoma","Small Cell Glioblastoma","Subependymoma","Undifferentiated Neuroepithelial Tumor"]
+						"values":["Anaplastic Astrocytoma","Anaplastic Ependymoma","Anaplastic Ganglioglioma","Anaplastic Meningioma","Anaplastic Oligoastrocytoma","Anaplastic Oligodendroglioma","Astroblastoma","Astrocytoma","Atypical Meningioma","Central Neurocytoma","Chondrosarcoma","Chordoid Meningioma","Chordoma","Craniopharyngioma","Dysembryoplastic Neuroepithelial Tumor (DNET)","Ependymoma","Esthesioneuroblastoma","Ganglioglioma","Glioblastoma","Glioma","Gliosarcoma","Hemangioblastoma","Hemangiopericytoma","Meningioma","Medulloblastoma","Neurofibroma","Neuroblastoma","Oligoastrocytoma","Oligodendroglioma","Papillary Glioneuronal Tumor","Pilocytic Astrocytoma","Pituitary Adenoma","Pleomorphic Xanthoastrocytoma","Primitive Neuroectodermal Tumor (PNET)","Schwannoma","Small Cell Glioblastoma","Subependymoma","Undifferentiated Neuroepithelial Tumor"]
+						},
+						{"diseaseGroup":["breast"],
+						"values":["Adenocarcinoma","Ductal Carcinoma","Lobular Carcinoma"]
+						},
+						{"diseaseGroup":["GI"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma"]
+						},
+						{"diseaseGroup":["GU"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Urothelial Carcinoma"]
+						},
+						{"diseaseGroup":["gyn"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Neuroendocrine Carcinoma"]
 						},
 						{"diseaseGroup":["head&neck"],
-						"values":["Adenocarcinoma","Adenocarcinoma, Metastatic","Basaloid Squamous Cell Carcinoma","Carcinoma","Dysplasia","High grade intraepithelial neoplasia","Malignant","Metastatic Carcinoma","Metastatic Squamous Cell Carcinoma","Non-Cancer","Non-Diagnostic","Non-Small Cell Carcinoma","Small Cell Carcinoma","Squamous Cell Carcinoma","Squamous Cell Carcinoma, In Situ","Squamous Papilloma"]
+						"values":["Adenocarcinoma","Basaloid Squamous Cell Carcinoma","Squamous Cell Carcinoma","Non-Small Cell Carcinoma","Small Cell Carcinoma","Salivary Gland Carcinoma"]
+						},
+						{"diseaseGroup":["heme"],
+						"values":["AML","CML","MM","MDS","CCL","Lymphoma","Leukemia"]
+						},
+						{"diseaseGroup":["male_cancers"],
+						"values":["Adenocarcinoma"]
+						},
+						{"diseaseGroup":["other"],
+						"values":[]
+						},
+						{"diseaseGroup":["sarcoma"],
+						"values":["Alveolar Soft Part Sarcoma", "Angiosarcoma", "Chondrosarcoma", "Clear Cell Sarcoma", "Dendritic Cell Tumor", "Dermatofibrosarcoma Protuberans", "Desmoplastic Small Round Cell Tumor", "Dysplastic Gangliocytoma of the Cerebellem (Lhermitte-Duclos Disease)", "Epithelioid Sarcoma", "Ewing Sarcoma", "Fibrosarcoma", "Ganglioneuroma", "GIST", "Hemangioblastoma", "Hemangiopericytomal", "Leiomyoma", "Leiomyosarcoma", "Lipoma", "Liposarcoma", "Malignant Peripheral Nerve Sheath Tumor", "Malignant Solitary Fibrous Tumor", "Myofibroblastoma", "Myofibrosarcoma", "Myxofibrosarcoma", "Myxoma", "Osteochondroma", "Osteosarcoma", "Rhabdomyosarcoma", "Round Blue Cell Sarcoma", "Sarcoma", "Smooth Muscle Tumor of Uncertain Malignant Potential (STUMP)", "Solitary Fibrous Tumor", "Synovial Sarcoma", "Undifferentiated Pleomorphic Sarcoma"]
+						},
+						{"diseaseGroup":["skin"],
+						"values":["Melanoma","Basal Cell Carcinoma","Merkel Cell Carcinoma","Squamous Cell Carcinoma"]
 						}
 					]
 				},
@@ -64,7 +118,43 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["Brushing","Washing","Biopsy","Lavage","Dissection","Fine Needle Aspirate","Excision","Resection"]
+						"values":["Brushing","Washing","Biopsy","Core Needle Biopsy","Wedge Biopsy","Wedge Resection","Exisional Biopsy","Punch Biopsy","Shave Biopsy","Lavage","Dissection","Lymph Node Dissection","Fine Needle Aspirate","Excision","Resection","Port Placement","Tube Placement","Drain Placement","Catheter Placement"]
+						},
+						{"diseaseGroup":["brain"],
+						"values":["Craniotomy","Neuroendoscopy"]
+						},
+						{"diseaseGroup":["breast"],
+						"values":["Mastectomy","Radical Mastectomy"]
+						},
+						{"diseaseGroup":["GI"],
+						"values":["Cholecystectomy","Pancreaticoduodenectomy","Omentectomy","Hemicolectomy","Segmental Resection","Appendectomy","Polypectomy"]
+						},
+						{"diseaseGroup":["GU"],
+						"values":["Prostatectomy","Radical Prostatectomy","Cystectomy"]
+						},
+						{"diseaseGroup":["gyn"],
+						"values":["Hysterectomy","Salpingo-Oopherectomy","Radical Hysterectomy","Externeration"]
+						},
+						{"diseaseGroup":["head&neck"],
+						"values":["Neck Dissection","Hemiglossectomy","Maxillectomy","Mandibulectomy","Hemithyroidectomy","Thyroidectomy","Glossectomy","Laryngopharyngectomy","Laryngectomy","Adrenalectomy","Tonsillectomy","Parotidectomy","Rhinectomy"]
+						},
+						{"diseaseGroup":["heme"],
+						"values":[""]
+						},
+						{"diseaseGroup":["lung"],
+						"values":["Alveolectomy","Bronchoscopy","Thoracentesis","Cystoscopy","Endoscopy","Laminectomy","Foraminotomy","Facetectomy;facetomies","Fusion","Ligation","Lobectomy","Lymphadenectomy","Lysis Carotid Artery","Mediastinoscopy","Paracentesis","Pericardiocentesis","Pneumonectomy","Thoracentesis","Thoracoscopy","Thoracostomy","Thoracotomy","Pleurectomy"]
+						},
+						{"diseaseGroup":["male_cancers"],
+						"values":["Orchiectomy"]
+						},
+						{"diseaseGroup":["other"],
+						"values":[]
+						},
+						{"diseaseGroup":["sarcoma"],
+						"values":[]
+						},
+						{"diseaseGroup":["skin"],
+						"values":["Shave Biopsy","Punch Biopsy"]
 						}
 					]
 				},
@@ -78,13 +168,46 @@
 						}
 					]
 				},
+				{"field":"Behavior",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":["Malignant","In Situ","Invasive"]
+						}
+					]
+				},
+				{"field":"OtherFinding",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":["Adenoma", "Ascites", "Atypical Cells", "Cyst", "Dysplasia", "Fibroma", "Fibrosis", "Granuloma", "Hyperplasia", "Inflammation", "Lipoma", "Metaplasia", "Mucinous", "Necrosis", "Polyp", "Treatment Effect"]
+						},
+						{"diseaseGroup":["sarcoma"],
+						"values":["Arterio-Venous Malformation", "Benign Vascular Proliferation", "Chondroma", "Chordoma", "Enchondroma", "Epidermoid Cyst", "Fibroma of Tendon Sheath", "Follicular Hyperplasia", "Giant Cell Granuloma", "Giant Cell Tumor Bone", "Hemangioma", "Hibernoma", "Leiomyoma", "Lipoma", "Myofibroblastoma", "Myolipoma", "Myxoma", "Neurofibroma", "Osteochondroma", "Perineruioma", "Schwannoma", "Solitary Fibrous Tumor"]
+						}
+					]
+				},
+				{"field":"Metastasis",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":["metastatic"]
+						}
+					]
+				},
 				{"field":"PathHistologyGrade",
 				"datatype":"string",
 				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":[]
+						"values":["high","low","intermediate","poor","moderate","well"]
 						}
 					]
 				},
@@ -92,19 +215,46 @@
 				"datatype":"string",
 				"closedClass":"False",
 				"diseaseProperties":
-					[
-						{"diseaseGroup":["lung"],
-						"values":["Upper Lobe","Mediastinum","Hilar","Interlobular","Lower Lobe","Middle Lobe","Middle/Lower Lobe","Bronchi","Pleura","Retroperitoneum","Upper/Middle Lobe","Lymph Node","Chest Wall"]
-						},
+					[						
 						{"diseaseGroup":["*"],
-						"values":["Liver","Skin","Abdomen","Stomach","Lymph Node","Heart","Pancreas","Ampulla","Pelvis","Brain","Spleen","Tonsil","Chest","Marrow","Neck","Adrenal","Back","Bile Duct","Bone","Leg","Arm","Torso","Diaphragm","Acetabulum","Prostate","Colon","Ovary","Lung","Penis","Testis","Breast","Kidney","Sacrum","Spleen","Nasopharynx","Bladder","Head"]
+						"values":["Abdomen","Acetabulum","Adrenal","Ampulla","Anal","Arm", "Back","Bile Duct","Bladder","Bone","Bowel","Brain and CNS", "Breast","Cervix","Chest","Colorectal","Diaphragm","Endometrium", "Esophagus","Head and Neck","Heart","Kidney","Leg","Liver", "Lung", "Lymph Node","Ovary","Pancreas","Pelvis","Penis","Prostate", "Sacrum","Skin","Spine","Spleen","Stomach","Testis","Tonsil", "Torso","Urine","Uterus","Vagina","Vulva"]
 						},
-						{"diseaseGroup":["brain"],
-						"values":["Cerebellar","Fossa","Frontal","Frontoparietal","Frontotemporal","Frontotemporoparietal","Occipital","Occipitoparietal","Occipitotemporal","Paraspinal","Parietal","Parietooccipital","Sellar","Skull","Spine","Suboccipital","Subtemporal","Temporooccipital","Temporoparietal","Temporal","Thalamus"]
+						{"diseaseGroup":["brain"],						
+						"values":["Cerebellar","Fossa","Frontal Lobe","Frontoparietal Lobe","Frontotemporal Lobe","Frontotemporoparietal Lobe","Occipital Lobe","Occipitoparietal Lobe","Occipitotemporal Lobe","Paraspinal","Parietal Lobe","Parietooccipital Lobe","Sellar","Skull","Spine","Suboccipital Lobe","Subtemporal Lobe","Temporooccipital Lobe","Temporoparietal Lobe","Temporal Lobe","Thalamus","Middle Lobe","Lower Lobe","Parietal","Cerebellopontine","Pineal Gland"]
+						},
+						{"diseaseGroup":["breast"],
+						"values":["1 O'clock","2 O'clock","3 O'clock","4 O'clock","5 O'clock","6 O'clock","7 O'clock","8 O'clock","9 O'clock","10 O'clock","11 O'clock","12 O'clock","LIQ","LOQ","UIQ","UOQ","Nipple","Axillary Tail"]
+						},
+						{"diseaseGroup":["GI"],
+						"values":["Gallbladder","Stomach","Rectum","Colon","Colorectal","Sigmoid Colon","Pancreas","Omentum","Ileum","Transverse Colon","Ascending Colon","Descending Colon","Cecum","Antrum","Rectosigmoid Colon","Appendix","Esophagus","Intestine","Duodenum","Bowel"]
+						},
+						{"diseaseGroup":["GU"],
+						"values":["Bladder","Prostate"]
+						},
+						{"diseaseGroup":["gyn"],
+						"values":["Cervix","Uterus","Ovary","Vagina","Vulva","Fallopian","Pelvis","Edometrium"]
 						},
 						{"diseaseGroup":["head&neck"],
-						"values":["Buccal ","Chin","Epiglottic fold","False vocal cord","Gingiva","Head","Hypopharynx","Jugular","Larynx","Lip","Lymph Nodes","Mandible","Maxilla","Mouth","Nasal","Neck","Nose","Oropharynx","Palate","Paratracheal","Pharynx","Salivary glands","Sinus","Subglottis","Sublingual","Submandibular","Supraglottis","Tongue","Tonsil","Tooth","Trachea","True vocal cord","vocal cord"]
-						}
+						"values":["Alveolar","Buccal ","Chin","Epiglottis","False Vocal Cord","Gingiva","Hypopharynx","Jugular","Larynx","Lip","Mandible","Maxilla","Maxillary Sinus","Mouth","Nasal","Neck","Nose","Oropharynx","Palate","Paratracheal","Pharynx","Salivary Gland","Sinus","Subglottis","Sublingual","Submandibular","Supraglottis","Skull","Tongue","Tonsil","Tooth","Trachea","Vocal Cord"]
+						},
+						{"diseaseGroup":["heme"],
+						"values":["Marrow","Peripheral"]
+						},
+						{"diseaseGroup":["lung"],
+						"values":["Upper Lobe","Mediastinum","Hilar","Interlobular","Lower Lobe","Middle Lobe","Middle/Lower Lobe","Bronchus","Pleura","Retroperitoneum","Upper/Middle Lobe","Lymph Node","Chest Wall"]
+						},
+						{"diseaseGroup":["male_cancers"],
+						"values":["Penis","Testicle"]
+						},
+						{"diseaseGroup":["other"],
+						"values":[]
+						},
+						{"diseaseGroup":["sarcoma"],
+						"values":["Lower Extremity","Upper Extremity","Pelvis","Abdomen","Torso","Spine","Retroperitoneal","Neck","Head","Lung","Heart","Peritoneum","Liver","Kidney","Diaphragm"]
+						},
+						{"diseaseGroup":["skin"],
+						"values":["Face","Neck","Arm","Leg","Torso","Foot","Hand"]
+						}						
 					]
 				},
 				{"field":"PathSubsite",
@@ -112,14 +262,13 @@
 				"closedClass":"False",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["*"],
-						"values":["Anterior","Base","Central","Deep","Lateral","Superior","Posterior","Distal","Margin","Lower","Upper","Medial","Inferior","Proximal"]
+						{"diseaseGroup":["*"],						"values":["Anterior","Base","Central","Deep","Lateral","Superior","Posterior","Distal","Margin","Lower","Upper","Medial","Inferior","Proximal"]
 						},
 						{"diseaseGroup":["head&neck"],
-						"values":["Level 1","Level 1A","Level 1B","Level 2","Level 2A","Level 2B","Level 3","Level 4","Level 5","Level 6"]
+						"values":["Level I","Level II","Level III","Level IV","Level V"]
 						},
-						{"diseaseGroup":["breast"],
-						"values":["1 o'clock","2 o'clock","3 o'clock","4 o'clock","5 o'clock","6 o'clock","7 o'clock","8 o'clock","9 o'clock","10 o'clock","11 o'clock","12 o'clock"]
+						{"diseaseGroup":["skin"],
+						"values":["Nevus","Lentigo","Scar"]
 						}
 					]
 				},
@@ -130,6 +279,9 @@
 					[
 						{"diseaseGroup":["*"],
 						"values":["Right","Left","Bilateral","Midline"]
+						},
+						{"diseaseGroup":["head&neck"],
+						"values":["Right","Left","Bilateral","Midline","Ipsilateral"]
 						}
 					]
 				},
@@ -164,7 +316,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["Tis","T1","T1a","T1b","T2","T2a","T2b","T3","T3a","T3b","T4","TX"]
+						"values":["Tis","T1","T1a","T1b","T1c","T2","T2a","T2b","T2c","T3","T3a","T3b","T3c","T4","T4a","T4b","T4c","TX"]
 						}
 					]
 				},
@@ -174,17 +326,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":[]
-						}
-					]
-				},
-				{"field":"PathStageR",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":[]
+						"values":["high","low","intermediate","poor","moderate","well"]
 						}
 					]
 				},
@@ -194,7 +336,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["N0","N1","N2","N3","NX"]
+						"values":["N0","N1","N1a","N1b","N1c","N2","N2a","N2b","N2c","N3","N3a","N3b","N3c","N4","N4a","N4b","N4c","NX"]
 						}
 					]
 				},
@@ -210,7 +352,7 @@
 				},
 				{"field":"PathStageSystem",
 				"datatype":"string",
-				"closedClass":"True",
+				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
@@ -234,7 +376,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["M0","M1","M1a","M1b","MX"]
+						"values":["M0","M1","M1a","M1b","M1c","M2","M2a","M2b","M2c","MX"]
 						}
 					]
 				},
@@ -244,11 +386,135 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["Brain","Thoracic","Head & Neck","Pancreas","Pituitary Adenoma","Colorectal","Breast","Prostate","GU","GI","Bladder","Sarcoma","Hematological","Ovarian","Other","Skin","Cervical","Thyroid","Liver","Penile/Testicular","Uterine/Vulvar"]
+						"values":["brain","breast","head&neck","heme","lung","GU","GI","sarcoma","gyn","other","skin","male_cancers"]
 						}
 					]
 				}
 			]
+			},
+			{"table":"EngineReportInfo",
+			"fields":[
+				{"field":"diseaseGroup1",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				},
+				{"field":"diseaseGroup2",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				},
+				{"field":"diseaseGroup3",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				},
+				{"field":"diseaseGroup4",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				},
+				{"field":"diseaseGroup5",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				},
+				{"field":"diseaseGroup6",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				},
+				{"field":"diseaseGroup7",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				},
+				{"field":"diseaseGroup8",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				},
+				{"field":"diseaseGroup9",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				},
+				{"field":"diseaseGroup10",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				},
+				{"field":"diseaseGroup11",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				},
+				{"field":"diseaseGroup12",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[											
+						{"diseaseGroup":["*"],
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						}
+					]
+				}
+				]
 			},
 			{"table":"PathologyFinding",
 			"fields":[
@@ -256,18 +522,67 @@
 				"datatype":"string",
 				"closedClass":"False",
 				"diseaseProperties":
-					[
-						{"diseaseGroup":["lung"],
-						"values":["Upper Lobe","Mediastinum","Hilar","Interlobular","Lower Lobe","Middle Lobe","Middle/Lower Lobe","Bronchi","Pleura","Retroperitoneum","Upper/Middle Lobe","Lymph Node","Chest Wall"]
-						},
+					[											
 						{"diseaseGroup":["*"],
-						"values":["Liver","Skin","Abdomen","Stomach","Lymph Node","Heart","Pancreas","Ampulla","Pelvis","Brain","Spleen","Tonsil","Chest","Marrow","Neck","Adrenal","Back","Bile Duct","Bone","Leg","Arm","Torso","Diaphragm","Acetabulum","Prostate","Colon","Ovary","Lung","Penis","Testis","Breast","Kidney","Sacrum","Spleen","Nasopharynx","Bladder","Head"]
+						"values":["Abdomen","Acetabulum","Adrenal","Ampulla","Anal","Arm", "Back","Bile Duct","Bladder","Bone","Bowel","Brain and CNS", "Breast","Cervix","Chest","Colorectal","Diaphragm","Endometrium", "Esophagus","Head and Neck","Heart","Kidney","Leg","Liver", "Lung", "Lymph Node","Ovary","Pancreas","Pelvis","Penis","Prostate", "Sacrum","Skin","Spine","Spleen","Stomach","Testis","Tonsil", "Torso","Urine","Uterus","Vagina","Vulva"]
 						},
-						{"diseaseGroup":["brain"],
-						"values":["Cerebellar","Fossa","Frontal","Frontoparietal","Frontotemporal","Frontotemporoparietal","Occipital","Occipitoparietal","Occipitotemporal","Paraspinal","Parietal","Parietooccipital","Sellar","Skull","Spine","Suboccipital","Subtemporal","Temporooccipital","Temporoparietal","Temporal","Thalamus"]
+						{"diseaseGroup":["brain"],						
+						"values":["Cerebellar","Fossa","Frontal Lobe","Frontoparietal Lobe","Frontotemporal Lobe","Frontotemporoparietal Lobe","Occipital Lobe","Occipitoparietal Lobe","Occipitotemporal Lobe","Paraspinal","Parietal Lobe","Parietooccipital Lobe","Sellar","Skull","Spine","Suboccipital Lobe","Subtemporal Lobe","Temporooccipital Lobe","Temporoparietal Lobe","Temporal Lobe","Thalamus","Middle Lobe","Lower Lobe","Parietal","Cerebellopontine","Pineal Gland"]
+						},
+						{"diseaseGroup":["breast"],
+						"values":["1 O'clock","2 O'clock","3 O'clock","4 O'clock","5 O'clock","6 O'clock","7 O'clock","8 O'clock","9 O'clock","10 O'clock","11 O'clock","12 O'clock","LIQ","LOQ","UIQ","UOQ","Nipple","Axillary Tail"]
+						},
+						{"diseaseGroup":["GI"],
+						"values":["Gallbladder","Stomach","Rectum","Colon","Colorectal","Sigmoid Colon","Pancreas","Omentum","Ileum","Transverse Colon","Ascending Colon","Descending Colon","Cecum","Antrum","Rectosigmoid Colon","Appendix","Esophagus","Intestine","Duodenum","Bowel"]
+						},
+						{"diseaseGroup":["GU"],
+						"values":["Bladder","Prostate"]
+						},
+						{"diseaseGroup":["gyn"],						"values":["Cervix","Uterus","Ovary","Vagina","Vulva","Fallopian","Pelvis","Edometrium"]
 						},
 						{"diseaseGroup":["head&neck"],
-						"values":["Buccal ","Chin","Epiglottic fold","False vocal cord","Gingiva","Head","Hypopharynx","Jugular","Larynx","Lip","Lymph Nodes","Mandible","Maxilla","Mouth","Nasal","Neck","Nose","Oropharynx","Palate","Paratracheal","Pharynx","Salivary glands","Sinus","Subglottis","Sublingual","Submandibular","Supraglottis","Tongue","Tonsil","Tooth","Trachea","True vocal cord","vocal cord"]
+						"values":["Alveolar","Buccal ","Chin","Epiglottis","False Vocal Cord","Gingiva","Hypopharynx","Jugular","Larynx","Lip","Mandible","Maxilla","Maxillary Sinus","Mouth","Nasal","Neck","Nose","Oropharynx","Palate","Paratracheal","Pharynx","Salivary Gland","Sinus","Subglottis","Sublingual","Submandibular","Supraglottis","Skull","Tongue","Tonsil","Tooth","Trachea","Vocal Cord"]
+						},
+						{"diseaseGroup":["heme"],
+						"values":["Marrow","Peripheral"]
+						},
+						{"diseaseGroup":["lung"],
+						"values":["Upper Lobe","Mediastinum","Hilar","Interlobular","Lower Lobe","Middle Lobe","Middle/Lower Lobe","Bronchus","Pleura","Retroperitoneum","Upper/Middle Lobe","Lymph Node","Chest Wall"]
+						},
+						{"diseaseGroup":["male_cancers"],
+						"values":["Penis","Testicle"]
+						},
+						{"diseaseGroup":["other"],
+						"values":[]
+						},
+						{"diseaseGroup":["sarcoma"],
+						"values":["Lower Extremity","Upper Extremity","Pelvis","Abdomen","Torso","Spine","Retroperitoneal","Neck","Head","Lung","Heart","Peritoneum","Liver","Kidney","Diaphragm"]
+						},
+						{"diseaseGroup":["skin"],
+						"values":["Face","Neck","Arm","Leg","Torso","Foot","Hand"]
+						}						
+					]
+				},
+				{"field":"Behavior",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":["Malignant","In Situ","Invasive"]
+						}
+					]
+				},
+				{"field":"OtherFinding",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":["Adenoma", "Ascites", "Atypical Cells", "Cyst", "Dysplasia", "Fibroma", "Fibrosis", "Granuloma", "Hyperplasia", "Inflammation", "Lipoma", "Metaplasia", "Mucinous", "Necrosis", "Polyp", "Treatment Effect"]
+						},
+						{"diseaseGroup":["sarcoma"],
+						"values":["Arterio-Venous Malformation", "Benign Vascular Proliferation", "Chondroma", "Chordoma", "Enchondroma", "Epidermoid Cyst", "Fibroma of Tendon Sheath", "Follicular Hyperplasia", "Giant Cell Granuloma", "Giant Cell Tumor Bone", "Hemangioma", "Hibernoma", "Leiomyoma", "Lipoma", "Myofibroblastoma", "Myolipoma", "Myxoma", "Neurofibroma", "Osteochondroma", "Perineruioma", "Schwannoma", "Solitary Fibrous Tumor"]
 						}
 					]
 				},
@@ -277,6 +592,9 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
+						"values":["Right","Left","Bilateral","Midline"]
+						},
+						{"diseaseGroup":["head&neck"],
 						"values":["Right","Left","Bilateral","Midline","Ipsilateral"]
 						}
 					]
@@ -317,7 +635,17 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":[]
+						"values":["high","low","intermediate","poor","moderate","well"]
+						}
+					]
+				},
+				{"field":"Metastasis",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":["metastatic"]
 						}
 					]
 				},
@@ -327,17 +655,44 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["lung"],
-						"values":["Adenocarcinoma","Adenosquamous Carcinoma","Alveolar Fibrosis","Atypical Cells","Atypical Epithelial Cells","Bronchioloalveolar Carcinoma","Interstitial Pulmonary Fibrosis","Large Cell Carcinoma","Metastatic Adenocarcinoma","Metastatic Carcinoma","Non Small Cell Carcinoma","Non-Necrotizing Granulomas","Small Cell Carcinoma","Squamous Cell Carcinoma","Lymphoepithelial Carcinoma"]
+						"values":["Adenocarcinoma","Adenosquamous Carcinoma","Bronchioloalveolar Carcinoma","Large Cell Carcinoma","Non Small Cell Carcinoma","Small Cell Carcinoma","Squamous Cell Carcinoma","Lymphoepithelial Carcinoma","Neuroendocrine Carcinoma"]
 						},
 						{"diseaseGroup":["*"],
-						"values":["Carcinoma, NOS","Non-Cancerous","Cancer","Dysplasia","Atypia","Carcinoma In Situ"]
+						"values":["Carcinoma, NOS","Cancer","Sarcoma"]
 						},
 						{"diseaseGroup":["brain"],
-						"values":["Anaplastic Astrocytoma","Anaplastic Ependymoma","Anaplastic Ganglioglioma","Anaplastic Meningioma","Anaplastic Oligoastrocytoma","Anaplastic Oligodendroglioma","Astroblastoma","Atypical Meningioma","Carcinoma","Carcinoma ","Central Neurocytoma","Chondrosarcoma","Chordoid Meningioma","Chordoma","Craniopharyngioma, adamantinomatous type","Diffuse Astrocytoma","Dysembryoplastic Neuroepithelial Tumor (DNET)","Dysembryoplastic Neuroepithelial Tumor (DNT)","Esthesioneuroblastoma","Extraventricular Neurocytoma","Fibrillary Astrocytoma","Ganglioglioma","Gemistocytic Astrocytoma","Glioblastoma","Glioblastoma with Oligodendroglioma component","Glioma, NOS","Gliosarcoma","Hemangioblastoma","Hemangiopericytoma","High-Grade Astrocytoma","High-Grade Glioma","Low-grade Astrocytoma","Low-Grade Glioma","Low-Grade Sarcoma","Malignant ","Malignant Astrocytic Neoplasm","Meningioma","Metastatic Adenocarcinoma","Metastatic Carcinoma","Neurofibroma","Non-Cancer","Non-Diagnostic","Non-Neoplastic","Olfactory Neuroblastoma","Oligoastrocytoma","Oligodendroglioma","Papillary Glioneuronal Tumor","Pilocytic Astrocytoma","Pituitary Adenoma","Pleomorphic Xanthoastrocytoma","Primitive Neuroectodermal Tumor (PNET)","Recurrent/residual glioblastoma","Recurrent/Residual Glioblastoma With Treatment Effect","Recurrent/residual high-grade glioma","Recurrent/Residual High-Grade Glioma With Treatment Effect","Schwannoma","Small Cell Glioblastoma","Subependymoma","Undifferentiated Neuroepithelial Tumor"]
+						"values":["Anaplastic Astrocytoma","Anaplastic Ependymoma","Anaplastic Ganglioglioma","Anaplastic Meningioma","Anaplastic Oligoastrocytoma","Anaplastic Oligodendroglioma","Astroblastoma","Astrocytoma","Atypical Meningioma","Central Neurocytoma","Chondrosarcoma","Chordoid Meningioma","Chordoma","Craniopharyngioma","Dysembryoplastic Neuroepithelial Tumor (DNET)","Ependymoma","Esthesioneuroblastoma","Ganglioglioma","Glioblastoma","Glioma","Gliosarcoma","Hemangioblastoma","Hemangiopericytoma","Meningioma","Medulloblastoma","Neurofibroma","Neuroblastoma","Oligoastrocytoma","Oligodendroglioma","Papillary Glioneuronal Tumor","Pilocytic Astrocytoma","Pituitary Adenoma","Pleomorphic Xanthoastrocytoma","Primitive Neuroectodermal Tumor (PNET)","Schwannoma","Small Cell Glioblastoma","Subependymoma","Undifferentiated Neuroepithelial Tumor"]
+						},
+						{"diseaseGroup":["breast"],
+						"values":["Adenocarcinoma","Ductal Carcinoma","Lobular Carcinoma"]
+						},
+						{"diseaseGroup":["GI"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma"]
+						},
+						{"diseaseGroup":["GU"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Urothelial Carcinoma"]
+						},
+						{"diseaseGroup":["gyn"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Neuroendocrine Carcinoma"]
 						},
 						{"diseaseGroup":["head&neck"],
-						"values":["Adenocarcinoma","Adenocarcinoma, Metastatic","Basaloid Squamous Cell Carcinoma","Carcinoma","Dysplasia","High grade intraepithelial neoplasia","Malignant","Metastatic Carcinoma","Metastatic Squamous Cell Carcinoma","Non-Cancer","Non-Diagnostic","Non-Small Cell Carcinoma","Small Cell Carcinoma","Squamous Cell Carcinoma","Squamous Cell Carcinoma, In Situ","Squamous Papilloma"]
-						}
+						"values":["Adenocarcinoma","Basaloid Squamous Cell Carcinoma","Squamous Cell Carcinoma","Non-Small Cell Carcinoma","Small Cell Carcinoma","Salivary Gland Carcinoma"]
+						},
+						{"diseaseGroup":["heme"],
+						"values":["AML","CML","MM","MDS","CCL","Lymphoma","Leukemia"]
+						},
+						{"diseaseGroup":["male_cancers"],
+						"values":["Adenocarcinoma"]
+						},
+						{"diseaseGroup":["other"],
+						"values":[]
+						},
+						{"diseaseGroup":["sarcoma"],
+						"values":["Alveolar Soft Part Sarcoma", "Angiosarcoma", "Chondrosarcoma", "Clear Cell Sarcoma", "Dendritic Cell Tumor", "Dermatofibrosarcoma Protuberans", "Desmoplastic Small Round Cell Tumor", "Dysplastic Gangliocytoma of the Cerebellem (Lhermitte-Duclos Disease)", "Epithelioid Sarcoma", "Ewing Sarcoma", "Fibrosarcoma", "Ganglioneuroma", "GIST", "Hemangioblastoma", "Hemangiopericytomal", "Leiomyoma", "Leiomyosarcoma", "Lipoma", "Liposarcoma", "Malignant Peripheral Nerve Sheath Tumor", "Malignant Solitary Fibrous Tumor", "Myofibroblastoma", "Myofibrosarcoma", "Myxofibrosarcoma", "Myxoma", "Osteochondroma", "Osteosarcoma", "Rhabdomyosarcoma", "Round Blue Cell Sarcoma", "Sarcoma", "Smooth Muscle Tumor of Uncertain Malignant Potential (STUMP)", "Solitary Fibrous Tumor", "Synovial Sarcoma", "Undifferentiated Pleomorphic Sarcoma"]
+						},
+						{"diseaseGroup":["skin"],
+						"values":["Melanoma","Basal Cell Carcinoma","Merkel Cell Carcinoma","Squamous Cell Carcinoma"]
+						}						
 					]
 				}
 			]
@@ -406,20 +761,47 @@
 				},
 				{"field":"PathFindHistology",
 				"datatype":"string",
-				"closedClass":"True",
+				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["lung"],
-						"values":["Adenocarcinoma","Adenosquamous Carcinoma","Alveolar Fibrosis","Atypical Cells","Atypical Epithelial Cells","Bronchioloalveolar Carcinoma","Interstitial Pulmonary Fibrosis","Large Cell Carcinoma","Metastatic Adenocarcinoma","Metastatic Carcinoma","Non Small Cell Carcinoma","Non-Necrotizing Granulomas","Small Cell Carcinoma","Squamous Cell Carcinoma","Lymphoepithelial Carcinoma"]
+						"values":["Adenocarcinoma","Adenosquamous Carcinoma","Bronchioloalveolar Carcinoma","Large Cell Carcinoma","Non Small Cell Carcinoma","Small Cell Carcinoma","Squamous Cell Carcinoma","Lymphoepithelial Carcinoma","Neuroendocrine Carcinoma"]
 						},
 						{"diseaseGroup":["*"],
-						"values":["Carcinoma, NOS","Non-Cancerous","Cancer","Dysplasia","Atypia","Carcinoma In Situ"]
+						"values":["Carcinoma, NOS","Cancer","Sarcoma"]
 						},
 						{"diseaseGroup":["brain"],
-						"values":["Anaplastic Astrocytoma","Anaplastic Ependymoma","Anaplastic Ganglioglioma","Anaplastic Meningioma","Anaplastic Oligoastrocytoma","Anaplastic Oligodendroglioma","Astroblastoma","Atypical Meningioma","Carcinoma","Carcinoma ","Central Neurocytoma","Chondrosarcoma","Chordoid Meningioma","Chordoma","Craniopharyngioma, adamantinomatous type","Diffuse Astrocytoma","Dysembryoplastic Neuroepithelial Tumor (DNET)","Dysembryoplastic Neuroepithelial Tumor (DNT)","Esthesioneuroblastoma","Extraventricular Neurocytoma","Fibrillary Astrocytoma","Ganglioglioma","Gemistocytic Astrocytoma","Glioblastoma","Glioblastoma with Oligodendroglioma component","Glioma, NOS","Gliosarcoma","Hemangioblastoma","Hemangiopericytoma","High-Grade Astrocytoma","High-Grade Glioma","Low-grade Astrocytoma","Low-Grade Glioma","Low-Grade Sarcoma","Malignant ","Malignant Astrocytic Neoplasm","Meningioma","Metastatic Adenocarcinoma","Metastatic Carcinoma","Neurofibroma","Non-Cancer","Non-Diagnostic","Non-Neoplastic","Olfactory Neuroblastoma","Oligoastrocytoma","Oligodendroglioma","Papillary Glioneuronal Tumor","Pilocytic Astrocytoma","Pituitary Adenoma","Pleomorphic Xanthoastrocytoma","Primitive Neuroectodermal Tumor (PNET)","Recurrent/residual glioblastoma","Recurrent/Residual Glioblastoma With Treatment Effect","Recurrent/residual high-grade glioma","Recurrent/Residual High-Grade Glioma With Treatment Effect","Schwannoma","Small Cell Glioblastoma","Subependymoma","Undifferentiated Neuroepithelial Tumor"]
+						"values":["Anaplastic Astrocytoma","Anaplastic Ependymoma","Anaplastic Ganglioglioma","Anaplastic Meningioma","Anaplastic Oligoastrocytoma","Anaplastic Oligodendroglioma","Astroblastoma","Astrocytoma","Atypical Meningioma","Central Neurocytoma","Chondrosarcoma","Chordoid Meningioma","Chordoma","Craniopharyngioma","Dysembryoplastic Neuroepithelial Tumor (DNET)","Ependymoma","Esthesioneuroblastoma","Ganglioglioma","Glioblastoma","Glioma","Gliosarcoma","Hemangioblastoma","Hemangiopericytoma","Meningioma","Medulloblastoma","Neurofibroma","Neuroblastoma","Oligoastrocytoma","Oligodendroglioma","Papillary Glioneuronal Tumor","Pilocytic Astrocytoma","Pituitary Adenoma","Pleomorphic Xanthoastrocytoma","Primitive Neuroectodermal Tumor (PNET)","Schwannoma","Small Cell Glioblastoma","Subependymoma","Undifferentiated Neuroepithelial Tumor"]
+						},
+						{"diseaseGroup":["breast"],
+						"values":["Adenocarcinoma","Ductal Carcinoma","Lobular Carcinoma"]
+						},
+						{"diseaseGroup":["GI"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma"]
+						},
+						{"diseaseGroup":["GU"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Urothelial Carcinoma"]
+						},
+						{"diseaseGroup":["gyn"],
+						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Neuroendocrine Carcinoma"]
 						},
 						{"diseaseGroup":["head&neck"],
-						"values":["Adenocarcinoma","Adenocarcinoma, Metastatic","Basaloid Squamous Cell Carcinoma","Carcinoma","Dysplasia","High grade intraepithelial neoplasia","Malignant","Metastatic Carcinoma","Metastatic Squamous Cell Carcinoma","Non-Cancer","Non-Diagnostic","Non-Small Cell Carcinoma","Small Cell Carcinoma","Squamous Cell Carcinoma","Squamous Cell Carcinoma, In Situ","Squamous Papilloma"]
+						"values":["Adenocarcinoma","Basaloid Squamous Cell Carcinoma","Squamous Cell Carcinoma","Non-Small Cell Carcinoma","Small Cell Carcinoma","Salivary Gland Carcinoma"]
+						},
+						{"diseaseGroup":["heme"],
+						"values":["AML","CML","MM","MDS","CCL","Lymphoma","Leukemia"]
+						},
+						{"diseaseGroup":["male_cancers"],
+						"values":["Adenocarcinoma"]
+						},
+						{"diseaseGroup":["other"],
+						"values":[]
+						},
+						{"diseaseGroup":["sarcoma"],
+						"values":["Alveolar Soft Part Sarcoma", "Angiosarcoma", "Chondrosarcoma", "Clear Cell Sarcoma", "Dendritic Cell Tumor", "Dermatofibrosarcoma Protuberans", "Desmoplastic Small Round Cell Tumor", "Dysplastic Gangliocytoma of the Cerebellem (Lhermitte-Duclos Disease)", "Epithelioid Sarcoma", "Ewing Sarcoma", "Fibrosarcoma", "Ganglioneuroma", "GIST", "Hemangioblastoma", "Hemangiopericytomal", "Leiomyoma", "Leiomyosarcoma", "Lipoma", "Liposarcoma", "Malignant Peripheral Nerve Sheath Tumor", "Malignant Solitary Fibrous Tumor", "Myofibroblastoma", "Myofibrosarcoma", "Myxofibrosarcoma", "Myxoma", "Osteochondroma", "Osteosarcoma", "Rhabdomyosarcoma", "Round Blue Cell Sarcoma", "Sarcoma", "Smooth Muscle Tumor of Uncertain Malignant Potential (STUMP)", "Solitary Fibrous Tumor", "Synovial Sarcoma", "Undifferentiated Pleomorphic Sarcoma"]
+						},
+						{"diseaseGroup":["skin"],
+						"values":["Melanoma","Basal Cell Carcinoma","Merkel Cell Carcinoma","Squamous Cell Carcinoma"]
 						}
 					]
 				}
@@ -427,43 +809,59 @@
 			},
 			{"table":"PathTest",
 			"fields":[
-				{"field":"PathDate",
-				"datatype":"date",
-				"closedClass":"False",
-				"diseaseProperties":
+					{"field":"PathDate",
+					"datatype":"date",
+					"closedClass":"False",
+					"diseaseProperties":
 						[
 							{"diseaseGroup":["*"],
 							"values":[]
 							}
 						]
 					},
-					{"field":"PathTest",
+					{"field":"Her2FISH",
 					"datatype":"string",
-						"closedClass":"False",
+						"closedClass":"True",
 						"diseaseProperties":
 						[
-							{"diseaseGroup":["*"],
-							"values":["19q","1p","1p/19q","ACTH","AE1/AE3","AKT1","ALK","APC","B72.3","BCL2L11","BerEP4","BIM","BRAF","Calretinin","CAM 5.2","CCND1","CD10","CD20","CD3","CD30","CD34","CD45","CD56","CDX2","CEA","Chromogranin","CK20","CK5","CK5/6","CK7","CTNNB1","Cytokeratin","D2-40","DDR2","EGFR","EMA","EML4-ALK arrangement","ER","ERBB2 (HER2)","FGFR1","FSH","GCDFP","GCDFP-15","GH","IDH 1","Ki-67","KIF5B","KIT","KRAS","LH","Mammaglobin","MAP2K1 (MEK1)","MEK1","MELAN A","Mesothelin","MET","MGMT","MIB1","MLH1","MOC-31","MSH2","MSH6","Mucicarmine","MYC","Napsin A","NKX2.1","NRAS","Oscar ","p16","P53","p63","Pancytokeratin","Pankeratin","PAP","PAX-8","PHE5/CG","PIK3","PIK3CA","PMS2","PR","PR88","Prolactin","PSA","PTEN","RET","ROS1","S100","S-100","SMAD4","STK11","SURF A","Surfactant","Synapto","Synaptophysin","Thyroglobulin","TP53","TSH","TTF-1","Villin","Vimentin","WT-1"]
+							{"diseaseGroup":["*"],							"values":["NO_HER2NEU","Positive","Negative","Equivocal","Hetergeneous","Insufficient"]
 							}
 						]
 					},
-					{"field":"PathResult",
+					{"field":"Her2IHC",
 					"datatype":"string",
-						"closedClass":"False",
+						"closedClass":"True",
 						"diseaseProperties":
 						[
-							{"diseaseGroup":["*"],
-							"values":["Amplified","Not Amplified","Deletion","Indeterminate","Negative","Non-Diagnostic","Positive","Positive, Weakly","Positive, Focally","Positive, Uniformly","Positive, Strongly","Positive, Diffusely"]
+							{"diseaseGroup":["*"],							"values":["NO_HER2NEU","Positive","Negative","Equivocal","Hetergeneous","Insufficient"]
 							}
 						]
 					},
+					{"field":"Nottingham",
+					"datatype":"string",
+						"closedClass":"True",
+						"diseaseProperties":
+						[
+							{"diseaseGroup":["*"],							"values":["NO_NOTTINGHAM","1","2","3"]
+							}
+						]
+					},
+					{"field":"Mitotic",
+					"datatype":"string",
+						"closedClass":"True",
+						"diseaseProperties":
+						[
+							{"diseaseGroup":["*"],							"values":["NO_MITOTIC","1","2","3"]
+							}
+						]
+					},				
 					{"field":"PathNotes",
 					"datatype":"string",
 						"closedClass":"False",
 						"diseaseProperties":
 						[
 							{"diseaseGroup":["*"],
-							"values":["IHC","Oncoplex","PCR","FISH","Per Consult"]
+							"values":[]
 							}
 						]
 					},
@@ -530,13 +928,13 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["Brain","Thoracic","Head & Neck","Pancreas","Pituitary Adenoma","Colorectal","Breast","Prostate","GU","GI","Bladder","Sarcoma","Hematological","Ovarian","Other","Skin","Cervical","Thyroid","Liver","Penile/Testicular","Uterine/Vulvar"]
+						"values":["brain","breast","head&neck","heme","lung","GU","GI","sarcoma","gyn","other","skin","male_cancers"]
 						}
 					]
 				},
 				{"field":"ClinStageSystem",
 				"datatype":"string",
-				"closedClass":"True",
+				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
@@ -550,7 +948,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["Tis","T1","T1a","T1b","T2","T2a","T2b","T3","T3a","T3b","T4","TX"]
+						"values":["Tis","T1","T1a","T1b","T1c","T2","T2a","T2b","T2c","T3","T3a","T3b","T3c","T4","T4a","T4b","T4c","TX"]
 						}
 					]
 				},
@@ -560,7 +958,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["N0","N1","N2","N3","NX"]
+						"values":["N0","N1","N1a","N1b","N1c","N2","N2a","N2b","N2c","N3","N3a","N3b","N3c","N4","N4a","N4b","N4c","NX"]
 						}
 					]
 					},
@@ -570,7 +968,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["M0","M1","M1a","M1b","MX"]
+						"values":["M0","M1","M1a","M1b","M1c","M2","M2a","M2b","M2c","MX"]
 						}
 					]
 				},
