@@ -47,4 +47,9 @@ def get(table_list):
         if field_list:
             table[global_strings.FIELDS] = field_list
             return_list.append(table)
+    for each in return_list:
+        for k,v in each.items():
+            print k, type(v)
+            if type(v)==str: print v
+        print type(each)
     return return_list

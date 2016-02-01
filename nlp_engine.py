@@ -129,7 +129,7 @@ else:
         OUTPUT_DICTIONARY[gb.REPORTS] = OUTPUT
         OUTPUT_DICTIONARY[gb.ERRS] = ERRORS
 
-    if MKDIR_ERRORS[0] == dict:       
+    if MKDIR_ERRORS[0] == dict:        
         OUTPUT_DICTIONARY[gb.ERRS].append(MKDIR_ERRORS[1])
     ## iterate through errors - CRASH for Exceptions and output Warnings
     if OUTPUT_DICTIONARY[gb.ERRS]:

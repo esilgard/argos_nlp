@@ -155,11 +155,11 @@ def main(arguments):
                 else:
                     return_fields, return_errors, return_type = get_fields\
                     (disease_group, pathology_d[mrn][accession], disease_group_data_d, path_data_d)
-                    field_value_d[gb.TABLES].append(final_logic.get(return_fields))
+                    field_value_d[gb.TABLES]+=(final_logic.get(return_fields))
                 field_value_output.append(field_value_d)
             else:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR \
                         in process.get(fields) -unknown number of reports completed.  \
                         Return error string: ' + return_errors[gb.ERR_STR]}], list)
 
-    return (field_value_output, [return_errors], list)
+    return (field_value_output, return_errors, list)
