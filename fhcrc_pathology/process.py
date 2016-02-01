@@ -31,19 +31,20 @@ def get_fields(disease_group, report_d, disease_group_data_d, path_data_d):
     {field names:[pertinent section(s)]} field_value_d hods values for each of the fields in data_d
     '''
     report_table_d = {}
-    error_list = []
+    error_list = []    
+    
     data_elements = dict.fromkeys(path_data_d.keys() + disease_group_data_d.keys())
     for field in data_elements:
         # import the CLASSES and MODULES for the fields in the disease specific data dictionary
         try:
             if field in disease_group_data_d:
-                module = __import__(field, globals(), locals(), [field])
-                if disease_group_data_d.get(field) == 'Class':
+                module = __import__(field, globals(), locals(), [field])                
+                if 'Class' in disease_group_data_d.get(field):
                     field_class = getattr(module, field)
                     module = field_class()
             else:
-                module = __import__(field, globals(), locals(), [])
-                if path_data_d.get(field) == 'Class':
+                module = __import__(field, globals(), locals(), [])                
+                if 'Class' in path_data_d.get(field):
                     field_class = getattr(module, field)
                     module = field_class()
         except EnvironmentError:
@@ -71,14 +72,18 @@ def get_fields(disease_group, report_d, disease_group_data_d, path_data_d):
     report_table_list = report_table_d.values()
     return report_table_list, error_list, list
 
-def get_disease_specific_d(disease_group):
+def get_data_d(disease_group, ml_flag):
+    if disease_group: disease_group = '/'+disease_group
     ''' get disease group data resources '''
     try:
-        return dict((y.split('\t')[0], y.split('\t')[1].strip()) for y in \
+        d = dict((y.split('\t')[0], y.split('\t')[1].strip()) for y in \
             open(PATH + '/' + disease_group + '/data_dictionary.txt', 'r').readlines())
+        if ml_flag != 'y':
+            d = dict((x,y) for x,y in d.items() if 'ML' not in y)
+        return d
     except IOError:
         return {gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not access or parse \
-            disease specific pathology data dictionary at ' + PATH + '/' + disease_group + '/data_dictionary.txt '}
+            pathology data dictionary at ' + PATH + '/' + disease_group + 'data_dictionary.txt '}
 
 def main(arguments):
     '''
@@ -86,6 +91,8 @@ def main(arguments):
         -f input pathology file
         -g disease group
     '''
+
+    ml_flag = arguments.get('-ml','n')
     ## get dictionaries/gazeteers needed for processing
     try:
         pathology_d, return_type = parser.parse(arguments.get('-f'))
@@ -97,14 +104,8 @@ def main(arguments):
     disease_group = arguments.get('-g')
 
     ## general pathology data dictionary ##
-    try:
-        path_data_d = dict((y.split('\t')[0], y.split('\t')[1].strip()) for y in open\
-                           (PATH + '/data_dictionary.txt', 'r').readlines())
-    except IOError:
-        return ({}, {gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not access or parse \
-                    pathology data dictionary at ' + PATH + '/data_dictionary.txt --- program aborted'}, Exception)
-
-    disease_group_data_d = get_disease_specific_d(disease_group)
+    path_data_d = get_data_d('', ml_flag)
+    disease_group_data_d = get_data_d(disease_group, ml_flag)
     field_value_output = []
     return_errors = []
     # report counting index (used for timeit tests)
@@ -116,24 +117,35 @@ def main(arguments):
             field_value_d[gb.REPORT] = accession
             field_value_d[gb.MRN] = mrn
             field_value_d[gb.TABLES] = []
-            ## write out cannonical version of text file
+            ## write out cannonical version of text and tsv file
             try:
-                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.txt', 'wb') as out:
-                    out.write(pathology_d[mrn][accession][(-1, 'FullText', 0, None)])
-                    for k, v in  pathology_d[mrn][accession].items():
-                        if k != (-1, 'FullText', 0, None):
-                            print k,'::::',v
+                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.txt', 'wb') as out_text:
+                    out_text.write(pathology_d[mrn][accession][(-1, 'FullText', 0, None)])
+                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.nlp.tsv', 'wb') as out_tsv:
+                    specimen_source = pathology_d[mrn][accession].get((0, 'SpecimenSource', 0, None))                   
+                    specimen_source_string = '~'.join([')'.join(a) for a in specimen_source.get(0).items()])                    
+                    
+                    out_tsv.write(gb.MRN_CAPS+'\t'+gb.FILLER_ORDER_NO+'\t'+gb.SET_ID+'\t'+gb.OBSERVATION_VALUE+'\t'+gb.SPECIMEN_SOURCE+'\n')
+                    for k,v in pathology_d[mrn][accession].items():
+                        if 'SpecimenSource' not in k and 'FullText' not in k and type(v)== dict:
+                            for a,b in v.items():
+                                try:
+                                    out_tsv.write(mrn+'\t'+accession+'\t'+str(a)+'\t'+b+'\t'+specimen_source_string+'\n')
+                                except:
+                                    print a,b
+                                    sys.exit()
+                   
             except IOError:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
-                    'FATAL ERROR in process.py attempting to write text to file at'+ \
+                    'FATAL ERROR in process.py attempting to write text and tsv to files at'+ \
                     arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + \
-                    '.txt - unknown number of reports completed. ' + str(sys.exc_info()[1])}], list)
+                    ' - unknown number of reports completed. ' + str(sys.exc_info()[1])}], list)
 
             ## find disease group in the case of unknown/all --- currently simple keyword/voting
             ## future work to include section specific search and stochastic language model
-            if arguments.get('-g') == 'all' or arguments.get('-g') == '*':
+            if arguments.get('-g') == 'all':
                 disease_group, report_info_table = PathClassifier.classify(pathology_d[mrn][accession][(-1, 'FullText', 0, None)])                
-                disease_group_data_d = get_disease_specific_d(disease_group)
+                disease_group_data_d = get_data_d(disease_group, ml_flag)
                 field_value_d[gb.TABLES].append(report_info_table)
             
             i += 1
@@ -141,14 +153,14 @@ def main(arguments):
             if return_type != Exception:
                 if arguments.get('-a') == 'n':
                     pass
-                else:
+                else:                    
                     return_fields, return_errors, return_type = get_fields\
                     (disease_group, pathology_d[mrn][accession], disease_group_data_d, path_data_d)
-                    field_value_d[gb.TABLES].append(final_logic.get(return_fields))
+                    field_value_d[gb.TABLES]+=(final_logic.get(return_fields))
                 field_value_output.append(field_value_d)
             else:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR \
                         in process.get(fields) -unknown number of reports completed.  \
                         Return error string: ' + return_errors[gb.ERR_STR]}], list)
 
-    return (field_value_output, [return_errors], list)
+    return (field_value_output, return_errors, list)

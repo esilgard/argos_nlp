@@ -1,29 +1,36 @@
-Tongue
-Neck
-Mouth;oral cavity
-Tonsil
-Mandible 
-Salivary Gland
+Alveolar
+Buccal
+Cheek
+Epiglottis;epiglottal
+False Vocal Cord
+Face
+Forehead
+Gingiva;gums;gum
+Hypopharynx
+Jugular
 Larynx
 Lip;labial
-Tongue;lingual
-Submandibular Gland
-Buccal
-Perifacial Node
-Palate
-Teeth;tooth
-Supraglottis
-Epiglottis;epiglottal
-Forehead
-Alveolar Ridge
-Trachea
-Maxillary Sinus
-Cheek
+Mandible 
 Maxilla
-Vocal Cord
+Maxillary Sinus
+Mouth;oral cavity
+Nasal
+Neck
+Nose
+Oropharynx
+Palate
+Paratracheal
 Pharynx;pharyngeal
-Jugular
-Gingiva
-Hypopharynx
-Face
+Salivary Gland;salivary glands
+Sinus
+Subglottis
+Sublingual
+Submandibular
 Skull
+Submandibular
+Supraglottis
+Teeth;tooth
+Tongue;lingual
+Tonsil
+Trachea
+Vocal Cord

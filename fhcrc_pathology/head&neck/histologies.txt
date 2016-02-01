@@ -1,2 +1,6 @@
 Squamous Cell Carcinoma
 Salivary Gland Carcinoma
+Non Small Cell Carcinoma;NSCC;non-small cell carcinoma
+Small Cell Carcinoma
+Adenocarcinoma
+Basaloid Squamous Cell Carcinoma

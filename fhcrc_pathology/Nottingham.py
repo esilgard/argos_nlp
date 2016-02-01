@@ -15,6 +15,7 @@ class Nottingham(OneFieldPerReportML):
     '''
     extract Nottingham grade using an svm model
     '''
+    print 'in Nottingham'
     __version__ = 'Nottingham1.0'
     def __init__(self):
         super(Nottingham, self).__init__()
@@ -26,6 +27,6 @@ class Nottingham(OneFieldPerReportML):
         self.features_in_model = 184974
         self.feature_mapping = dict((x.split('\t')[0], int(x.strip().split('\t')[1])) for x in \
                             open(PATH + "models/Nottingham/feature_mapping.txt", 'r').readlines())
-        self.class_label_mapping = {0: '0', 1: '1', 2: '2', 3: '3'}
+        self.class_label_mapping = {0: 'NO_NOTTINGHAM', 1: '1', 2: '2', 3: '3'}
         self.keyword_patterns = {'NOTTINGHAM': r'nottingham', 'GRADE':r'^grade'}
         self.window = 7
