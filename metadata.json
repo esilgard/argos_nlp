@@ -356,7 +356,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["AJCC_07","AJCC_10","AJCC_02"]
+						"values":["AJCC 8", "AJCC 7", "AJCC 6"]
 						}
 					]
 				},
