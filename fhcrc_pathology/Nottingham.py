@@ -15,6 +15,7 @@ class Nottingham(OneFieldPerReportML):
     '''
     extract Nottingham grade using an svm model
     '''
+    print 'in Nottingham'
     __version__ = 'Nottingham1.0'
     def __init__(self):
         super(Nottingham, self).__init__()

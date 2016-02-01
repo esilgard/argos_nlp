@@ -7,11 +7,11 @@ command_line_flags.txt
 	a tab delimited text file containing command line flags and their descriptions in the format:
 	flag<tab>required/not_required<tab>short_description<tab>long_description
 
+global_strings.py
+	a set of string variables used in various scripts in this directory
+
 nlp_engine.py
 	the primary script for the natural language processing engine.  it requires a set of flagged command line arguments, as well as the command_line_flag file which gives their mappings, and input document(s)
-
-__init__.py 
-	required for module imports
 
 fhcrc_pathology
 	directory of modules for processing pathology reports
@@ -29,6 +29,8 @@ metadata.py
 	a script to create a dictionary/json object that lists relevant metadata for the batch run (potential fields values, etc)
 	this document and disease group specific metadata (full version read in from metadata.json) will be used to population dropdowns in the front end/abstraction interface
 
-global_strings.py
-	a set of string variables used in various scripts in this directory
+metadata.json
+	a json document that houses all the relevant metadata for all document types, tables, fields, etc. This data is used to parse output and population dropdown fields in the user interface
 
+schema.json
+	a json schema that dictates the appropriate output format for the engine (currently validation is an offline process)
