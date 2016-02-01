@@ -120,6 +120,9 @@ def main(arguments):
             try:
                 with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.txt', 'wb') as out:
                     out.write(pathology_d[mrn][accession][(-1, 'FullText', 0, None)])
+                    for k, v in  pathology_d[mrn][accession].items():
+                        if k != (-1, 'FullText', 0, None):
+                            print k,'::::',v
             except IOError:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
                     'FATAL ERROR in process.py attempting to write text to file at'+ \
