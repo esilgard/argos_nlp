@@ -2,7 +2,7 @@ Frontal Lobe;frontal
 Upper Lobe;upper
 Temporal Lobe;temporal
 Suboccipital Lobe;suboccipital
-Lower Lobe;
+Lower Lobe
 Parietal Lobe;parietal
 Frontotemporal
 Pituitary
@@ -11,7 +11,7 @@ Occipital Lobe;occipital
 Fossa
 Frontoparietal Lobe;frontoparietal
 Parietooccipital Lobe;parietooccipital
-Temporoparietal Lobe;temporoparietal 
+Temporoparietal Lobe;temporoparietal
 Cerebellar
 Frontotemporoparietal Lobe;frontotemporoparietal
 Temporooccipital Lobe;temporooccipital
