@@ -40,9 +40,13 @@ def classify(text):
     total_votes = sum([votes.get(x) for x in votes])
     (label, votes) = sorted(votes.items(), key=lambda x: x[1], reverse=True)[0]
 
+    ## catch division by zero error if no keywords are found
     if votes == 0:
         label = 'other'
-    return_table_d[gb.FIELDS].append({gb.VERSION:__version__, gb.CONFIDENCE: '%.2f' % (votes/total_votes),
+        confidence = 0.0        
+    else:
+        confidence = votes/total_votes
+    return_table_d[gb.FIELDS].append({gb.VERSION:__version__, gb.CONFIDENCE: '%.2f' % (confidence),
                     gb.NAME:gb.CLASS_DZ_GROUP, gb.VALUE:label, gb.STARTSTOPS:[], gb.TABLE:gb.RPT_TABLE})
             
     return label, return_table_d
