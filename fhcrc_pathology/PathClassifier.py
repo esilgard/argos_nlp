@@ -16,9 +16,7 @@ RESOURCES = {'behavior.txt': .1, 'node_sites.txt': .2, 'other_findings.txt': .2,
 DZ_GROUPS = ['brain', 'breast', 'GI', 'GU', 'gyn', 'heme', 'lung', 'sarcoma', \
              'skin', 'male_cancers', 'other', 'head&neck']
 KEYWORD_D = {}
-return_table_d = {}
-return_table_d[gb.TABLE] = gb.RPT_TABLE
-return_table_d[gb.FIELDS] = []
+
 
 for disease in DZ_GROUPS:
     KEYWORD_D[disease] = {}
@@ -28,6 +26,9 @@ for disease in DZ_GROUPS:
                 KEYWORD_D[disease].update({token.lower(): RESOURCES[files]})
 
 def classify(text):
+    return_table_d = {}
+    return_table_d[gb.TABLE] = gb.RPT_TABLE
+    return_table_d[gb.FIELDS] = []
     ''' use keyword lists to classify pathology report by disease group '''
     votes = dict.fromkeys(DZ_GROUPS, 0)
     for disease in votes:
