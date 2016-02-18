@@ -7,7 +7,7 @@
 
 import re, os
 import global_strings as gb
-PATH = os.path.dirname(os.path.realpath(__file__)) + '\\'
+PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 
 class SecondaryField(object):
     '''

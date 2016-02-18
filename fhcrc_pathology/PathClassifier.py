@@ -9,7 +9,7 @@ __version__ = 'PathClassifier1.0'
 import os, re
 import global_strings as gb
 
-PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
+PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 RESOURCES = {'behavior.txt': .1, 'node_sites.txt': .2, 'other_findings.txt': .2, \
              'procedures.txt': .2, 'sites.txt': .1, 'subsite.txt': .2, \
              'histologies.txt': .9, 'keywords.txt': .9}
@@ -21,7 +21,7 @@ KEYWORD_D = {}
 for disease in DZ_GROUPS:
     KEYWORD_D[disease] = {}
     for files in RESOURCES:
-        for line in open(PATH + disease + '/' + files, 'r').readlines():
+        for line in open(PATH + disease + os.path.sep + files, 'r').readlines():
             for token in line.strip().split(';'):
                 KEYWORD_D[disease].update({token.lower(): RESOURCES[files]})
 

@@ -9,7 +9,7 @@ from .OneFieldPerReportML import OneFieldPerReportML
 from . import global_strings as gb
 from sklearn.externals import joblib
 import os
-PATH = os.path.dirname(os.path.realpath(__file__)) + '\\'
+PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 
 class Her2FISH(OneFieldPerReportML):
     '''

@@ -30,7 +30,7 @@ OUTPUT_DICTIONARY = {}
 OUTPUT_DICTIONARY[gb.ERRS] = []
 
 ## path to the nlp_engine.py script ##
-NLP_ENGINE_PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
+NLP_ENGINE_PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 ORIGINAL_WD = os.getcwd()
 
 ## timeit variable for performance testing ##

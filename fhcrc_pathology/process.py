@@ -18,7 +18,7 @@
 import sys, parser, final_logic
 import os, PathClassifier
 import global_strings as gb
-PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
+PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 __version__ = 'process_pathology1.0'
 
 ####################################################################################
@@ -119,9 +119,9 @@ def main(arguments):
             field_value_d[gb.TABLES] = []
             ## write out cannonical version of text and tsv file
             try:
-                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.txt', 'wb') as out_text:
+                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + os.path.sep + accession + '.txt', 'wb') as out_text:
                     out_text.write(pathology_d[mrn][accession][(-1, 'FullText', 0, None)])
-                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + '.nlp.tsv', 'wb') as out_tsv:
+                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + os.path.sep + accession + '.nlp.tsv', 'wb') as out_tsv:
                     specimen_source = pathology_d[mrn][accession].get((0, 'SpecimenSource', 0, None))                   
                     specimen_source_string = '~'.join([')'.join(a) for a in specimen_source.get(0).items()])                    
                     
@@ -138,7 +138,7 @@ def main(arguments):
             except IOError:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
                     'FATAL ERROR in process.py attempting to write text and tsv to files at'+ \
-                    arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + accession + \
+                    arguments.get('-f')[:arguments.get('-f').find('.nlp')] + os.path.sep + accession + \
                     ' - unknown number of reports completed. ' + str(sys.exc_info()[1])}], list)
 
             ## find disease group in the case of unknown/all --- currently simple keyword/voting

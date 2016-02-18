@@ -7,7 +7,7 @@
 
 import re, os
 import global_strings as gb
-PATH = os.path.dirname(os.path.realpath(__file__)) + '\\'
+PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 
 class OneFieldPerSpecimen(object):
     '''
@@ -138,7 +138,7 @@ class OneFieldPerSpecimen(object):
         self.general_list, self.general_standardizations = self.get_dictionaries\
                                                           (self.file_name_string)
         self.dz_specific_list, self.dz_specific_standardizations = self.get_dictionaries\
-                                            (disease_group + '\\' + self.file_name_string)
+                                            (disease_group + os.path.sep + self.file_name_string)
         ## general sets to track and aggregate overall findings for the report
         finding_set = set([])
         start_stops_set = set([])
