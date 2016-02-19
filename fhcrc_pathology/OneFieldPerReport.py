@@ -69,7 +69,7 @@ class OneFieldPerReport(object):
                         else:
                             self.return_d[gb.VALUE] = self.value_type.get(True)[0]
                             self.return_d[gb.CONFIDENCE] = ('%.2f' % self.value_type.get(True)[1])
-                            self.return_d[gb.STARTSTOPS].append\
+                        self.return_d[gb.STARTSTOPS].append\
                                         ({gb.START: match.start(1), gb.STOP:match.end(1)})
                 ## iterate through match iterator for 'all' style fields, which may have multiple
                 else:
