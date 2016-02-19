@@ -1,5 +1,0 @@
-Right;rt
-Left;lt
-Bilateral
-Midline
-Ipsilateral
