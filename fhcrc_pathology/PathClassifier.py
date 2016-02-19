@@ -14,7 +14,7 @@ RESOURCES = {'behavior.txt': .1, 'node_sites.txt': .2, 'other_findings.txt': .2,
              'procedures.txt': .2, 'sites.txt': .1, 'subsite.txt': .2, \
              'histologies.txt': .9, 'keywords.txt': .9}
 DZ_GROUPS = ['brain', 'breast', 'GI', 'GU', 'gyn', 'heme', 'lung', 'sarcoma', \
-             'skin', 'male_cancers', 'other', 'head&neck']
+             'skin', 'male_cancers', 'other', 'head_neck']
 KEYWORD_D = {}
 
 
