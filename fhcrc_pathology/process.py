@@ -48,16 +48,16 @@ def get_fields(disease_group, report_d, disease_group_data_d, path_data_d):
                     field_class = getattr(module, field)
                     module = field_class()
         except EnvironmentError:
-            return ({}, {gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
+            return ([], [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
                          'FATAL ERROR could not import ' + field + ' module or class--- \
-                         program aborted. ' + str(sys.exc_info()[1])}, Exception)
+                         program aborted. ' + str(sys.exc_info()[1])}], Exception)
         try:
             # return fields regardless from module or class
             field_value, return_type = module.get(disease_group, report_d)
         except RuntimeError:
-            return ({}, {gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
+            return ([], [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
                              'FATAL ERROR could not complete ' + field + ' module or class--- \
-                             program aborted. ' + str(sys.exc_info()[1])}, Exception)
+                             program aborted. ' + str(sys.exc_info()[1])}], Exception)
         
         ## organize fields by tables, then individual records, then individual fields
         if return_type == list:
@@ -73,17 +73,17 @@ def get_fields(disease_group, report_d, disease_group_data_d, path_data_d):
     return report_table_list, error_list, list
 
 def get_data_d(disease_group, ml_flag):
-    if disease_group: disease_group = '/'+disease_group
+    if disease_group: disease_group = os.path.sep+disease_group
     ''' get disease group data resources '''
     try:
         d = dict((y.split('\t')[0], y.split('\t')[1].strip()) for y in \
-            open(PATH + '/' + disease_group + '/data_dictionary.txt', 'r').readlines())
+            open(PATH + os.path.sep + disease_group + os.path.sep+'data_dictionary.txt', 'r').readlines())
         if ml_flag != 'y':
             d = dict((x,y) for x,y in d.items() if 'ML' not in y)
         return d
     except IOError:
         return {gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not access or parse \
-            pathology data dictionary at ' + PATH + '/' + disease_group + 'data_dictionary.txt '}
+            pathology data dictionary at ' + PATH + os.path.sep + disease_group + 'data_dictionary.txt '}
 
 def main(arguments):
     '''
@@ -97,10 +97,10 @@ def main(arguments):
     try:
         pathology_d, return_type = parser.parse(arguments.get('-f'))
         if return_type != dict:
-            return ({}, pathology_d, Exception)
+            return ([{}], [pathology_d], Exception)
     except IOError:
-        return({}, {gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not parse \
-                input pathology file ' + arguments.get('-f') + ' --- program aborted'}, Exception)
+        return([{}], [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not parse \
+                input pathology file ' + arguments.get('-f') + ' --- program aborted'}], Exception)
     disease_group = arguments.get('-g')
 
     ## general pathology data dictionary ##

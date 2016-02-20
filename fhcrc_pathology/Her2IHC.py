@@ -22,9 +22,9 @@ class Her2IHC(OneFieldPerReportML):
         self.table = gb.TEST_TABLE
         self.confidence = .961
         ## pickled model and feature/label mappings
-        self.model = joblib.load(PATH + "models/Her2IHC/svm_model_window7skip2.pkl")
+        self.model = joblib.load(PATH + "models"+os.path.sep+"Her2IHC"+os.path.sep+"svm_model_window7skip2.pkl")
         self.feature_mapping = dict((x.split('\t')[0], int(x.strip().split('\t')[1])) for x in \
-                               open(PATH + "models/Her2IHC/feature_mapping.txt", 'r').readlines())
+                               open(PATH + "models"+os.path.sep+"Her2IHC"+os.path.sep+"feature_mapping.txt", 'r').readlines())
         self.class_label_mapping = {0: 'NO_HER2NEU', 1: 'Equivocal', 2: 'Positive', 3: 'Negative', \
                                     4: 'Heterogeneous', 5: 'Insufficient'}
         self.keyword_patterns = {'HER2': r'her[\\\/\- ]*2', 'HER': r'^her', 'CERB': \

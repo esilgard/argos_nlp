@@ -22,10 +22,10 @@ class Nottingham(OneFieldPerReportML):
         self.table = gb.TEST_TABLE
         self.confidence = .987
         ## pickled model and feature/label mappings
-        self.model = joblib.load(PATH + "models/Nottingham/svm_model_window7skip2.pkl")
+        self.model = joblib.load(PATH + "models"+os.path.sep+"Nottingham"+os.path.sep+"svm_model_window7skip2.pkl")
         self.features_in_model = 184974
         self.feature_mapping = dict((x.split('\t')[0], int(x.strip().split('\t')[1])) for x in \
-                            open(PATH + "models/Nottingham/feature_mapping.txt", 'r').readlines())
+                            open(PATH + "models"+os.path.sep+"Nottingham"+os.path.sep+"feature_mapping.txt", 'r').readlines())
         self.class_label_mapping = {0: 'NO_NOTTINGHAM', 1: '1', 2: '2', 3: '3'}
         self.keyword_patterns = {'NOTTINGHAM': r'nottingham', 'GRADE':r'^grade'}
         self.window = 7
