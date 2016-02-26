@@ -1,0 +1,2 @@
+Shave Biopsy;shave
+Punch Biopsy;punch

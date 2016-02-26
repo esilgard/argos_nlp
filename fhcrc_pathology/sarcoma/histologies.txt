@@ -1,0 +1,34 @@
+Alveolar Soft Part Sarcoma
+Angiosarcoma
+Chondrosarcoma
+Clear Cell Sarcoma
+Dendritic Cell Tumor
+Dermatofibrosarcoma Protuberans
+Desmoplastic Small Round Cell Tumor;SRCT
+Dysplastic Gangliocytoma of the Cerebellem (Lhermitte-Duclos Disease)
+Epithelioid Sarcoma
+Ewing Sarcoma;ewings sarcoma;ewing s sarcoma;PNET;Primitive Neuroectodermal Tumor
+Fibrosarcoma
+Ganglioneuroma
+GIST;Gastrointestinal Stromal Tumor
+Hemangioblastoma
+Hemangiopericytomal
+Leiomyoma
+Leiomyosarcoma;Leimyosarcoma
+Lipoma
+Liposarcoma
+Malignant Peripheral Nerve Sheath Tumor;MPNST 
+Malignant Solitary Fibrous Tumor
+Myofibroblastoma
+Myofibrosarcoma
+Myxofibrosarcoma;mixofibrosarcoma;myxo fibrosarcoma
+Myxoma
+Osteochondroma
+Osteosarcoma
+Rhabdomyosarcoma
+Round Blue Cell Sarcoma
+Sarcoma
+Smooth Muscle Tumor of Uncertain Malignant Potential (STUMP)
+Solitary Fibrous Tumor
+Synovial Sarcoma;synovial
+Undifferentiated Pleomorphic Sarcoma;UPS;pleomorphic sarcoma

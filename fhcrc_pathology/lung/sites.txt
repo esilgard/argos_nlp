@@ -5,7 +5,7 @@ Interlobular
 Lower Lobe;Lower Lobes
 Middle Lobe;Middle Lobes
 Middle/Lower Lobe;lower/middle lobes;Middle/Lower Lobes;lower/middle lobe
-Bronchi;bronchial;bronchus
+Bronchus;bronchial;bronchi
 Pleura;pleurum;pleural
 Retroperitoneum;retroperitoneal
 Upper/Middle Lobe;Upper/Middle Lobes;middle/upper lobes;middle/upper lobe

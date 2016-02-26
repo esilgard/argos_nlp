@@ -1,0 +1,28 @@
+Frontal Lobe;frontal
+Upper Lobe;upper
+Temporal Lobe;temporal
+Suboccipital Lobe;suboccipital
+Lower Lobe
+Parietal Lobe;parietal
+Frontotemporal
+Pituitary
+Middle Lobe
+Occipital Lobe;occipital
+Fossa
+Frontoparietal Lobe;frontoparietal
+Parietooccipital Lobe;parietooccipital
+Temporoparietal Lobe;temporoparietal
+Cerebellar
+Frontotemporoparietal Lobe;frontotemporoparietal
+Temporooccipital Lobe;temporooccipital
+Cerebellopontine
+Sellar
+Pineal Gland;pineal
+Occipitoparietal
+Temporofrontal
+Cerebellum
+Posterior fossa
+Skull
+Spine;spinal
+Paraspinal
+Thalamus

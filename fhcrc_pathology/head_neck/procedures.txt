@@ -1,0 +1,13 @@
+Neck Dissection;level [ivIVabAB\d]*dissection
+Hemiglossectomy
+Maxillectomy
+Mandibulectomy
+Hemithyroidectomy
+Thyroidectomy
+Glossectomy
+Laryngopharyngectomy
+Laryngectomy
+Adrenalectomy
+Tonsillectomy
+Parotidectomy
+Rhinectomy

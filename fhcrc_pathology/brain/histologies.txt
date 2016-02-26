@@ -1,0 +1,37 @@
+Anaplastic Astrocytoma
+Anaplastic Ependymoma
+Anaplastic Ganglioglioma
+Anaplastic Meningioma
+Anaplastic Oligoastrocytoma
+Anaplastic Oligodendroglioma
+Astroblastoma
+Astrocytoma
+Atypical Meningioma
+Central Neurocytoma
+Chondrosarcoma
+Chordoid Meningioma
+Chordoma
+Craniopharyngioma
+Dysembryoplastic Neuroepithelial Tumor (DNET);Dysembryoplastic Neuroepithelial Tumor;DNET
+Ependymoma
+Esthesioneuroblastoma
+Ganglioglioma
+Glioblastoma;GBM
+Glioma
+Gliosarcoma
+Hemangioblastoma
+Hemangiopericytoma
+Medulloblastoma
+Meningioma
+Neuroblastoma
+Neurofibroma
+Oligoastrocytoma
+Oligodendroglioma
+Papillary Glioneuronal Tumor
+Pilocytic Astrocytoma
+Pituitary Adenoma
+Pleomorphic Xanthoastrocytoma (PNET);PNET
+Schwannoma
+Small Cell Glioblastoma
+Subependymoma
+Undifferentiated Neuroepithelial Tumor

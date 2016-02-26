@@ -1,6 +1,5 @@
 ''' author@esilgard '''
-#
-# Copyright (c) 2013-2015 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2013-2016 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 import sys, os, codecs
 import output_results, make_text_output_directory, metadata
 from datetime import datetime
@@ -23,15 +23,14 @@ import global_strings as gb
 initial script of the Argos/NLP engine do deal with command line parsing and module outputs
 should exit with a non-zero status for any fatal errors and
 output warnings and results in json format to CWD in the file provided in cmd line args
-
 '''
 
 ## declare output dictionary for values, warnings, and metadata
 OUTPUT_DICTIONARY = {}
-
+OUTPUT_DICTIONARY[gb.ERRS] = []
 
 ## path to the nlp_engine.py script ##
-NLP_ENGINE_PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
+NLP_ENGINE_PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 ORIGINAL_WD = os.getcwd()
 
 ## timeit variable for performance testing ##
@@ -57,27 +56,22 @@ try:
     try:
         ## set of required flags for program to run successfully ##
         REQUIRED_FLAGS = set([])
-
         ## dictionary of actual flags:argument values ##
         ARGUMENTS = {}
-
         ## dictionary of flag:tuple(flag description,verbose flag description) ##
         COMMAND_LINE_FLAGS = {}
-
         for line in COMMAND_LINE_FLAG_FILE.readlines():
             line = line.strip().split('\t')
             if line[1] == 'required':
                 REQUIRED_FLAGS.add(line[0])
             COMMAND_LINE_FLAGS[line[0]] = (line[2], line[3])
         COMMAND_LINE_FLAG_FILE.close()
-
         ARGS = sys.argv[1:]
     except IOError:
         sys.stderr.write('FATAL ERROR: command line flag dictionary could not be established \
                         from file, potential formatting error.  program aborted.')
         sys.exit(1)
 except EnvironmentError:
-
     sys.stderr.write('FATAL ERROR: command line flag file not found.  program aborted.')
     sys.exit(1)
 
@@ -90,7 +84,7 @@ for index in range(0, len(ARGS)-1, 2):
     else:
         OUTPUT_DICTIONARY[gb.ERRS].append({gb.ERR_TYPE: 'Warning', gb.ERR_STR: 'nonfatal error: \
         unrecognized flag: ' + ARGS[index] + ', this flag will not be excluded. Refer to ' + \
-        COMMAND_LINE_FLAG_FILE + ' for a complete list and description of command line flags'})
+        NLP_ENGINE_PATH + 'COMMAND_LINE_FLAGS.txt for a complete list and description of command line flags'})
 
 ## build the dictionary for the json output ##
 OUTPUT_DICTIONARY[gb.CNTL] = {}
@@ -101,11 +95,8 @@ OUTPUT_DICTIONARY[gb.CNTL]["source"] = "document source"
 OUTPUT_DICTIONARY[gb.CNTL]["docDate"] = "doc date"
 OUTPUT_DICTIONARY[gb.CNTL]["processDate"] = str(datetime.today().isoformat())
 metadata = metadata.get(NLP_ENGINE_PATH, ARGUMENTS)
-OUTPUT_DICTIONARY[gb.CNTL]["metadata"]= metadata
-OUTPUT_DICTIONARY[gb.ERRS] = []
+OUTPUT_DICTIONARY[gb.CNTL]["metadata"] = metadata
 OUTPUT_DICTIONARY[gb.REPORTS] = []
-
-
 ## add in flag info to the json output dictionary
 OUTPUT_DICTIONARY[gb.CNTL]["docName"] = ARGUMENTS.get('-f')
 OUTPUT_DICTIONARY[gb.CNTL]["docType"] = ARGUMENTS.get('-t')
@@ -113,7 +104,6 @@ OUTPUT_DICTIONARY[gb.CNTL]["diseaseGroup"] = ARGUMENTS.get('-g')
 
 ## ERR out for missing flags that are required ##
 MISSING_FLAGS = REQUIRED_FLAGS-set(ARGUMENTS.keys())
-
 if len(MISSING_FLAGS) > 0:
     for each_flag in MISSING_FLAGS:
         sys.stderr.write('FATAL ERROR: missing required flag: ' + each_flag + ' ' + COMMAND_LINE_FLAGS[each_flag][1])
@@ -129,18 +119,19 @@ else:
     MKDIR_ERRORS = make_text_output_directory.main(ARGUMENTS.get('-f'))
     if MKDIR_ERRORS[0] == Exception:
         sys.stderr.write(MKDIR_ERRORS[1])
-        sys.exit(1)        
+        sys.exit(1)
     OUTPUT, ERRORS, RETURN_TYPE = DOCUMENT_PROCESSER.process.main(ARGUMENTS)
+
     if RETURN_TYPE == Exception:
         sys.stderr.write(ERRORS[gb.ERR_STR])
         sys.exit(1)
     else:
         OUTPUT_DICTIONARY[gb.REPORTS] = OUTPUT
-        OUTPUT_DICTIONARY[gb.ERRS] = ERRORS    
-    if MKDIR_ERRORS[0] == dict:
-        OUTPUT_DICTIONARY[gb.ERRS].append(MKDIR_ERRORS[1])
+        OUTPUT_DICTIONARY[gb.ERRS] = ERRORS
 
-    ## iterate through errors - crash for Exceptions and output Warnings
+    if MKDIR_ERRORS[0] == dict:        
+        OUTPUT_DICTIONARY[gb.ERRS].append(MKDIR_ERRORS[1])
+    ## iterate through errors - CRASH for Exceptions and output Warnings
     if OUTPUT_DICTIONARY[gb.ERRS]:
         CRASH = False
         for error_dictionary in OUTPUT_DICTIONARY[gb.ERRS]:
@@ -154,7 +145,6 @@ else:
     if OUTPUT_RETURN:
         sys.exit(1)
 
-
-### timeit - print out the amount of time it took to process all the reports ##
+## timeit - print out the amount of time it took to process all the reports ##
 ## print (datetime.today()-BEGIN).days * 86400 + (datetime.today()-BEGIN).seconds, \
 ##'seconds to process '+str(len(OUTPUT_DICTIONARY["reports"]))+' reports'

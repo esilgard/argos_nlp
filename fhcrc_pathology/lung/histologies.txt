@@ -2,7 +2,6 @@ Adenocarcinoma
 Adenosquamous Carcinoma
 Bronchioloalveolar Carcinoma
 Large Cell Carcinoma
-Metastatic Adenocarcinoma
 Non Small Cell Carcinoma;Non Small Cell Malignancy;Non Small Cell Lung Cancer;Non Small Cell Lung Carcinoma;NSCLC
 Small Cell Carcinoma;Small Cell Lung Carcinoma;SCLC
 Squamous Cell Carcinoma

@@ -1,0 +1,4 @@
+Right;rt;[0-9]{1,2}[ ]?r
+Left;lt;[0-9]{1,2}[ ]?l
+Midline;nodal station (7|8|9)
+Bilateral

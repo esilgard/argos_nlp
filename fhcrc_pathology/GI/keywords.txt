@@ -1,0 +1,1 @@
+GI;stomach;gastric;esophagus;esophageal;pancreas;pancreatic;ampulla;anal;bowel;anus;diaphragm;acetabulum;gastro;intestinal;gastrointestinal;bile;gall;intestine;colorectal;colon;colonic;sigmoid;rectum;rectal;rectosigmoid

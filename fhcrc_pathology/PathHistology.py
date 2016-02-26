@@ -1,136 +1,31 @@
+'''author@esilgard'''
 #
-# Copyright (c) 2013-2015 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2013-2016 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
 
-'''author@esilgard'''
-__version__='PathHistology1.0'
+from OneFieldPerSpecimen import OneFieldPerSpecimen
+import global_strings as gb
 
-import re
-import os
-import global_strings
-path= os.path.dirname(os.path.realpath(__file__))+'/'
+class PathHistology(OneFieldPerSpecimen):
+    ''' find a disease specific (or back off to a general) histology from the path text '''
+    __version__ = 'PathHistology1.0'
+    def __init__(self):
+        super(PathHistology, self).__init__()
+        self.specimen_field_name = 'PathFindHistology'
+        self.overall_field_name = 'PathHistology'
+        self.specimen_table = gb.FINDING_TABLE
+        self.overall_table = gb.PATHOLOGY_TABLE
+        self.specimen_confidence = 0.9
+        self.unlabled_specimen_confidence = 0.7
+        ## reference lists & dictionaries ##
+        self.file_name_string = 'histologies'
+        ## relevant sections of the report ##
+        self.good_section = r'IMPRESSION|FINAL DIAGNOSIS|COMMENT|DX|SUMMARY CANCER'
+        self.bad_section = r'CLINICAL|Note'
 
-
-#############################################################################################################################################################
-
-#############################################################################################################################################################
-
-def get(disease_group,dictionary):
-   
-    '''
-    extract the histology from the lower cased text of the pathology report       
-    return a list of dictionaries of each PathFindHistology (per specimen) and overall PathHistology (for the entire report)
-    '''
-   
-    return_dictionary_list=[]
-    ## a list of histologies from the disease relevent histology file
-    histologies=[]
-    histology_standardizations={}    
-    try:
-        for line in open(path+'/'+disease_group+'/'+'histologies.txt','r').readlines():
-            histos=line.split(';')
-            for h in histos:
-                h=h.strip().lower()
-                histology_standardizations[h]=histos[0].strip()
-                histologies.append(h)
-        histologies=sorted(histologies,key=lambda x: len(x),reverse=True)        
-    except: return ([{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'ERROR: could not access histology file at '+path+'/'+disease_group+'/'+'histologies.txt -- PathHistology not completed'}],Exception)
-
-    ## a general list of cancer diagnosis
-    general_diagnoses=[]
-    general_standardizations={}
-    try:
-        for line in open(path+'/'+'histologies.txt','r').readlines():
-            diag=line.split(';')
-            for d in diag:
-                d=d.strip().lower()
-                general_standardizations[d]=diag[0].strip()
-                general_diagnoses.append(d)
-        general_diagnoses=sorted(general_diagnoses,key=lambda x: len(x),reverse=True)        
-    except: return ([{global_strings.ERR_TYPE:'Exception',global_strings.ERR_STR:'ERROR: could not access general diagnosis file at '+path+'/'+'histologies.txt -- PathHistology not completed'}],Exception)
-
-    
-    ## loop through relevant sections for section histologies
-    def get_spec_histo(specimen,string_list,standardizations):        
-        specimen_histology_set=set([])
-        specimen_start_stops_set=set([])
-
-        ## helper method to find non-negated string matches - histologies are sorted by length, longest first ##
-        def find_histology_match(short_text,histologies,line_onset):            
-            for histo in histologies:
-                x=re.match(r'.*([\W]|^)('+histo+r')([\W]|$).*',short_text)
-                if re.search(r'([\W]|^)'+histo+r'([\W]|$)',short_text):
-                    if not re.search(r'( not | no |negative |free of |without|against |(hx|history) of | to rule out|preclud)[\w ]{,50}'+histo+r'([\W]|$)',short_text) and \
-                       not re.search(r'([\W]|^)'+histo+r'[\w ]{,40}( unlikely| not (likely|identif)| negative)',short_text):                                              
-                        start=x.start(2)+line_onset
-                        stop=start+len(x.group(2))
-                        ## only add char off sets of there is not a longer (overlapping) string
-                        ## this works because the histology list is sorted by length
-                        ## is there a faster way to do this than iterate through set items?
-                        substring=False
-                        for offsets in specimen_start_stops_set:
-                            if start >= offsets[0] and start <= offsets[1]:
-                                substring=True
-                        if substring==False:
-                            specimen_histology_set.add(standardizations[histo])
-                            specimen_start_stops_set.add((start,stop))
-    
-        for section in sorted(dictionary):                
-            section_specimen=section[3]                
-            line_onset=section[2]
-            header=section[1]          
-            if ('IMPRESSION' in header or 'FINAL DIAGNOSIS' in header or 'COMMENT' in header) and 'CLINICAL' not in header:                
-                for index,results in sorted(dictionary[section].items(),key=lambda x: int(x[0])):                 
-                    ## meant to weed out references to literature/papers - picking up publication info like this: 2001;30:1-14. ##
-                    ## these can contain confusing general statements about the cancer and/or patients in general ##
-                    if re.search(r'[\d]{4}[;,][ ]*[\d]{1,4}:[\d\-]{1,6}',results):pass 
-                    elif specimen in section_specimen:                        
-                        text=results.lower()
-                        text=re.sub(r'[.,:;\\\/\-]',' ',text)                            
-                        find_histology_match(text,string_list,line_onset)
-                                            
-        return specimen_histology_set,specimen_start_stops_set
-##############################################################################################################################################################        
-    histology_set=set([])
-    start_stops_set=set([])
-    
-    ## loop through explicitly labeled specimens to look for corresponding histologies in relevant sections
-    for specimen_dictionary in dictionary[(0,'SpecimenSource',0,None)].values():     
-        for specimen,description in specimen_dictionary.items():           
-            specimen_histology_set,specimen_start_stops_set=get_spec_histo(specimen,histologies,histology_standardizations)
-            
-            ## back off to general cancer diagnosis
-            if not specimen_histology_set:                
-                specimen_histology_set,specimen_start_stops_set=get_spec_histo(specimen,general_diagnoses,general_standardizations)                
-            if specimen_histology_set:                
-                return_dictionary_list.append({global_strings.NAME:"PathFindHistology",global_strings.KEY:specimen,global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(specimen_histology_set),
-                                               global_strings.CONFIDENCE:("%.2f" % .9),global_strings.VERSION:__version__,
-                                               global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]})
-                histology_set=histology_set.union(specimen_histology_set)             
-                start_stops_set=start_stops_set.union(specimen_start_stops_set)
-            
-    ## back off model - to cover the case where there's no explicitly labeled specimen - assign to a general "UNK" specimen
-    if not histology_set:    
-        specimen_histology_set,specimen_start_stops_set=get_spec_histo('',histologies,histology_standardizations)
-        ## back off to general cancer diagnosis
-        if not specimen_histology_set:
-            specimen_histology_set,specimen_start_stops_set=get_spec_histo('',general_diagnoses,general_standardizations)
-        if specimen_histology_set:           
-            histology_set=histology_set.union(specimen_histology_set)
-            start_stops_set=start_stops_set.union(specimen_start_stops_set)
-            return_dictionary_list.append({global_strings.NAME:"PathFindHistology",global_strings.KEY:"UNK",global_strings.TABLE:global_strings.FINDING_TABLE,global_strings.VALUE:';'.join(specimen_histology_set),global_strings.CONFIDENCE:("%.2f" % .70),
-                                      global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in specimen_start_stops_set]})
-        
-    ## aggregate histologies of individual specimens for overall histology
-    if histology_set:      
-        return_dictionary_list.append({global_strings.NAME:"PathHistology",global_strings.KEY:"ALL",global_strings.TABLE:global_strings.PATHOLOGY_TABLE,global_strings.VALUE:';'.join(histology_set),
-                                       global_strings.CONFIDENCE:("%.2f" % (sum([float(x.get(global_strings.CONFIDENCE)) for x in return_dictionary_list])/len(return_dictionary_list))),
-                                      global_strings.VERSION:__version__,global_strings.STARTSTOPS:[{global_strings.START:char[0],global_strings.STOP:char[1]} for char in start_stops_set]})     
-    
-    return (return_dictionary_list,list)        
-                
-            
-
-                      
+        ## there is a secondary data element that should be searched for
+        ## based on either position or value of the first e.g. PathGrade
+        self.has_secondary_data_element = True
+        self.secondary_data_elements = ['PathGrade', 'Metastasis']

@@ -4,7 +4,7 @@
     "description": "Output from the natural language processing engine.",
     "type": "object",
 	"properties": {
-        "ControlInfo": {
+        "controlInfo": {
             "description": "The information about the batch run along with relevant metadata and groupings to inform the UI.",
             "type": "object",
 			"properties": {
@@ -118,8 +118,68 @@
         },
 		"reports": {
             "description": "Output information for the documents themselves",
-            "type": "array"
+            "type": "array",
+			"items": {
+				"type":"object",
+				"properties": {
+					"mrn": {
+						"type": "string", 
+						"description": "The medical record number for the patient to whom the report belongs"
+						},
+					"report": {
+						"type":"string",
+						"description": "The unique identifier for the report processed"
+						},
+					"tables":{
+						"type":"array",
+						"description":"a list of tables containing fields that have been output by the engine for this report","items": {"type":"object",
+							"properties":{
+								"table":{
+									"type":"string",
+									"description":"the name of the destination table"
+									},
+								"fields":{
+									"type":"array",
+									"description":"a list of the fields that have been output by the engine for this report and the relevant table",
+									"items": {
+										"type":"object",
+										"properties":{
+											"algorithmVersion": {
+												"type":"string",
+												"description":"the version of the algorithm that output this value (this comes from the algorithm class itself)"
+												},
+											"confidence": {
+												"type":"string",
+												"description":"an internal confidence measure for the value output by the engine"
+												},
+											"name": {
+												"type":"string",
+												"description":"the name of the field"
+												},
+											"recordKey":{
+												"type":"string",
+												"description":"an identifier to signal which record (e.g. specimen or finding) the field value relates to"
+												},
+											"startStops": {
+												"type":"array",
+												"description":"an array of character offsets for the supporting evidence/strings"
+												},
+											"table": {
+												"type":"string",
+												"description":"the name of the table to which the field belongs"
+												},
+											"value": {
+												"description":"the value(s) of the field output by the engine. The datatype of this value is variable and dictated by the metadata."
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 		}
 	},
-	"required": ["ControlInfo", "errors"]
+	"required": ["controlInfo", "errors"]
 }

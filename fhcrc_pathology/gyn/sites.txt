@@ -1,0 +1,8 @@
+Cervix;cervical
+Uterus;uterine
+Ovary;ovarian
+Vagina;vaginal
+Vulva;vulvar
+Fallopian
+Pelvis
+Edometrium;endometrial

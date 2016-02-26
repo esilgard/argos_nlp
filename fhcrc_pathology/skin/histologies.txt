@@ -1,0 +1,4 @@
+Melanoma
+Basal Cell Carcinoma;basal cell
+Merkel Cell Carcinoma;merkel cell
+Squamous Cell Carcinoma;squamous
