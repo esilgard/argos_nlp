@@ -149,7 +149,6 @@ def main(arguments):
             if return_type != Exception:
                 if arguments.get('-a') == 'n':
                     pass
-
                 else:                    
                     return_fields, return_errors, return_type = get_fields\
                     (disease_group, pathology_d[mrn][accession], disease_group_data_d, path_data_d)
@@ -157,7 +156,9 @@ def main(arguments):
                 field_value_output.append(field_value_d)
 
             else:
+                
+                concatenated_error_string = ';'.join([x[gb.ERR_STR] for x in return_errors])
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR \
                         in process.get(fields) -unknown number of reports completed.  \
-                        Return error string: ' + return_errors[gb.ERR_STR]}], list)
+                        Return error string: ' + concatenated_error_string}], list)
     return (field_value_output, return_errors, list)
