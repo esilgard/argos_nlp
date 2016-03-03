@@ -46,7 +46,7 @@
 						{"diseaseGroup":["gyn"],
 						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Neuroendocrine Carcinoma"]
 						},
-						{"diseaseGroup":["head&neck"],
+						{"diseaseGroup":["head_neck"],
 						"values":["Adenocarcinoma","Basaloid Squamous Cell Carcinoma","Squamous Cell Carcinoma","Non-Small Cell Carcinoma","Small Cell Carcinoma","Salivary Gland Carcinoma"]
 						},
 						{"diseaseGroup":["heme"],
@@ -63,7 +63,7 @@
 						},
 						{"diseaseGroup":["skin"],
 						"values":["Melanoma","Basal Cell Carcinoma","Merkel Cell Carcinoma","Squamous Cell Carcinoma"]
-						}						
+						}
 					]
 				},
 				{"field":"PathHistology2",
@@ -92,7 +92,7 @@
 						{"diseaseGroup":["gyn"],
 						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Neuroendocrine Carcinoma"]
 						},
-						{"diseaseGroup":["head&neck"],
+						{"diseaseGroup":["head_neck"],
 						"values":["Adenocarcinoma","Basaloid Squamous Cell Carcinoma","Squamous Cell Carcinoma","Non-Small Cell Carcinoma","Small Cell Carcinoma","Salivary Gland Carcinoma"]
 						},
 						{"diseaseGroup":["heme"],
@@ -135,7 +135,7 @@
 						{"diseaseGroup":["gyn"],
 						"values":["Hysterectomy","Salpingo-Oopherectomy","Radical Hysterectomy","Externeration"]
 						},
-						{"diseaseGroup":["head&neck"],
+						{"diseaseGroup":["head_neck"],
 						"values":["Neck Dissection","Hemiglossectomy","Maxillectomy","Mandibulectomy","Hemithyroidectomy","Thyroidectomy","Glossectomy","Laryngopharyngectomy","Laryngectomy","Adrenalectomy","Tonsillectomy","Parotidectomy","Rhinectomy"]
 						},
 						{"diseaseGroup":["heme"],
@@ -219,7 +219,7 @@
 						{"diseaseGroup":["*"],
 						"values":["Abdomen","Acetabulum","Adrenal","Ampulla","Anal","Arm", "Back","Bile Duct","Bladder","Bone","Bowel","Brain and CNS", "Breast","Cervix","Chest","Colorectal","Diaphragm","Endometrium", "Esophagus","Head and Neck","Heart","Kidney","Leg","Liver", "Lung", "Lymph Node","Ovary","Pancreas","Pelvis","Penis","Prostate", "Sacrum","Skin","Spine","Spleen","Stomach","Testis","Tonsil", "Torso","Urine","Uterus","Vagina","Vulva"]
 						},
-						{"diseaseGroup":["brain"],						
+						{"diseaseGroup":["brain"],
 						"values":["Cerebellar","Fossa","Frontal Lobe","Frontoparietal Lobe","Frontotemporal Lobe","Frontotemporoparietal Lobe","Occipital Lobe","Occipitoparietal Lobe","Occipitotemporal Lobe","Paraspinal","Parietal Lobe","Parietooccipital Lobe","Sellar","Skull","Spine","Suboccipital Lobe","Subtemporal Lobe","Temporooccipital Lobe","Temporoparietal Lobe","Temporal Lobe","Thalamus","Middle Lobe","Lower Lobe","Parietal","Cerebellopontine","Pineal Gland"]
 						},
 						{"diseaseGroup":["breast"],
@@ -234,7 +234,7 @@
 						{"diseaseGroup":["gyn"],
 						"values":["Cervix","Uterus","Ovary","Vagina","Vulva","Fallopian","Pelvis","Edometrium"]
 						},
-						{"diseaseGroup":["head&neck"],
+						{"diseaseGroup":["head_neck"],
 						"values":["Alveolar","Buccal ","Chin","Epiglottis","False Vocal Cord","Gingiva","Hypopharynx","Jugular","Larynx","Lip","Mandible","Maxilla","Maxillary Sinus","Mouth","Nasal","Neck","Nose","Oropharynx","Palate","Paratracheal","Pharynx","Salivary Gland","Sinus","Subglottis","Sublingual","Submandibular","Supraglottis","Skull","Tongue","Tonsil","Tooth","Trachea","Vocal Cord"]
 						},
 						{"diseaseGroup":["heme"],
@@ -265,7 +265,7 @@
 						{"diseaseGroup":["*"],
 						"values":["Anterior","Base","Central","Deep","Lateral","Superior","Posterior","Distal","Margin","Lower","Upper","Medial","Inferior","Proximal"]
 						},
-						{"diseaseGroup":["head&neck"],
+						{"diseaseGroup":["head_neck"],
 						"values":["Level I","Level II","Level III","Level IV","Level V"]
 						},
 						{"diseaseGroup":["skin"],
@@ -281,7 +281,7 @@
 						{"diseaseGroup":["*"],
 						"values":["Right","Left","Bilateral","Midline"]
 						},
-						{"diseaseGroup":["head&neck"],
+						{"diseaseGroup":["head_neck"],
 						"values":["Right","Left","Bilateral","Midline","Ipsilateral"]
 						}
 					]
@@ -387,7 +387,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["brain","breast","head&neck","heme","lung","GU","GI","sarcoma","gyn","other","skin","male_cancers"]
+						"values":["brain","breast","head_neck","heme","lung","GU","GI","sarcoma","gyn","other","skin","male_cancers"]
 						}
 					]
 				}
@@ -395,123 +395,13 @@
 			},
 			{"table":"EngineReportInfo",
 			"fields":[
-				{"field":"diseaseGroup1",
+				{"field":"ClassifiedDiseaseGroup",
 				"datatype":"string",
 				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
-						}
-					]
-				},
-				{"field":"diseaseGroup2",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
-						}
-					]
-				},
-				{"field":"diseaseGroup3",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
-						}
-					]
-				},
-				{"field":"diseaseGroup4",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
-						}
-					]
-				},
-				{"field":"diseaseGroup5",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
-						}
-					]
-				},
-				{"field":"diseaseGroup6",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
-						}
-					]
-				},
-				{"field":"diseaseGroup7",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
-						}
-					]
-				},
-				{"field":"diseaseGroup8",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
-						}
-					]
-				},
-				{"field":"diseaseGroup9",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
-						}
-					]
-				},
-				{"field":"diseaseGroup10",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
-						}
-					]
-				},
-				{"field":"diseaseGroup11",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
-						}
-					]
-				},
-				{"field":"diseaseGroup12",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head&neck"]
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head_neck"]
 						}
 					]
 				}
@@ -542,7 +432,7 @@
 						{"diseaseGroup":["gyn"],
 						"values":["Cervix","Uterus","Ovary","Vagina","Vulva","Fallopian","Pelvis","Edometrium"]
 						},
-						{"diseaseGroup":["head&neck"],
+						{"diseaseGroup":["head_neck"],
 						"values":["Alveolar","Buccal ","Chin","Epiglottis","False Vocal Cord","Gingiva","Hypopharynx","Jugular","Larynx","Lip","Mandible","Maxilla","Maxillary Sinus","Mouth","Nasal","Neck","Nose","Oropharynx","Palate","Paratracheal","Pharynx","Salivary Gland","Sinus","Subglottis","Sublingual","Submandibular","Supraglottis","Skull","Tongue","Tonsil","Tooth","Trachea","Vocal Cord"]
 						},
 						{"diseaseGroup":["heme"],
@@ -596,7 +486,7 @@
 						{"diseaseGroup":["*"],
 						"values":["Right","Left","Bilateral","Midline"]
 						},
-						{"diseaseGroup":["head&neck"],
+						{"diseaseGroup":["head_neck"],
 						"values":["Right","Left","Bilateral","Midline","Ipsilateral"]
 						}
 					]
@@ -677,7 +567,7 @@
 						{"diseaseGroup":["gyn"],
 						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Neuroendocrine Carcinoma"]
 						},
-						{"diseaseGroup":["head&neck"],
+						{"diseaseGroup":["head_neck"],
 						"values":["Adenocarcinoma","Basaloid Squamous Cell Carcinoma","Squamous Cell Carcinoma","Non-Small Cell Carcinoma","Small Cell Carcinoma","Salivary Gland Carcinoma"]
 						},
 						{"diseaseGroup":["heme"],
@@ -787,7 +677,7 @@
 						{"diseaseGroup":["gyn"],
 						"values":["Adenocarcinoma","Squamous Cell Carcinoma","Neuroendocrine Carcinoma"]
 						},
-						{"diseaseGroup":["head&neck"],
+						{"diseaseGroup":["head_neck"],
 						"values":["Adenocarcinoma","Basaloid Squamous Cell Carcinoma","Squamous Cell Carcinoma","Non-Small Cell Carcinoma","Small Cell Carcinoma","Salivary Gland Carcinoma"]
 						},
 						{"diseaseGroup":["heme"],
@@ -934,7 +824,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["brain","breast","head&neck","heme","lung","GU","GI","sarcoma","gyn","other","skin","male_cancers"]
+						"values":["brain","breast","head_neck","heme","lung","GU","GI","sarcoma","gyn","other","skin","male_cancers"]
 						}
 					]
 				},

@@ -73,7 +73,7 @@ def get_fields(disease_group, report_d, disease_group_data_d, path_data_d):
     return report_table_list, error_list, list
 
 def get_data_d(disease_group, ml_flag):
-    if disease_group: disease_group = os.path.sep+disease_group
+    #if disease_group: disease_group = os.path.sep+disease_group
     ''' get disease group data resources '''
     try:
         d = dict((y.split('\t')[0], y.split('\t')[1].strip()) for y in \
