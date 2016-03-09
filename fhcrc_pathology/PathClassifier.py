@@ -48,6 +48,7 @@ def classify(text):
     else:
         confidence = votes/total_votes
     return_table_d[gb.FIELDS].append({gb.VERSION:__version__, gb.CONFIDENCE: '%.2f' % (confidence),
-                    gb.NAME:gb.CLASS_DZ_GROUP, gb.VALUE:label, gb.STARTSTOPS:[], gb.TABLE:gb.RPT_TABLE})
+                    gb.NAME:gb.CLASS_DZ_GROUP, gb.VALUE:label, gb.STARTSTOPS:[],
+                    gb.TABLE:gb.RPT_TABLE, gb.KEY: gb.ALL})
             
     return label, return_table_d
