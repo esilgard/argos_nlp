@@ -12,7 +12,7 @@ import global_strings as gb
 PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 RESOURCES = {'behavior.txt': .1, 'node_sites.txt': .2, 'other_findings.txt': .2, \
              'procedures.txt': .2, 'sites.txt': .1, 'subsite.txt': .2, \
-             'histologies.txt': .9, 'keywords.txt': .9}
+             'histologies.txt': .9, 'keywords.txt': .7}
 DZ_GROUPS = ['brain', 'breast', 'GI', 'GU', 'gyn', 'heme', 'lung', 'sarcoma', \
              'skin', 'male_cancers', 'other', 'head_neck']
 KEYWORD_D = {}
@@ -22,7 +22,7 @@ for disease in DZ_GROUPS:
     KEYWORD_D[disease] = {}
     for files in RESOURCES:
         for line in open(PATH + disease + os.path.sep + files, 'r').readlines():
-            for token in line.strip().split(';'):
+            for token in line.strip().split(';'):                
                 KEYWORD_D[disease].update({token.lower(): RESOURCES[files]})
 
 def classify(text):
@@ -34,13 +34,12 @@ def classify(text):
     for disease in votes:
         for word in KEYWORD_D[disease]:            
             for each in word.split(';'):
-                a = re.findall(r'([\W])' + each + r'([\W])', text, re.IGNORECASE)
+                a = re.findall(r'([\W])' + each + r'([\W])', text, re.IGNORECASE)                
                 votes[disease] += len(a) * KEYWORD_D[disease][word]
                     
     
     total_votes = sum([votes.get(x) for x in votes])
     (label, votes) = sorted(votes.items(), key=lambda x: x[1], reverse=True)[0]
-
     ## catch division by zero error if no keywords are found
     if votes == 0:
         label = 'other'

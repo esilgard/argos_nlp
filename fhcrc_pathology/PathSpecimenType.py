@@ -15,7 +15,7 @@ class PathSpecimenType(OneFieldPerSpecimen):
     def __init__(self):
         super(PathSpecimenType, self).__init__()
         self.specimen_field_name = 'SpecimenFindType'
-        self.overall_field_name = 'SpecimenType'
+        self.overall_field_name = 'PathSpecimenType'
         self.specimen_table = gb.FINDING_TABLE
         self.overall_table = gb.PATHOLOGY_TABLE
         self.specimen_confidence = 0.7

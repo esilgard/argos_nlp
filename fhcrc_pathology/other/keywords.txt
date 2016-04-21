@@ -1,1 +1,1 @@
-heart;coronary;spleen;tonsil;device;thyroid;fungus;fungal
+heart;coronary;spleen;tonsil;device;thyroid;fungus;fungal;rejection;autopsy

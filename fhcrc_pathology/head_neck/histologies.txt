@@ -4,3 +4,9 @@ Non Small Cell Carcinoma;NSCC;non-small cell carcinoma
 Small Cell Carcinoma
 Adenocarcinoma
 Basaloid Squamous Cell Carcinoma
+Neuroendocrine Carcinoma;neuroendocrine
+Olfactory Neuroblastoma
+Esthesioneuroblastoma
+Adenoid Cystic Carcinoma;adenocyst;cylindroma;adenocystic;adenoidcystic
+Mucoepidermoid Carcinoma;mucoepidermoid
+Sinonasal undifferentiated carcinoma;SNUC

@@ -11,3 +11,8 @@ Adrenalectomy
 Tonsillectomy
 Parotidectomy
 Rhinectomy
+Ethmoidectomy
+Sphenoidectomy
+Sphenoidotomy
+Intranasal antrotomy
+Sinusectomy

@@ -123,7 +123,8 @@ else:
     OUTPUT, ERRORS, RETURN_TYPE = DOCUMENT_PROCESSER.process.main(ARGUMENTS)
 
     if RETURN_TYPE == Exception:
-        sys.stderr.write(ERRORS[gb.ERR_STR])
+        print ERRORS
+        sys.stderr.write('\n'.join([err[gb.ERR_STR] for err in ERRORS]))
         sys.exit(1)
     else:
         OUTPUT_DICTIONARY[gb.REPORTS] = OUTPUT

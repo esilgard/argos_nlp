@@ -409,6 +409,52 @@
 			},
 			{"table":"PathologyFinding",
 			"fields":[
+			{"field":"PathSpecimenType",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":["Brushing","Washing","Biopsy","Core Needle Biopsy","Wedge Biopsy","Wedge Resection","Exisional Biopsy","Punch Biopsy","Shave Biopsy","Lavage","Dissection","Lymph Node Dissection","Fine Needle Aspirate","Excision","Resection","Port Placement","Tube Placement","Drain Placement","Catheter Placement"]
+						},
+						{"diseaseGroup":["brain"],
+						"values":["Craniotomy","Neuroendoscopy"]
+						},
+						{"diseaseGroup":["breast"],
+						"values":["Mastectomy","Radical Mastectomy"]
+						},
+						{"diseaseGroup":["GI"],
+						"values":["Cholecystectomy","Pancreaticoduodenectomy","Omentectomy","Hemicolectomy","Segmental Resection","Appendectomy","Polypectomy"]
+						},
+						{"diseaseGroup":["GU"],
+						"values":["Prostatectomy","Radical Prostatectomy","Cystectomy"]
+						},
+						{"diseaseGroup":["gyn"],
+						"values":["Hysterectomy","Salpingo-Oopherectomy","Radical Hysterectomy","Externeration"]
+						},
+						{"diseaseGroup":["head_neck"],
+						"values":["Neck Dissection","Hemiglossectomy","Maxillectomy","Mandibulectomy","Hemithyroidectomy","Thyroidectomy","Glossectomy","Laryngopharyngectomy","Laryngectomy","Adrenalectomy","Tonsillectomy","Parotidectomy","Rhinectomy"]
+						},
+						{"diseaseGroup":["heme"],
+						"values":[""]
+						},
+						{"diseaseGroup":["lung"],
+						"values":["Alveolectomy","Bronchoscopy","Thoracentesis","Cystoscopy","Endoscopy","Laminectomy","Foraminotomy","Facetectomy;facetomies","Fusion","Ligation","Lobectomy","Lymphadenectomy","Lysis Carotid Artery","Mediastinoscopy","Paracentesis","Pericardiocentesis","Pneumonectomy","Thoracentesis","Thoracoscopy","Thoracostomy","Thoracotomy","Pleurectomy"]
+						},
+						{"diseaseGroup":["male_cancers"],
+						"values":["Orchiectomy"]
+						},
+						{"diseaseGroup":["other"],
+						"values":[]
+						},
+						{"diseaseGroup":["sarcoma"],
+						"values":[]
+						},
+						{"diseaseGroup":["skin"],
+						"values":["Shave Biopsy","Punch Biopsy"]
+						}
+					]
+				},
 				{"field":"PathFindSite",
 				"datatype":"string",
 				"closedClass":"False",
@@ -461,7 +507,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["Malignant","In Situ","Invasive"]
+						"values":["Malignant","In Situ","Invasive","Benign"]
 						}
 					]
 				},

@@ -16,13 +16,14 @@ Maxillary Sinus
 Mouth;oral cavity
 Nasal
 Neck
-Nose
+Nose;olfactory
 Oropharynx
 Palate
 Paratracheal
 Pharynx;pharyngeal
 Salivary Gland;salivary glands
 Sinus
+Sinonasal
 Subglottis
 Sublingual
 Submandibular
