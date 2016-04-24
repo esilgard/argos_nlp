@@ -2,14 +2,14 @@ AML;acute myeloid leukemia;Myeloid Sarcoma;Acute Monocytic Leukemia;Myeloid Leuk
 CML;chronic myeloid leukemia;Monocytic Leukemia;Acute Erythremia;Megakaryocytic Leukemia
 Multiple Myeloma;Plasma Cell Leukemia
 MDS;Myelodysplastic Syndrome
-CCL;Chronic Lymphocytic Leukemia
 Hodgkin Lymphoma;Hodgkin Nodular Sclerosis;Hodgkin Mixed Cellularity;Hodgkin Lymph Depletion
 B-Cell Non-Hodgkin Lymphoma;Mantle Cell Lymphoma;Burkitt Lymphoma;Anaplastic Lymphoma;Burkitt's Lymphoma;ALCL;Anaplastic Large Cell Lymphoma;B-Cell Lymphoma;Large B-Cell Lymphoma;Follicular Lymphoma;follicular center cell lymphoma
 T-Cell Non-Hodgkin Lymphoma;Mycosis Fungoides;Sezarys Disease;Sezary's Disease;T-Cell Lymphoma
 Leukemia, NOS;Lymphadenitis
 Amyloidosis
 Acute Lymphoid Leukemia;Lymphoid Leukemia
-CLL;Chronic Lymphoid Leukemia;Hairy Cell Leukemia
+CLL;Chronic Lymphoid Leukemia;Hairy Cell Leukemia;Chronic Lymphocytic Leukemia
+SLL;small lymphocytic lymphoma
 Waldenstrom Macroglobulinemia
 Myeloproliferative Neoplasms;Polycythemia Vera;Essential Thrombocythemia;Myelofibrosis
 Anemia;Sickle Cell
