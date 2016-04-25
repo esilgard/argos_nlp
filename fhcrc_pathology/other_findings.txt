@@ -1,5 +1,5 @@
 Fibrosis;fibrotic
-Atypical Cells;atypical;atypia;atypical
+Atypical Cells;atypia
 Granuloma;granulomas
 Mucinous;mucin producing
 Necrosis;necrotic;necroses

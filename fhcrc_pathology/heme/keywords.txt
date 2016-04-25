@@ -1,1 +1,1 @@
-heme;hematological;aml;leukemia;myeloma;blast;myeloid;blood;marrow
+heme;hematological;aml;leukemia;myeloma;blast;myeloid;blood;marrow;hematopathology;lymphoma

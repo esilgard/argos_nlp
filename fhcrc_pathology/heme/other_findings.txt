@@ -1,4 +1,8 @@
 Porphyria
-Gilbert syndrome
-Crigler-Najjar syndrome
+Gilbert Syndrome
+Crigler-Najjar Syndrome
 Langerhans-Cell Histiocytosis;Langerhans
+Pancytopenia
+Granuloma;granulomas
+Thrombocytopenia
+Hyperplasia
