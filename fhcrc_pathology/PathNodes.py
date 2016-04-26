@@ -35,18 +35,13 @@ class PathNodes(object):
             recordKey=0
             return_dictionary_list=[]
             for node in re.finditer(self.regex, full_text, re.DOTALL):
-                #print recordKey
-                #print node.group(1),node.group(2),node.group(3)
-                print [{dict_keys.START:node.start(self.site_nodes),dict_keys.STOP:node.end(self.site_nodes)}]
-               
+                print [{dict_keys.START:node.start(self.site_nodes),dict_keys.STOP:node.end(self.site_nodes)}]               
                 self.return_dictionary_list.append({dict_keys.CONFIDENCE:self.confidence,dict_keys.NAME:'PathFindSite',dict_keys.VALUE:node.group(self.site_nodes),
                                                     dict_keys.STARTSTOPS:[{dict_keys.START:node.start(self.site_nodes),dict_keys.STOP:node.end(self.site_nodes)}],
                                                     dict_keys.KEY:recordKey,global_strings.TABLE:dict_keys.NODE_TABLE})
-                #print 'k'
                 self.return_dictionary_list.append({dict_keys.CONFIDENCE:self.confidence,dict_keys.NAME:'PathFindNodesPos',dict_keys.VALUE:node.group(self.pos_nodes),
                                                     dict_keys.STARTSTOPS:[{dict_keys.START:node.start(self.pos_nodes),dict_keys.STOP:node.end(self.pos_nodes)}],
                                                     dict_keys.KEY:recordKey,global_strings.TABLE:dict_keys.NODE_TABLE})
-                #print 'l'
                 self.return_dictionary_list.append({dict_keys.CONFIDENCE:self.confidence,dict_keys.NAME:'PathFindNumNodes',dict_keys.VALUE:node.group(self.num_nodes),
                                                     dict_keys.STARTSTOPS:[{dict_keys.START:node.start(self.num_nodes),dict_keys.STOP:node.end(self.num_nodes)}],
                                                     dict_keys.KEY:recordKey,global_strings.TABLE:dict_keys.NODE_TABLE})
@@ -56,5 +51,4 @@ class PathNodes(object):
             return (self.return_dictionary_list,list)
            
         except:
-            #print 'ERROR'
             return ([{dict_keys.ERR_TYPE:'Warning',dict_keys.ERR_STR:'ERROR in %s module.' % self.node_name}],Exception)
