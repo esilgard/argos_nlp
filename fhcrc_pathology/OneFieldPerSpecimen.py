@@ -78,7 +78,7 @@ class OneFieldPerSpecimen(object):
                     ## only return character offsets for the regular path text (not SpecimenSource)
                     if line_onset:
                         start = text.find(finding) + line_onset
-                        stop = start + len(finding) -1
+                        stop = start + len(finding)
                         ## only add char off sets if there is not a longer (overlapping) string
                         ## this works because the finding list is sorted by length
                         substring = False

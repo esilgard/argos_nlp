@@ -313,7 +313,7 @@
 			"fields":[
 				{"field":"PathStageT",
 				"datatype":"string",
-				"closedClass":"True",
+				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
@@ -333,7 +333,7 @@
 				},
 				{"field":"PathStageN",
 				"datatype":"string",
-				"closedClass":"True",
+				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
@@ -373,7 +373,7 @@
 				},
 				{"field":"PathStageM",
 				"datatype":"string",
-				"closedClass":"True",
+				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],

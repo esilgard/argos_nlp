@@ -5,3 +5,4 @@ Hemicolectomy
 Segmental Resection
 Appendectomy
 Polypectomy
+Hemihepatectomy
