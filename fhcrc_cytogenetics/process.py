@@ -36,24 +36,8 @@ def main(arguments):
     except IOError:        
         return([{}], [{gb.ERR_TYPE:'Exception', gb.ERR_STR:'FATAL ERROR: could not parse input cytogenetics file '\
                    +arguments.get('-f') + ' --- program aborted.'}], Exception)
-    '''
-    ## ** temporary hack for now to differentiate between scca and uw reports **##
-    if 'uw' in arguments.get('-f'):                                              
-        
-    elif 'scca' in arguments.get('-f'):
-        try:
-            cytogenetics_dictionary,return_type=scca_cyto_parser.parse(arguments.get('-f'))        
-            if return_type!=dict: return ({},cytogenetics_dictionary,Exception)
-        except:        
-            return({},[{gb.ERR_TYPE:'Exception',gb.ERR_STR:'FATAL ERROR: could not parse input cytogenetics file '\
-                   +arguments.get('-f')+' --- program aborted.'+str(sys.exc_info())}],Exception)
-    else:
-        return({},[{gb.ERR_TYPE:'Exception',gb.ERR_STR:'FATAL ERROR: could not parse input cytogenetics file '\
-                   +arguments.get('-f')+' --- neither UW nor SCCA specified as a document source --- program aborted.'+str(sys.exc_info())}],Exception)
-    '''
 
-    disease_group=arguments.get('-g')
-   
+    disease_group = arguments.get('-g')   
     field_value_output = []
     error_output = []
     return_error_list = []
@@ -70,15 +54,15 @@ def main(arguments):
                     specimen_source = cytogenetics_dictionary[mrn][acc].get((0, 'SpecimenSource', 0, None))
                     specimen_source_string = '~'.join([')'.join(a) for a in specimen_source.get(0).items()])                
                     
-                    out_tsv.write(gb.MRN_CAPS+'\t'+gb.FILLER_ORDER_NO+'\t'+gb.SET_ID+'\t'+gb.OBSERVATION_VALUE+'\t'+gb.SPECIMEN_SOURCE+'\n')
+                    out_tsv.write(gb.MRN_CAPS + '\t' + gb.FILLER_ORDER_NO + '\t' + gb.SET_ID + '\t' + gb.OBSERVATION_VALUE + '\t' + gb.SPECIMEN_SOURCE + '\n')
                     for k,v in cytogenetics_dictionary[mrn][acc].items():
                         if 'SpecimenSource' not in k and 'FullText' not in k and type(v) == dict:
                             for a, b in v.items():
-                                out_tsv.write(mrn+'\t'+acc+'\t'+str(a)+'\t'+b+'\t'+specimen_source_string+'\n')                                
+                                out_tsv.write(mrn + '\t' + acc + '\t' + str(a) + '\t' + b + '\t' + specimen_source_string + '\n')                                
                                
             except IOError:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
-                    'FATAL ERROR in cytogenetics/process.py attempting to write text and tsv to files at'+ \
+                    'FATAL ERROR in cytogenetics/process.py attempting to write text and tsv to files at' + \
                     arguments.get('-f')[:arguments.get('-f').find('.nlp')] + os.path.sep + acc + \
                     ' - unknown number of reports completed. ' + str(sys.exc_info()[1])}], list)
 
@@ -98,7 +82,7 @@ def main(arguments):
                 field_value_dictionary = {}
                 field_value_dictionary[gb.REPORT] = acc
                 field_value_dictionary[gb.MRN] = mrn
-                field_value_dictionary[gb.DATE]=(cytogenetics_dictionary[mrn][acc][(-1,'Date',0,None)])
+                field_value_dictionary[gb.DATE] = (cytogenetics_dictionary[mrn][acc][(-1,'Date',0,None)])
                
                 str_cleaner_return_dictionary, karyotype_string = iscn_string_cleaner.get(cyto_string)
                 if not str_cleaner_return_dictionary:
@@ -113,7 +97,7 @@ def main(arguments):
                                 cytogenetics module' + str(sys.exc_info())}], list)           
 
                     try:                
-                        with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')]+'/'+acc+'.txt','wb') as out:
+                        with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + '/' + acc + '.txt','wb') as out:
                             out.write(cytogenetics_dictionary[mrn][acc][(-1,'FullText',0,None)])
                     except:                                
                         return (field_value_output,[{gb.ERR_TYPE:'Exception', gb.ERR_STR: 'FATAL ERROR in process.py \
@@ -121,14 +105,14 @@ def main(arguments):
                                 + '/' + acc + '.txt - unknown number of reports completed. ' + sys.exc_info()}], list)
                     if return_type!=Exception:
                         field_value_dictionary[gb.TABLES]=[]
-                        field_value_dictionary[gb.TABLES].append({gb.TABLE:disease_group.upper()+'_Cytogenetics',gb.FIELDS:swog_return_fields})                    
+                        field_value_dictionary[gb.TABLES].append({gb.TABLE:'Cytogenetics', gb.FIELDS:swog_return_fields})                    
                         field_value_output.append(field_value_dictionary)
                         if return_errors: return_error_list.append(return_errors)
                     else:
-                        return (field_value_output,[{gb.ERR_TYPE:'Exception',gb.ERR_STR:\
+                        return (field_value_output, [{gb.ERR_TYPE:'Exception', gb.ERR_STR:\
                                  ' FATAL ERROR in process_cytogenetics.get() - unknown number of reports completed.' + str(sys.exc_info())}], list)           
                 else:
-                    field_value_dictionary[gb.TABLES]=[]
-                    field_value_dictionary[gb.TABLES].append({gb.TABLE:disease_group.upper() + '_Cytogenetics', gb.FIELDS:str_cleaner_return_dictionary})                    
+                    field_value_dictionary[gb.TABLES] = []
+                    field_value_dictionary[gb.TABLES].append({gb.TABLE:'Cytogenetics', gb.FIELDS:str_cleaner_return_dictionary})                    
                     field_value_output.append(field_value_dictionary)                            
-    return (field_value_output, return_error_list, list)
+    return field_value_output, return_error_list, list

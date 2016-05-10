@@ -19,7 +19,7 @@
 '''
     based off basic pathology parser program - for UW pathology reports from Amalga
 '''
-__version__ = 'uw_cyto_parser1.0'
+__version__ = 'cyto_parser1.0'
 
 import re, sys, make_datetime
 import global_strings as gb
