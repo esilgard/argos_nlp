@@ -7,7 +7,7 @@ import re,global_strings,json
 
 
 '''author@esilgard'''
-__version__='classify_aml_swog_category1.0'
+__version__='classify_heme_category1.0'
 
 
 def get(cell_list,karyotype_string):
