@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2015-2016 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ def main(arguments):
     i = 0
     ## create a list of output field dictionaries ##
     for mrn in cytogenetics_dictionary:
-        for acc in cytogenetics_dictionary[mrn]:
+        for acc in cytogenetics_dictionary[mrn]:           
             ## write out cannonical version of text and tsv file
             try:
                 with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + os.path.sep + acc + '.txt', 'wb') as out_text:
@@ -69,14 +69,14 @@ def main(arguments):
 
             
             cyto_string = ''
-            ## walk through ISCN section in order (by offsets) incase the cytogenetics string is on multiple, sequential lines
+            ## walk through ISCN section in order (by offsets) in case the cytogenetics string is on multiple, sequential lines
             for sections in sorted(cytogenetics_dictionary[mrn][acc], key=lambda x: x[2]):               
                 section_header = sections[1]
                 beginning_offset = sections[2]                
-                if 'ISCN' in section_header:                   
+                if 'ISCN' in section_header:                    
                     karyo_offset = beginning_offset
                     for line, text in sorted(cytogenetics_dictionary[mrn][acc][sections].items(),key=lambda x:x[0]):                        
-                        cyto_string += text.strip('"')
+                        cyto_string += text
             
             if cyto_string:                
                 field_value_dictionary = {}
@@ -84,9 +84,9 @@ def main(arguments):
                 field_value_dictionary[gb.MRN] = mrn
                 field_value_dictionary[gb.DATE] = (cytogenetics_dictionary[mrn][acc][(-1,'Date',0,None)])
                
-                str_cleaner_return_dictionary, karyotype_string = iscn_string_cleaner.get(cyto_string)
+                str_cleaner_return_dictionary, karyotype_string, karyo_offset = iscn_string_cleaner.get(cyto_string, karyo_offset)
                 ## if string cleaner does not encounter raw text description of karyotype, then parse string
-                if not str_cleaner_return_dictionary:
+                if not str_cleaner_return_dictionary:                    
                     return_fields, return_errors, return_type = iscn_parser.get(karyotype_string, karyo_offset)
                     try:                    
                         exec ('from ' + disease_group + ' import classify_' + disease_group + '_swog_category')
@@ -94,7 +94,7 @@ def main(arguments):
                             (return_fields, karyotype_string)')
                     except:
                         return (field_value_output, [{gb.ERR_TYPE:'Exception', gb.ERR_STR:\
-                                 ' FATAL ERROR in process_cytogenetics.get() - could not retrive disease group specific \
+                                 ' FATAL ERROR in process.get() - could not retrive disease group specific \
                                 cytogenetics module' + str(sys.exc_info())}], list)           
 
                     try:                
@@ -106,14 +106,15 @@ def main(arguments):
                                 + '/' + acc + '.txt - unknown number of reports completed. ' + sys.exc_info()}], list)
                     if return_type != Exception:
                         field_value_dictionary[gb.TABLES] = []
-                        field_value_dictionary[gb.TABLES].append({gb.TABLE:'Cytogenetics', gb.FIELDS:swog_return_fields})                    
+                        field_value_dictionary[gb.TABLES].append({gb.TABLE:gb.CYTOGENETICS, gb.FIELDS:swog_return_fields})                    
                         field_value_output.append(field_value_dictionary)
-                        if return_errors: return_error_list.append(return_errors)
+                        if return_errors:
+                            return_error_list.append(return_errors)
                     else:
                         return (field_value_output, [{gb.ERR_TYPE:'Exception', gb.ERR_STR:\
-                                 ' FATAL ERROR in process_cytogenetics.get() - unknown number of reports completed.' + str(sys.exc_info())}], list)           
+                                 ' FATAL ERROR in process.get() - unknown number of reports completed.' + str(sys.exc_info())}], list)           
                 else:
                     field_value_dictionary[gb.TABLES] = []
-                    field_value_dictionary[gb.TABLES].append({gb.TABLE:'Cytogenetics', gb.FIELDS:str_cleaner_return_dictionary})                    
+                    field_value_dictionary[gb.TABLES].append({gb.TABLE:gb.CYTOGENETICS, gb.FIELDS:str_cleaner_return_dictionary})                    
                     field_value_output.append(field_value_dictionary)                            
     return field_value_output, return_error_list, list

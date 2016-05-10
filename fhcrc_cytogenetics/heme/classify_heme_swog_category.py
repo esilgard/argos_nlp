@@ -24,7 +24,7 @@ def get(cell_list,karyotype_string):
     return_errors = []
     return_dictionary_list = [{gb.NAME:gb.KARYOTYPE_STRING, gb.VALUE:karyotype_string, gb.CONFIDENCE:1.0,
                             gb.VERSION:__version__, gb.STARTSTOPS:[{gb.START:karyo_offset,
-                                                                                          gb.STOP:karyo_offset + len(karyotype_string)}]}]
+                            gb.STOP:karyo_offset + len(karyotype_string)}]}]
     ## a dictionary of mutation types and their cell counts
     aml_swog_mutations=dict.fromkeys(['inv(16)', 't(16;16)', 'del(16q)', 't(8;21)', 't(15;17)', 't(8;21)', gb.NORMAL, '+8', '+6', '-Y',
                                       'del(12p)', '-7', '-5', '3q', '9q', '11q', '17p', '20q', '21q', 'del(7q)', 'del(5q)', 'del(9q)',

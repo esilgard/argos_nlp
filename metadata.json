@@ -842,7 +842,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["heme"],
-						"values":["Favorable","Unfavorable","Miscellaneous","Intermediate","Insufficient"]
+						"values":["Favorable","Unfavorable","Miscellaneous","Intermediate","Insufficient","Unknown"]
 						}
 					]
 				},

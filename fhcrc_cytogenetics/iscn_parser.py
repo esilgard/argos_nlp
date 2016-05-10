@@ -3,13 +3,14 @@
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
-import re,global_strings,json
-
-'''author@esilgard'''
-__version__='iscn_parser1.0'
+import re,json
 import global_strings as gb
 
-def get(karyotype_string,karyo_offset):
+'''author@esilgard'''
+__version__ = 'iscn_parser1.0'
+import global_strings as gb
+
+def get(karyotype_string, karyo_offset):
     '''
     parse ISCN cytogenetic information from a short string of text containing only information
     about the genetic variation/karyotype in the ISCN format

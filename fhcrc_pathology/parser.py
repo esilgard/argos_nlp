@@ -83,8 +83,7 @@ def parse(obx_file):
                                line[headers.get(gb.SPECIMEN_SOURCE)] == 'NULL':
                                 specimen_dictionary = {}
                             else:
-                                try:
-                                    
+                                try:                                    
                                     specimen_dictionary = dict((x.split(')')[0], x.split(')')[1].\
                                                     replace('(', ' ')) for x in  line[headers.get\
                                                     (gb.SPECIMEN_SOURCE)].strip('"').strip('~').split('~'))
