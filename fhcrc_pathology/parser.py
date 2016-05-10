@@ -68,8 +68,7 @@ def parse(obx_file):
                         path_d[mrn] = path_d.get(mrn, {})
                         path_d[mrn][acc] = path_d[mrn].get(acc, {})
                         path_d[mrn][acc][(-1, 'FullText', 0, None)] = path_d[mrn][acc].get\
-                            ((-1, 'FullText', 0 , None), '') +'\n'
-                        # maintain readability of fully constituted text by keeping 'NULL' lines
+                            ((-1, 'FullText', 0 , None), '') +'\n'                        
                         chars_onset += 1
                     else:
                         ## grab acc dictionary
@@ -79,7 +78,7 @@ def parse(obx_file):
                             chars_onset = 0
                             # create a specimen source dictionary for each labeled specimen
                             # (in the same format as the regular pathology section dictionary
-                            ## catch NULL or empty string specimenSources
+                            # catch NULL or empty string specimenSources
                             if not headers.get(gb.SPECIMEN_SOURCE) or \
                                line[headers.get(gb.SPECIMEN_SOURCE)] == 'NULL':
                                 specimen_dictionary = {}
