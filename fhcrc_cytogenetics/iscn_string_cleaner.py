@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2015-2016 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #

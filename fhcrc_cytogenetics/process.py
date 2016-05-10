@@ -85,6 +85,7 @@ def main(arguments):
                 field_value_dictionary[gb.DATE] = (cytogenetics_dictionary[mrn][acc][(-1,'Date',0,None)])
                
                 str_cleaner_return_dictionary, karyotype_string = iscn_string_cleaner.get(cyto_string)
+                ## if string cleaner does not encounter raw text description of karyotype, then parse string
                 if not str_cleaner_return_dictionary:
                     return_fields, return_errors, return_type = iscn_parser.get(karyotype_string, karyo_offset)
                     try:                    
@@ -103,8 +104,8 @@ def main(arguments):
                         return (field_value_output,[{gb.ERR_TYPE:'Exception', gb.ERR_STR: 'FATAL ERROR in process.py \
                                 attempting to write text to file at' + arguments.get('-f')[:arguments.get('-f').find('.nlp')] \
                                 + '/' + acc + '.txt - unknown number of reports completed. ' + sys.exc_info()}], list)
-                    if return_type!=Exception:
-                        field_value_dictionary[gb.TABLES]=[]
+                    if return_type != Exception:
+                        field_value_dictionary[gb.TABLES] = []
                         field_value_dictionary[gb.TABLES].append({gb.TABLE:'Cytogenetics', gb.FIELDS:swog_return_fields})                    
                         field_value_output.append(field_value_dictionary)
                         if return_errors: return_error_list.append(return_errors)

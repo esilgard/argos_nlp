@@ -21,21 +21,19 @@ def get(karyotype_string,karyo_offset):
     seperate_cell_types = karyotype_string.split('/')    
     cell_type_order = 0
 
-    for each_cell_type in seperate_cell_types:
-        
+    for each_cell_type in seperate_cell_types:        
         d = {}
         d[gb.OFFSET] = karyo_offset+karyotype_string.find(each_cell_type)
         d[gb.ABNORMALITIES] = []
         d[gb.CELL_ORDER] = cell_type_order
-        cell_count = re.match('.*(\[c?p?([\d]+)\]).*', each_cell_type)      
-
+        cell_count = re.match('.*(\[c?p?([\d]+)\]).*', each_cell_type)
         if cell_count:
             try:                
                 d[gb.CELL_COUNT] = cell_count.group(2)
                 each_cell_type = each_cell_type[:each_cell_type.find(cell_count.group(1))]                
             ## catches error when there is no cell count
             except:               
-                d[gb.WARNING] = gb.PARSE_ERR
+                d[gb.WARNING] = 1
             cell_description = each_cell_type.split(',')           
             try:
                 d[gb.CHROMOSOME_NUM] = cell_description[0].strip()
@@ -46,7 +44,7 @@ def get(karyotype_string,karyo_offset):
                 d[gb.WARNING] = None               
             except:
                 ## catches error when there is no chromosome type number and type                
-                d[gb.WARNING] = gb.PARSE_ERR
+                d[gb.WARNING] = 1
             ## if the length of the cell_description is greater than 2, then there are one or more abnormalities
             if len(cell_description) > 2:                
                 d[gb.ABNORMALITIES] = cell_description[2:]
@@ -54,7 +52,7 @@ def get(karyotype_string,karyo_offset):
                     try:
                         d[gb.CHROMOSOME] = return_list[0][gb.CHROMOSOME]
                     except:
-                         d[gb.WARNING] = gb.PARSE_ERR
+                         d[gb.WARNING] = 1
                          d[gb.CHROMOSOME] = 'UNK'                    
                     d[gb.ABNORMALITIES] += return_list[0][gb.ABNORMALITIES]
                 ## catch this typo - where the XX and XY is included in the idem/sl cell line reference - exclude the reference itself from the list of abnormalities
@@ -70,8 +68,8 @@ def get(karyotype_string,karyo_offset):
                     try:                       
                         d[gb.CHROMOSOME] = return_list[cell_type_order-1][gb.CHROMOSOME]
                         d[gb.ABNORMALITIES] = return_list[cell_type_order-1][gb.ABNORMALITIES] + d[gb.ABNORMALITIES]
-                    except:                        
-                        d[gb.WARNING] = gb.PARSE_ERR                        
+                    except:
+                        d[gb.WARNING] = 1                        
                
             ## further parse abnormalities into dictionaries of type of mutation:chromosome specifics (number, location) ##
             for i in range(len(d[gb.ABNORMALITIES])):                
@@ -88,11 +86,11 @@ def get(karyotype_string,karyo_offset):
                         abnormal_chromosome = re.match('[ ]?([\d\-\~?\ ]*)[ ]?(mar|r|dmin|pstk+|inc)[ ]?', d[gb.ABNORMALITIES][i])
                         if abnormal_chromosome:
                             d[gb.ABNORMALITIES][i] = {'other aberration': (abnormal_chromosome.group(1), abnormal_chromosome.group(2))}
-                        else:                            
-                            d[gb.WARNING] = gb.PARSE_ERR                  
+                        else:
+                            d[gb.WARNING] = 1                  
                               
-        else:            
-            d[gb.WARNING] = gb.PARSE_ERR 
+        else:
+            d[gb.WARNING] = 1 
         return_list.append(d)                
-        cell_type_order += 1    
+        cell_type_order += 1
     return return_list, None, list
