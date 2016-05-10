@@ -823,6 +823,18 @@
 		]
 	},
 	"cytogenetics": {
+		"groupings": [
+				{
+					"level": "table",
+					"order": "alpha",
+					"orientation": "horizontal"
+				},
+				{
+					"level": "field",
+					"order": "alpha",
+					"orientation": "horizontal"
+				}
+			],
 		"tables":[
 			{"table":"Cytogenetics",
 			"fields":[
@@ -842,7 +854,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["heme"],
-						"values":["Favorable","Unfavorable","Miscellaneous","Intermediate","Insufficient","Unknown"]
+						"values":["Favorable","Unfavorable","Miscellaneous","Intermediate","Insufficient"]
 						}
 					]
 				},
