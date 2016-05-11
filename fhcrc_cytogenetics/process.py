@@ -45,7 +45,7 @@ def main(arguments):
     i = 0
     ## create a list of output field dictionaries ##
     for mrn in cytogenetics_dictionary:
-        for acc in cytogenetics_dictionary[mrn]:           
+        for acc in cytogenetics_dictionary[mrn]:
             ## write out cannonical version of text and tsv file
             try:
                 with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + os.path.sep + acc + '.txt', 'wb') as out_text:
@@ -91,7 +91,7 @@ def main(arguments):
                     try:                    
                         exec ('from ' + disease_group + ' import classify_' + disease_group + '_swog_category')
                         exec('cell_list, swog_return_fields, return_errors = classify_' + disease_group + '_swog_category.get\
-                            (return_fields, karyotype_string)')
+                            (return_fields, karyotype_string, karyo_offset)')
                     except:
                         return (field_value_output, [{gb.ERR_TYPE:'Exception', gb.ERR_STR:\
                                  ' FATAL ERROR in process.get() - could not retrive disease group specific \

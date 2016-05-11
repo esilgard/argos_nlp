@@ -11,15 +11,14 @@ import global_strings as gb
 __version__='classify_heme_category1.0'
 
 
-def get(cell_list,karyotype_string):
-    karyo_offset = min([x['Offset'] for x in cell_list])
+def get(cell_list, karyotype_string, karyo_offset):
     '''
-    take a parsed list of cells
+        take a parsed list of cells
         where each element within the cell group has a list of dictionaries of abnormalities
         as well as a cell count, a chromosome number, a warning, a chromosome, and 
         a cell order (just the order the cell line was listed in the report)
         
-    return the same list with an appended swog label dictionary
+        return the same list with an appended swog label dictionary
     '''
     return_errors = []
     return_dictionary_list = [{gb.NAME:gb.KARYOTYPE_STRING, gb.VALUE:karyotype_string, gb.CONFIDENCE:1.0,
@@ -39,7 +38,7 @@ def get(cell_list,karyotype_string):
     monosomy_set = set([])
     trisomy_set = set([])
 ##################################################################################################################################
-    
+
     ## start by counting cells with each type of pertinent aberration      
     for x in cell_list:        
         if x[gb.WARNING]:aml_swog_mutations[gb.WARNING] = 1
@@ -50,16 +49,15 @@ def get(cell_list,karyotype_string):
             clone_minimum = 2            
             if int(x['ChromosomeNumber'][:2]) < 46:clone_minimum = 3
             if x[gb.ABNORMALITIES]:
-                for y in x[gb.ABNORMALITIES]:                   
+                for y in x[gb.ABNORMALITIES]:
                     try:                        
                         for z, zz in y.items():                            
                             variation_string = z + '(' + zz[0] + ')' + zz[1]
                             if cell_count >= clone_minimum:
                                 if z == '-' or z == '+':
                                     variation_string = z + zz[0] + zz[1]                            
-                                variation_start = cell_offset + (karyotype_string[cell_offset:].find(variation_string))
+                                variation_start = cell_offset + (karyotype_string[cell_offset-karyo_offset:].find(variation_string))
                                 variation_end = variation_start + len(variation_string)                            
-                                                   
                                 ## all trisomies
                                 if z == '+':
                                     if cell_count >= 2:                             
@@ -76,12 +74,12 @@ def get(cell_list,karyotype_string):
                                     if cell_count >= 3:
                                         monosomy_set.add(variation_string)
                                         abnormality_set.add(variation_string) 
-                                        aml_swog_offsets['monosomies'].append((variation_start,variation_end))
+                                        aml_swog_offsets['monosomies'].append((variation_start, variation_end))
                                        
                                         for each in ['Y', '7', '5']:
                                             if zz[0] == each:
                                                 aml_swog_mutations['-'+each] += cell_count
-                                                aml_swog_offsets['-'+each].append((variation_start,variation_end))
+                                                aml_swog_offsets['-'+each].append((variation_start, variation_end))
 
                                 ## all other abnormalities do not have a cell count minimum
                                 else:
@@ -103,18 +101,18 @@ def get(cell_list,karyotype_string):
                                     for each in ['t(15;17)', 't(6;9)', 't(9;22)', 't(8;21)']:
                                         if zz[0] == each[2:-1]:
                                             aml_swog_mutations[each] += cell_count
-                                            aml_swog_offsets[each].append((variation_start,variation_end))                                  
+                                            aml_swog_offsets[each].append((variation_start, variation_end))                                  
                                             
                                 ## del 5q, del 7q, del 12p
                                 elif z == 'del':
                                     for each in ['5','7']:
                                         if zz[0] == each and 'q' in zz[1]:    # this will also capture subsegmental deletions
                                             aml_swog_mutations['del(' + each + 'q)'] += cell_count
-                                            aml_swog_offsets['del(' + each + 'q)'].append((variation_start,variation_end))
+                                            aml_swog_offsets['del(' + each + 'q)'].append((variation_start, variation_end))
                                    
                                     if zz[0] == '12' and 'p' in zz[1]:
                                         aml_swog_mutations['del(12p)'] += cell_count
-                                        aml_swog_offsets['del(12p)'].append((variation_start,variation_end))
+                                        aml_swog_offsets['del(12p)'].append((variation_start, variation_end))
                                
                                 ## any 17p, 21q, 20q, 11q, 9q, 3q  - we want to capture things like t(3;3) but NOT -13
                                 ## also must make sure the 'q' is on the '11' arm - do not want to capture things like t(11;22)(p4;q20)
@@ -134,14 +132,14 @@ def get(cell_list,karyotype_string):
                                         aml_swog_offsets['17p'].append((variation_start,variation_end))
 
                     ## catch any other formatting abnormalities/parsing errors
-                    except:                         
+                    except:
                         aml_swog_mutations[gb.WARNING] = 1                        
                         x[gb.WARNING] = 1                   
             ## there are no abnormalities - add up the "normal" cells
             else:              
-                aml_swog_mutations[gb.NORMAL] += cell_count                
-                aml_swog_offsets[gb.NORMAL].append((karyotype_string.find('4'),karyotype_string.find(']')))
-                
+                aml_swog_mutations[gb.NORMAL] += cell_count
+                ## this is a normal XX or XY; string len is always 2
+                aml_swog_offsets[gb.NORMAL].append((cell_offset,cell_offset + 2))
          ## catch trouble with cell counts etc       
         except:
             aml_swog_mutations[gb.WARNING] = 1            

@@ -15,16 +15,14 @@ def get(karyotype_string, karyo_offset):
     parse ISCN cytogenetic information from a short string of text containing only information
     about the genetic variation/karyotype in the ISCN format
     refer to http://www.cydas.org/Docs/ISCNAnalyser/Analysis.html for ISCN formatting guidelines
-    return a normal cell count (this could be 0) and
-    a list of abnormal cell types that include the number of cells and a dictionary of any genetic abnormalities    
+    a list of cell types that include the number of cells and a dictionary of any genetic abnormalities    
     '''
     return_list = []    
     seperate_cell_types = karyotype_string.split('/')    
     cell_type_order = 0
-
     for each_cell_type in seperate_cell_types:        
         d = {}
-        d[gb.OFFSET] = karyo_offset+karyotype_string.find(each_cell_type)
+        d[gb.OFFSET] = karyo_offset + karyotype_string.find(each_cell_type) + cell_type_order  #cell_type_order makes up for the'/'
         d[gb.ABNORMALITIES] = []
         d[gb.CELL_ORDER] = cell_type_order
         cell_count = re.match('.*(\[c?p?([\d]+)\]).*', each_cell_type)
@@ -56,6 +54,7 @@ def get(karyotype_string, karyo_offset):
                          d[gb.WARNING] = 1
                          d[gb.CHROMOSOME] = 'UNK'                    
                     d[gb.ABNORMALITIES] += return_list[0][gb.ABNORMALITIES]
+
                 ## catch this typo - where the XX and XY is included in the idem/sl cell line reference - exclude the reference itself from the list of abnormalities
                 elif (d[gb.ABNORMALITIES][0] == 'sl' or 'idem' in d[gb.ABNORMALITIES][0]) and len(seperate_cell_types) > 1:
                     d[gb.ABNORMALITIES] = return_list[0][gb.ABNORMALITIES] + d[gb.ABNORMALITIES][1:]
@@ -91,7 +90,8 @@ def get(karyotype_string, karyo_offset):
                             d[gb.WARNING] = 1                  
                               
         else:
-            d[gb.WARNING] = 1 
+            d[gb.WARNING] = 1            
         return_list.append(d)                
         cell_type_order += 1
+
     return return_list, None, list
