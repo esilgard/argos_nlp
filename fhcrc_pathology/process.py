@@ -127,12 +127,8 @@ def main(arguments):
                     for k,v in pathology_d[mrn][accession].items():
                         if 'SpecimenSource' not in k and 'FullText' not in k and type(v) == dict:
                             for a, b in v.items():
-                                try:
-                                    out_tsv.write(mrn+'\t'+accession+'\t'+str(a)+'\t'+b+'\t'+specimen_source_string+'\n')
-                                #except:
-                                #    print a,b
-                                #    sys.exit()
-                   
+                                out_tsv.write(mrn+'\t'+accession+'\t'+str(a)+'\t'+b+'\t'+specimen_source_string+'\n')
+                                                   
             except IOError:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
                     'FATAL ERROR in pathology/process.py attempting to write text and tsv to files at'+ \
