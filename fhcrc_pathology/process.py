@@ -39,7 +39,7 @@ def get_fields(disease_group, report_d, disease_group_data_d, path_data_d):
         # import the CLASSES and MODULES for the fields in the disease specific data dictionary
         try:
             if field in disease_group_data_d:
-                module = __import__(field, globals(), locals(), [field])                
+                module = __import__(disease_group + '.' + field, globals(), locals(), [field])                
                 if 'Class' in disease_group_data_d.get(field):
                     field_class = getattr(module, field)
                     module = field_class()
@@ -141,7 +141,7 @@ def main(arguments):
                 disease_group_data_d = get_data_d(disease_group, ml_flag)
                 field_value_d[gb.TABLES].append(report_info_table)
             i += 1
-            ## if no Exceptions and "no algorithm" isn't there, then run appropriate algorithms
+            ## if no Exceptions from dz classification and "no algorithm" isn't there, then run appropriate algorithms
             if return_type != Exception:
                 if arguments.get('-a') == 'n':
                     pass

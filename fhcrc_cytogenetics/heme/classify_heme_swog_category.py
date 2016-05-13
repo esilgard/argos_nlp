@@ -23,7 +23,7 @@ def get(cell_list, karyotype_string, karyo_offset):
     return_errors = []
     return_dictionary_list = [{gb.NAME:gb.KARYOTYPE_STRING, gb.VALUE:karyotype_string, gb.CONFIDENCE:1.0,
                             gb.VERSION:__version__, gb.STARTSTOPS:[{gb.START:karyo_offset,
-                            gb.STOP:karyo_offset + len(karyotype_string)}]}]
+                            gb.STOP:karyo_offset + len(karyotype_string)}], gb.TABLE:gb.CYTOGENETICS}]
     ## a dictionary of mutation types and their cell counts
     aml_swog_mutations=dict.fromkeys(['inv(16)', 't(16;16)', 'del(16q)', 't(8;21)', 't(15;17)', 't(8;21)', gb.NORMAL, '+8', '+6', '-Y',
                                       'del(12p)', '-7', '-5', '3q', '9q', '11q', '17p', '20q', '21q', 'del(7q)', 'del(5q)', 'del(9q)',
@@ -151,9 +151,9 @@ def get(cell_list, karyotype_string, karyo_offset):
        
     ## Assign SWOG risk categories based on important mutations
     ###############################################################################################################################################
-    swog_dictionary = {gb.NAME:gb.SWOG, gb.TABLE:gb.CYTOGENETICS, \
+    swog_dictionary = {gb.NAME:gb.SWOG, gb.TABLE:gb.CYTOGENETICS,
                        gb.VALUE:gb.UNKNOWN,gb.CONFIDENCE:1.0,
-                       gb.STARTSTOPS:[], gb.VERSION:__version__}
+                       gb.STARTSTOPS:[], gb.VERSION:__version__, gb.TABLE:gb.CYTOGENETICS}
     ## not all swog risk categories return a list of character offsets, since some classifications rely on the ABSENCE of some given evidence
     
     # any kind of abnormality that is not specifically outlined in SWOG criteria -> MISCELLANEOUS                  
@@ -206,6 +206,5 @@ def get(cell_list, karyotype_string, karyo_offset):
         return_dictionary_list.append({gb.NAME:each_variation, gb.VALUE:aml_swog_mutations[each_variation], \
                                        gb.CONFIDENCE:1.0, gb.VERSION:__version__, \
                                        gb.STARTSTOPS:[{gb.START:a[0], gb.STOP:a[1]} \
-                                       for a in aml_swog_offsets[each_variation]] })
-
-    return cell_list, return_dictionary_list, return_errors
+                                       for a in aml_swog_offsets[each_variation]], gb.TABLE:gb.CYTOGENETICS})
+    return return_dictionary_list, return_errors
