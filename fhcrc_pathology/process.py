@@ -75,15 +75,16 @@ def get_fields(disease_group, report_d, disease_group_data_d, path_data_d):
 def get_data_d(disease_group, ml_flag):
     #if disease_group: disease_group = os.path.sep+disease_group
     ''' get disease group data resources '''
-    try:
-        d = dict((y.split('\t')[0], y.split('\t')[1].strip()) for y in \
-            open(PATH + os.path.sep + disease_group + os.path.sep+'data_dictionary.txt', 'r').readlines())
-        if ml_flag != 'y':
-            d = dict((x,y) for x,y in d.items() if 'ML' not in y)
-        return d
-    except IOError:
-        return {gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not access or parse \
-            pathology data dictionary at ' + PATH + os.path.sep + disease_group + 'data_dictionary.txt '}
+    if disease_group != 'all':
+        try:
+            d = dict((y.split('\t')[0], y.split('\t')[1].strip()) for y in \
+                open(PATH + disease_group + os.path.sep + 'data_dictionary.txt', 'r').readlines())
+            if ml_flag != 'y':
+                d = dict((x,y) for x,y in d.items() if 'ML' not in y)
+            return d
+        except IOError:
+            return Exception
+        
 
 def main(arguments):
     '''
@@ -100,10 +101,14 @@ def main(arguments):
     except IOError:
         return([{}], [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not parse \
                 input pathology file ' + arguments.get('-f') + ' --- program aborted'}], Exception)
-    disease_group = arguments.get('-g')
+    disease_group = arguments.get('-g')    
     ## general pathology data dictionary ##
     path_data_d = get_data_d('', ml_flag)
     disease_group_data_d = get_data_d(disease_group, ml_flag)
+    if disease_group_data_d == Exception:
+        return ([],[{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not access or parse \
+            pathology data dictionary at ' + PATH + disease_group + os.path.sep + 'data_dictionary.txt\
+            verify that "' + disease_group + '" is a valid disease group for this report type'}],Exception)
     field_value_output = []
     return_errors = []
     # report counting index (used for timeit tests)

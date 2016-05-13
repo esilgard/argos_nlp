@@ -74,12 +74,12 @@ def get_data_d(disease_group, ml_flag):
     ''' get disease group data resources '''
     try:
         d = dict((y.split('\t')[0], y.split('\t')[1].strip()) for y in \
-            open(PATH + os.path.sep + disease_group + os.path.sep+'data_dictionary.txt', 'r').readlines())
+            open(PATH + disease_group + os.path.sep+'data_dictionary.txt', 'r').readlines())
         if ml_flag != 'y':
             data_d = dict((x,y) for x,y in d.items() if 'ML' not in y)
         return data_d
-    except:
-        return None
+    except IOError:
+        return Exception
         
 
 
@@ -99,12 +99,18 @@ def main(arguments):
                         cytogenetics file ' + arguments.get('-f') + ' --- program aborted.'}], Exception)
 
     disease_group = arguments.get('-g')
+    ## temporary error message attempting to classify in cytogenetics branch
+    if disease_group == 'all':
+        return ([], [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR \
+                        in process; cytogenetics branch does not classify reports by disease group,\
+                        "all" is not an acceptable disease group input for this report type'}], list)
+        
     ## disease specific cytogenetics data dictionary (no general algorithms beyond parsing currently) ##    
     disease_group_data_d = get_data_d(disease_group, ml_flag)
-    if not disease_group_data_d:
-        return ([{}], [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not access or parse \
-            cytogenetics data dictionary at ' + PATH + os.path.sep + disease_group + os.path.sep + 'data_dictionary.txt '}], Exception)
-
+    if disease_group_data_d == Exception:
+        return ([],[{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: could not access or parse \
+            pathology data dictionary at ' + PATH + os.path.sep + disease_group + os.path.sep + 'data_dictionary.txt\
+            verify that "' + disease_group + '" is a valid disease group for this report type'}],Exception)
     field_value_output = []
     return_error_list = []
 
