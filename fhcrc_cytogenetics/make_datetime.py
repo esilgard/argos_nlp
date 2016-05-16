@@ -1,5 +1,6 @@
+''' author @ esilgard '''
 #
-# Copyright (c) 2014-2015 Fred Hutchinson Cancer Research Center
+# Copyright (c) 2014-2016 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,26 +14,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-''' author @ esilgard '''
-__version__='make_datetime1.0'
 from datetime import datetime
+__version__ = 'make_datetime1.0'
 
-'''
-   takes a tuple of (year,month,day) and a datetime format string
-   returns python datetime object (in string form for serializable JSON jump)
-'''
-
-def get(date_tuple,format_string):
+def get(date_tuple, format_string):
+    '''
+       takes a tuple of (year,month,day) and a datetime format string
+       returns python datetime object (in string form for JSON dump)
+     '''
     ## verify expected format before attempting to parse
-    if type(date_tuple)==tuple and len(date_tuple)==3:
-        if len(date_tuple[1])==1:
-            month='0'+date_tuple[1]
-        else:   month=date_tuple[1]
-        if len(date_tuple[2])==1:
-            day='0'+date_tuple[2]
-        else:   day=date_tuple[2]    
-        date_tuple=str(datetime.strptime(date_tuple[0]+','+month+','+day,format_string)) 
+    if isinstance(date_tuple, tuple) and len(date_tuple) == 3:
+        if len(date_tuple[1]) == 1:
+            month = '0' + date_tuple[1]
+        else:
+            month = date_tuple[1]
+        if len(date_tuple[2]) == 1:
+            day = '0' + date_tuple[2]
+        else:
+            day = date_tuple[2]
+        date_tuple = str(datetime.strptime(date_tuple[0] + ',' + month + ',' + day, format_string))
         return date_tuple
     else:
         return 'NA'
