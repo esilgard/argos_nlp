@@ -59,12 +59,11 @@ def get_fields(disease_group, disease_group_data_d, return_fields, karyotype_str
                              'FATAL ERROR could not complete ' + field + ' module or class--- \
                              program aborted. ' + str(sys.exc_info(0)[1])}], Exception)
 
-        ## organize fields by tables, then individual records, then individual fields
-        if isinstance(return_type, list):
+        ##  organize fields by tables, records, then fields
+        if isinstance(return_type, list):            
             for each_field in field_value:
                 table = each_field.get(gb.TABLE)
                 report_table_d[table] = report_table_d.get(table, {})
-                report_table_d[table][gb.TABLE] = table
                 report_table_d[table][gb.FIELDS] = report_table_d[table].get(gb.FIELDS, [])
                 report_table_d[table][gb.FIELDS].append(each_field)
         else:
@@ -171,8 +170,7 @@ def main(arguments):
                 if cyto_string:
                     field_value_dictionary = {}
                     field_value_dictionary[gb.REPORT] = acc
-                    field_value_dictionary[gb.MRN] = mrn
-                    field_value_dictionary[gb.DATE] = (cytogenetics_d[mrn][acc][(-1, 'Date', 0, None)])
+                    field_value_dictionary[gb.MRN] = mrn                   
 
                     str_cleaner_return_dictionary, karyotype_string, karyo_offset = \
                     iscn_string_cleaner.get(cyto_string, karyo_offset)
@@ -184,6 +182,7 @@ def main(arguments):
                             return_fields, return_errors, return_type = get_fields\
                             (disease_group, disease_group_data_d, return_fields, \
                             karyotype_string, karyo_offset)
+                            
                             field_value_output.append(field_value_dictionary)
                         except IOError:
                             return (field_value_output, [{gb.ERR_TYPE:'Exception', gb.ERR_STR:\
@@ -203,9 +202,9 @@ def main(arguments):
                             return (field_value_output, [{gb.ERR_TYPE:'Exception', gb.ERR_STR:\
                             'FATAL ERROR in process.get(). Unknown number of reports completed.' + \
                             str(sys.exc_info(1))}], list)
-                    else:
+                    else:                        
                         ## string cleaner extracted a text based classification
-                        field_value_dictionary[gb.TABLES] = []
+                        field_value_dictionary[gb.TABLES] = []                        
                         field_value_dictionary[gb.TABLES].append({gb.TABLE:gb.CYTOGENETICS, \
                         gb.FIELDS:str_cleaner_return_dictionary})
                         field_value_output.append(field_value_dictionary)

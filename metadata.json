@@ -1,4 +1,4 @@
-{    
+{
 	"pathology": {
 		"groupings": [
 				{
@@ -838,6 +838,17 @@
 		"tables":[
 			{"table":"Cytogenetics",
 			"fields":[
+				{
+				"field":"Date",
+				"datatype":"date",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[]
+						}
+					]
+				},
 				{"field":"KaryotypeString",
 				"datatype":"string",
 				"closedClass":"False",
@@ -1107,7 +1118,7 @@
 						"values":[]
 						}
 					]
-				},				
+				},
 				{"field":"trisomies",
 				"datatype":"integer",
 				"closedClass":"False",
