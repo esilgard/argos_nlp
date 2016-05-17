@@ -1,22 +1,21 @@
 # argos_nlp
 =================================================================================================
 
-This is the primary directory for the Fred Hutch natural language processing engine for the 
-parsing of clinical documents and the classification and automated extraction of clinical data elements
+This is the primary directory for the Fred Hutch natural language processing engine for the parsing of clinical documents and the classification and automated extraction of clinical data elements
 ----------------------------------------------------------------------------------------------------------------
 - command_line_flags.txt 
 	a tab delimited text file containing command line flags and their descriptions in the format:
 	flag<tab>required/not_required<tab>short_description<tab>long_description
 	
 	required flags
-	--------------
+	~~~~~~~~~~~~~~~~
 	* -t = type of report (e.g. 'pathology' or 'cytogenetics')
 	* -f = path to the input file
 	* -o = name of the output file (this will right to the runtime directory)
 	* -g = disease group ('all' will prompt the engine to classify the disease group if the report type == pathology)
 	
 	optional flags
-	--------------
+	~~~~~~~~~~~~~~
 	* -ml = machine learning flag, this defaults to 'n' which means the engine will not require the language models needed to run the machine learning algorithms
 	* -a = algorithm flag, this defaults to 'y', which means the engine will run appropriate algorithms. If input parameter == 'n', then the engine will simply output text and tsv files.
 
