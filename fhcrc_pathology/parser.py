@@ -80,7 +80,7 @@ def parse(obx_file):
                             # create a specimen source dictionary for each labeled specimen
                             # (in the same format as the regular pathology section dictionary
                             ## catch NULL or empty string specimenSources
-                            if not headers.get(gb.SPECIMEN_SOURCE) or \
+                            if not line[headers.get(gb.SPECIMEN_SOURCE)] or \
                                line[headers.get(gb.SPECIMEN_SOURCE)] == 'NULL':
                                 specimen_dictionary = {}
                             else:
@@ -89,7 +89,7 @@ def parse(obx_file):
                                     specimen_dictionary = dict((x.split(')')[0], x.split(')')[1].\
                                                     replace('(', ' ')) for x in  line[headers.get\
                                                     (gb.SPECIMEN_SOURCE)].strip('"').strip('~').split('~'))
-                                except:                                    
+                                except:
                                     return ({gb.ERR_TYPE: 'Exception', gb.ERR_STR: "FATAL ERROR: " + str(sys.exc_info()[0]) + \
                                          "," + str(sys.exc_info()[1]) + " -- could not parse specimenSource from " + '\t'.join(line) + \
                                          " -- program aborted"}, Exception)
