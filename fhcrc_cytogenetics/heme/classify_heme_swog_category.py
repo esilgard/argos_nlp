@@ -153,7 +153,7 @@ def get(cell_list, karyotype_string, karyo_offset):
     ###############################################################################################################################################
     swog_dictionary = {gb.NAME:gb.SWOG, gb.TABLE:gb.CYTOGENETICS,
                        gb.VALUE:gb.UNKNOWN,gb.CONFIDENCE:1.0,
-                       gb.STARTSTOPS:[], gb.VERSION:__version__, gb.TABLE:gb.CYTOGENETICS}
+                       gb.STARTSTOPS:[], gb.VERSION:__version__}
     ## not all swog risk categories return a list of character offsets, since some classifications rely on the ABSENCE of some given evidence
     
     # any kind of abnormality that is not specifically outlined in SWOG criteria -> MISCELLANEOUS                  

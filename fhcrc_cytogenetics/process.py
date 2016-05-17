@@ -34,7 +34,7 @@ def get_fields(disease_group, disease_group_data_d, return_fields, karyotype_str
     {mrn:{acc:{section:{index:text}}}}} data_d maps disease and document relevant
     {field names:[pertinent section(s)]} field_value_d holds values for each of the fields
     '''
-    report_table_d = {}
+    report_table_list = []
     error_list = []
     data_elements = dict.fromkeys(disease_group_data_d.keys())
 
@@ -60,15 +60,12 @@ def get_fields(disease_group, disease_group_data_d, return_fields, karyotype_str
                              program aborted. ' + str(sys.exc_info(0)[1])}], Exception)
 
         ##  organize fields by tables, records, then fields
-        if isinstance(return_type, list):            
-            for each_field in field_value:
-                table = each_field.get(gb.TABLE)
-                report_table_d[table] = report_table_d.get(table, {})
-                report_table_d[table][gb.FIELDS] = report_table_d[table].get(gb.FIELDS, [])
-                report_table_d[table][gb.FIELDS].append(each_field)
+        if isinstance(return_type, list):
+            report_table_list += field_value
         else:
             error_list += field_value
-    report_table_list = report_table_d.values()
+
+    #report_table_list = report_table_d.values()
     return report_table_list, error_list, list
 
 
@@ -179,20 +176,19 @@ def main(arguments):
                         return_fields, return_errors, return_type = iscn_parser.get\
                        (karyotype_string, karyo_offset)
                         try:
+                            
                             return_fields, return_errors, return_type = get_fields\
                             (disease_group, disease_group_data_d, return_fields, \
                             karyotype_string, karyo_offset)
-                            
-                            field_value_output.append(field_value_dictionary)
+                           
+                            #field_value_output.append(field_value_dictionary)
                         except IOError:
                             return (field_value_output, [{gb.ERR_TYPE:'Exception', gb.ERR_STR:\
                             'FATAL ERROR in process.get() - \
                             could not retrieve disease group specific module' + \
                             str(sys.exc_info(1))}], list)
                         if return_type != Exception:
-                            field_value_dictionary[gb.TABLES] = []
-                            field_value_dictionary[gb.TABLES].append\
-                            ({gb.TABLE:gb.CYTOGENETICS, gb.FIELDS:return_fields})
+                            field_value_dictionary[gb.TABLES] = [{gb.TABLE:gb.CYTOGENETICS, gb.FIELDS:return_fields}]
                             field_value_output.append(field_value_dictionary)
                             if return_errors:
                                 return_error_list.append(return_errors)
