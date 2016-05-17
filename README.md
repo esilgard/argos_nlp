@@ -5,13 +5,13 @@ This is the primary directory for the Fred Hutch natural language processing eng
 ----------------------------------------------------------------------------------------------------------------
 - command_line_flags.txt 
 	a tab delimited text file containing command line flags and their descriptions in the format:
-	flag__tab__required or not_required__tab__short_description__tab__long_description
+	flag __tab__ required or not_required __tab__ short_description __tab__ long_description
 
 *required flags*
 
 	* -t = type of report (e.g. 'pathology' or 'cytogenetics')
 	* -f = path to the input file
-	* -o = name of the output file (this will right to the runtime directory)
+	* -o = name of the output file (this will right to the argos_nlp directory)
 	* -g = disease group ('all' will prompt the engine to classify the disease group if the report type == pathology)
 
 *optional flags*
