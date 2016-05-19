@@ -16,7 +16,7 @@ Anaplastic Lymphoma
 ALCL;Anaplastic Large Cell Lymphoma
 Intravascular large B-cell lymphoma;Intravascular large B cell lymphoma
 Primary effusion lymphoma;effusion lymphoma
-Follicular Lymphoma;follicular center cell lymphoma;follicular center lymphoma
+Follicular Lymphoma;follicular center cell lymphoma;follicular center lymphoma;lymphoma[ ]+follicular;follicular cell lymphoma
 Lymphomatoid granulomatosis
 Plasmablastic lymphoma
 Primary central nervous system lymphoma;central nervous system lymphoma;CNS lymphoma

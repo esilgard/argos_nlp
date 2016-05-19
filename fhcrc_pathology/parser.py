@@ -96,7 +96,7 @@ def parse(obx_file):
                             path_d[mrn][acc][(0, gb.SPECIMEN_SOURCE, 0, None)] = {}
                             path_d[mrn][acc][(0, gb.SPECIMEN_SOURCE, 0, None)][0] = specimen_dictionary
                         # match general section header patterns
-                        section_header = re.match(r'^[\*\"\<\( ]*([A-Z \\\-\(\)]{4,})[\*:#\>\) ]*$', text)
+                        section_header = re.match(r'^[\*\"\<\( ]*([A-Za-z\d \/\\\-\(\)]{4,100})[\*:#\>\)]+$', text)
 
                         # reassign the section variable if you find a section pattern match
                         # reset specimen and increment section order

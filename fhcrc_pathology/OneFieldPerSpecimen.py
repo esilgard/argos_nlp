@@ -94,8 +94,7 @@ class OneFieldPerSpecimen(object):
             section_specimen = section[3]
             line_onset = section[2]
             header = section[1]
-
-            if re.search(self.good_section, header) and not re.search(self.bad_section, header):
+            if re.search(self.good_section, header) and not re.search(self.bad_section, header):                
                 for index, results in sorted(d[section].items(), key=lambda x: int(x[0])):
                     ## this is a special case for getting info from the SpecimenSource
                     ## this is a metadata field, not in the path text itself
@@ -150,8 +149,12 @@ class OneFieldPerSpecimen(object):
                 if specimen_finding_set:
                     if self.inference_flag:
                         specimen_finding_set = self.infer(specimen_finding_set)
+
+                    ## drop confidence level for multiple finds
+                    if len(specimen_finding_set) > 1:
+                        self.specimen_confidence = self.specimen_confidence * .8
                     specimen_finding_d = {gb.NAME: self.specimen_field_name, gb.KEY: specimen, \
-                    gb.TABLE: self.specimen_table, gb.VALUE: ';'.join(specimen_finding_set), \
+                    gb.TABLE: self.specimen_table, gb.VALUE: ';'.join(sorted(specimen_finding_set)), \
                     gb.CONFIDENCE: ("%.2f" % self.specimen_confidence), gb.VERSION: \
                     self.get_version(), gb.STARTSTOPS: [{gb.START: char[0], gb.STOP: char[1]}\
                                                         for char in specimen_start_stops_set]}
@@ -178,10 +181,12 @@ class OneFieldPerSpecimen(object):
                 if self.inference_flag:
                     specimen_finding_set = self.infer(specimen_finding_set)
                 start_stops_set = start_stops_set.union(specimen_start_stops_set)
-
+                ## drop confidence level for multiple finds
+                if len(specimen_finding_set) > 1:
+                    self.unlabled_specimen_confidence = self.unlabled_specimen_confidence * .8
                 unk_finding_d = {gb.NAME: self.specimen_field_name, gb.KEY: gb.UNK, \
                                  gb.TABLE: self.specimen_table, gb.VERSION: self.get_version(), \
-                                 gb.VALUE: ';'.join(specimen_finding_set), gb.CONFIDENCE: \
+                                 gb.VALUE: ';'.join(sorted(specimen_finding_set)), gb.CONFIDENCE: \
                                  ("%.2f" % self.unlabled_specimen_confidence), gb.STARTSTOPS: \
                                  [{gb.START: char[0], gb.STOP:char[1]} for \
                                   char in specimen_start_stops_set]}
@@ -195,7 +200,7 @@ class OneFieldPerSpecimen(object):
             if self.inference_flag:
                 finding_set = self.infer(finding_set)
             overall_finding_d = {gb.NAME: self.overall_field_name, gb.KEY: gb.ALL, \
-                                 gb.TABLE: self.overall_table, gb.VALUE: ';'.join(finding_set), \
+                                 gb.TABLE: self.overall_table, gb.VALUE: ';'.join(sorted(finding_set)), \
                                  gb.CONFIDENCE: ("%.2f" % (sum([float(x.get(gb.CONFIDENCE)) \
                                 for x in self.return_d_list])/len(self.return_d_list))), \
                                 gb.VERSION: self.get_version(), gb.STARTSTOPS: \
