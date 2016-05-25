@@ -5,14 +5,13 @@ Core Needle Biopsy;core needle;core bx;needle core biopsy;core biopsy
 Wedge Biopsy;wedge biopsies;wedge bx
 Wedge Resection;wedge resections
 Lavage
-Exisional Biopsy;exisional biopsies
+Exisional Biopsy;exisional biopsies;excision;excisions;excisional
 Punch Biopsy;punch;shave biopsies
 Shave Biopsy;shave;shave biopsies
 Dissection;dissection[s]?
 Lymph Node Dissection;node dissection[s]?
 Fine Needle Aspirate;FNA;a[sp]{2}irate;aspiration
-Excision;excisions[s]?
-Resection;resection[s]?
+Resection;resections
 Port Placement;placement [\w\s]{0,20}port
 Tube Placement;placement [\w\s]{0,20}tube
 Drain Placement;placement [\w\s]{0,20}drain

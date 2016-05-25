@@ -47,18 +47,26 @@ class SecondaryField(object):
                 p = re.match(pattern[0], text[offsets[gb.START]-self.pre_window: \
                             offsets[gb.STOP]+self.post_window].lower(), re.DOTALL)
                 if p:
-                    finding_set.add(p.group(pattern[1]))
+                    ## should normalize more when there are clear standards
+                    if p.group(pattern[1]) in self.standardization_dictionary:
+                        finding_set.add(self.standardization_dictionary[p.group(pattern[1])])
+                    else:
+                        finding_set.add(p.group(pattern[1]))
                     start_stops_set.add((p.start(pattern[1]) + (offsets[gb.START]-30), \
                                          p.end(pattern[1]) + (offsets[gb.START]-30)))
 
         if finding_set:
+            ## initial confidence is set at the primary field's confidence level
+            confidence = float(primary_field_dictionary[gb.CONFIDENCE])
+            ## multiple contradictory finds lowers confidence
+            if len(finding_set) > 1:
+                confidence = confidence * .75
             self.return_d = {gb.NAME: self.field_name, \
                                       gb.KEY: primary_field_dictionary[gb.KEY], \
                                       gb.TABLE: primary_field_dictionary[gb.TABLE], \
                                       gb.VERSION: self.get_version(), \
                                       gb.VALUE: ';'.join(finding_set), \
-                                      gb.CONFIDENCE: (primary_field_dictionary[gb.CONFIDENCE]), \
+                                      gb.CONFIDENCE: ('%.2f' % confidence), \
                                       gb.STARTSTOPS: [{gb.START: char[0], gb.STOP: char[1]} \
                                                       for char in start_stops_set]}
-
         return self.return_d

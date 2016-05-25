@@ -1,7 +1,7 @@
 Mastectomy
 Radical Mastectomy
 Lumpectomy
-Excisional Biopsy
-Ultrasound Guided Biopsy;ultra[ \-]?sound[ \-]?guided (core (needle )?)?biopsy
-Stereotactic Biopsy;x[ \-]ray guided biopsy
-MRI Guided Biopsy;mri[ \-]?guided (core (needle )?)?biopsy
+Excisional Biopsy;excision;excisional
+Ultrasound Guided Biopsy;ultra sound guided core needle biopsy;ultrasound guided biopsy;ultrasound guided core biopsy;ultrasound guided core needle biopsy
+Stereotactic Biopsy;x ray guided biopsy
+MRI Guided Biopsy;mri guided core biopsy;mri guided core needle biopsy

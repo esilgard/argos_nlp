@@ -1,3 +1,4 @@
 Malignant;malignancy
 Invasive
 In Situ;in-situ
+Metastatic;metastasis;metastases

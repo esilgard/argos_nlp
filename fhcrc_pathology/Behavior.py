@@ -19,8 +19,8 @@ class Behavior(OneFieldPerSpecimen):
         self.overall_field_name = 'Behavior'
         self.specimen_table = gb.FINDING_TABLE
         self.overall_table = gb.PATHOLOGY_TABLE
-        self.specimen_confidence = 0.5
-        self.unlabled_specimen_confidence = 0.3
+        self.specimen_confidence = 0.8
+        self.unlabled_specimen_confidence = 0.7
          ## reference lists & dictionaries ##
         self.file_name_string = 'behavior'
         ## relevant sections of the report ##

@@ -207,7 +207,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["high","low","intermediate","poor","moderate","well"]
+						"values":["high grade","low grade","intermediate grade","poorly differentiated","moderately differentiated","well differentiated"]
 						}
 					]
 				},
@@ -553,7 +553,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["high","low","intermediate","poor","moderate","well"]
+						"values":["high grade","low grade","intermediate grade","poorly differentiated","moderately differentiated","well differentiated"]
 						}
 					]
 				},

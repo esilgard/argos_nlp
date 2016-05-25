@@ -14,10 +14,11 @@ class PathGrade(SecondaryField):
     def __init__(self):
         super(PathGrade, self).__init__()
         self.field_name = 'PathGrade'
-        self.standardization_dictionary = {'high': 'high', 'low': 'low', 'intermediate': \
-                                           'intermediate', '3': 'high', '1': 'low', '2': \
-                                           'intermediate', 'iii': 'high', 'i': 'low', 'ii': \
-                                           'intermediate', 'moderate': 'moderate', 'poor': 'poor',}
+        self.standardization_dictionary = {'high': 'high grade', 'low': 'low grade', 'intermediate ': \
+                                           'intermediate grade', '3': 'high grade', '1': 'low grade', '2': \
+                                           'intermediate grade', 'iii': 'high grade', 'i': 'low grade', 'ii': \
+                                           'intermediate grade', 'moderate': 'moderately differentied', 
+                                           'poor': 'poorly differentiated', 'well': "well differentiated"}
 
         self.pre_window = 30
         self.post_window = 30

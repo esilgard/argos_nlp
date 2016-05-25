@@ -32,7 +32,7 @@ class OneFieldPerReport(object):
         ''' find field match based on different match types (greedy, all, etc '''
         try:
             full_text = dictionary[(-1, 'FullText', 0, None)]
-            self.return_d = {gb.NAME: self.field_name, gb.VALUE: None, gb.CONFIDENCE: 0.0, \
+            self.return_d = {gb.NAME: self.field_name, gb.VALUE: None, gb.CONFIDENCE: ('%.2f' % 0.0), \
                              gb.KEY: gb.ALL, gb.VERSION: self.get_version(),\
                              gb.STARTSTOPS: [], gb.TABLE: self.table}
             ## match type object for equivalence test - this determines whether the value

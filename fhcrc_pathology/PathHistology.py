@@ -28,4 +28,4 @@ class PathHistology(OneFieldPerSpecimen):
         ## there is a secondary data element that should be searched for
         ## based on either position or value of the first e.g. PathGrade
         self.has_secondary_data_element = True
-        self.secondary_data_elements = ['PathGrade', 'Metastasis']
+        self.secondary_data_elements = ['PathGrade']
