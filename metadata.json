@@ -124,7 +124,7 @@
 						"values":["Craniotomy","Neuroendoscopy"]
 						},
 						{"diseaseGroup":["breast"],
-						"values":["Mastectomy","Radical Mastectomy"]
+						"values":["Mastectomy","Radical Mastectomy","Lumpectomy","Stereotactic Biopsy","Ultrasound Guided Biopsy","Excisional Biopsy"]
 						},
 						{"diseaseGroup":["GI"],
 						"values":["Cholecystectomy","Pancreaticoduodenectomy","Omentectomy","Hemicolectomy","Segmental Resection","Appendectomy","Polypectomy"]
@@ -201,7 +201,7 @@
 						}
 					]
 				},
-				{"field":"PathHistologyGrade",
+				{"field":"PathGrade",
 				"datatype":"string",
 				"closedClass":"False",
 				"diseaseProperties":
@@ -223,7 +223,7 @@
 						"values":["Cerebellar","Fossa","Frontal Lobe","Frontoparietal Lobe","Frontotemporal Lobe","Frontotemporoparietal Lobe","Occipital Lobe","Occipitoparietal Lobe","Occipitotemporal Lobe","Paraspinal","Parietal Lobe","Parietooccipital Lobe","Sellar","Skull","Spine","Suboccipital Lobe","Subtemporal Lobe","Temporooccipital Lobe","Temporoparietal Lobe","Temporal Lobe","Thalamus","Middle Lobe","Lower Lobe","Parietal","Cerebellopontine","Pineal Gland"]
 						},
 						{"diseaseGroup":["breast"],
-						"values":["1 O'clock","2 O'clock","3 O'clock","4 O'clock","5 O'clock","6 O'clock","7 O'clock","8 O'clock","9 O'clock","10 O'clock","11 O'clock","12 O'clock","LIQ","LOQ","UIQ","UOQ","Nipple","Axillary Tail"]
+						"values":["1 O'clock","1:30 O'clock","2 O'clock","2:30 O'clock","3:30 O'clock","3 O'clock","4:30 O'clock","4 O'clock","5 O'clock","5:30 O'clock","6 O'clock","6:30 O'clock","7 O'clock","7:30 O'clock","8 O'clock","8:30 O'clock","9 O'clock","9:30 O'clock","10 O'clock","10:30 O'clock","11 O'clock","11:30 O'clock","12 O'clock","12:30 O'clock","LIQ","LOQ","UIQ","UOQ","Nipple","Axillary Tail"]
 						},
 						{"diseaseGroup":["GI"],
 						"values":["Gallbladder","Stomach","Rectum","Colon","Colorectal","Sigmoid Colon","Pancreas","Omentum","Ileum","Transverse Colon","Ascending Colon","Descending Colon","Cecum","Antrum","Rectosigmoid Colon","Appendix","Esophagus","Intestine","Duodenum","Bowel"]
@@ -321,16 +321,6 @@
 						}
 					]
 				},
-				{"field":"PathGrade",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["high","low","intermediate","poor","moderate","well"]
-						}
-					]
-				},
 				{"field":"PathStageN",
 				"datatype":"string",
 				"closedClass":"False",
@@ -338,16 +328,6 @@
 					[
 						{"diseaseGroup":["*"],
 						"values":["N0","N1","N1a","N1b","N1c","N2","N2a","N2b","N2c","N3","N3a","N3b","N3c","N4","N4a","N4b","N4c","NX"]
-						}
-					]
-				},
-				{"field":"PathQuality",
-				"datatype":"string",
-				"closedClass":"True",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["OUT","STD","REV"]
 						}
 					]
 				},
@@ -421,7 +401,7 @@
 						"values":["Craniotomy","Neuroendoscopy"]
 						},
 						{"diseaseGroup":["breast"],
-						"values":["Mastectomy","Radical Mastectomy"]
+						"values":["Mastectomy","Radical Mastectomy","Lumpectomy","Stereotactic Biopsy","Ultrasound Guided Biopsy","Excisional Biopsy"]
 						},
 						{"diseaseGroup":["GI"],
 						"values":["Cholecystectomy","Pancreaticoduodenectomy","Omentectomy","Hemicolectomy","Segmental Resection","Appendectomy","Polypectomy"]
@@ -455,7 +435,7 @@
 						}
 					]
 				},
-				{"field":"PathFindSite",
+				{"field":"PathSite",
 				"datatype":"string",
 				"closedClass":"False",
 				"diseaseProperties":
@@ -467,7 +447,7 @@
 						"values":["Cerebellar","Fossa","Frontal Lobe","Frontoparietal Lobe","Frontotemporal Lobe","Frontotemporoparietal Lobe","Occipital Lobe","Occipitoparietal Lobe","Occipitotemporal Lobe","Paraspinal","Parietal Lobe","Parietooccipital Lobe","Sellar","Skull","Spine","Suboccipital Lobe","Subtemporal Lobe","Temporooccipital Lobe","Temporoparietal Lobe","Temporal Lobe","Thalamus","Middle Lobe","Lower Lobe","Parietal","Cerebellopontine","Pineal Gland"]
 						},
 						{"diseaseGroup":["breast"],
-						"values":["1 O'clock","2 O'clock","3 O'clock","4 O'clock","5 O'clock","6 O'clock","7 O'clock","8 O'clock","9 O'clock","10 O'clock","11 O'clock","12 O'clock","LIQ","LOQ","UIQ","UOQ","Nipple","Axillary Tail"]
+						"values":["1 O'clock","1:30 O'clock","2 O'clock","2:30 O'clock","3:30 O'clock","3 O'clock","4:30 O'clock","4 O'clock","5 O'clock","5:30 O'clock","6 O'clock","6:30 O'clock","7 O'clock","7:30 O'clock","8 O'clock","8:30 O'clock","9 O'clock","9:30 O'clock","10 O'clock","10:30 O'clock","11 O'clock","11:30 O'clock","12 O'clock","12:30 O'clock","LIQ","LOQ","UIQ","UOQ","Nipple","Axillary Tail"]
 						},
 						{"diseaseGroup":["GI"],
 						"values":["Gallbladder","Stomach","Rectum","Colon","Colorectal","Sigmoid Colon","Pancreas","Omentum","Ileum","Transverse Colon","Ascending Colon","Descending Colon","Cecum","Antrum","Rectosigmoid Colon","Appendix","Esophagus","Intestine","Duodenum","Bowel"]
@@ -567,7 +547,7 @@
 						}
 					]
 				},
-				{"field":"PathFindGrade",
+				{"field":"PathGrade",
 				"datatype":"string",
 				"closedClass":"False",
 				"diseaseProperties":

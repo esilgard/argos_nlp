@@ -1,7 +1,7 @@
 Brushing;brush;brushings
 Washing;Wash;washings
 Biopsy;biopsies;bx
-Core Needle Biopsy;core needle;core bx
+Core Needle Biopsy;core needle;core bx;needle core biopsy;core biopsy
 Wedge Biopsy;wedge biopsies;wedge bx
 Wedge Resection;wedge resections
 Lavage

@@ -14,7 +14,7 @@ class PathStageN(OneFieldPerReport):
     def __init__(self):
         super(PathStageN, self).__init__()
         self.field_name = 'PathStageN'
-        self.regex = r'((p|y|[pP]athological)[ ]*N[0123Xx][abc]?)'
+        self.regex = r'(([PpYy]|[pP]athological)[ ]*N[0123Xx][abc]?)'
         self.confidence = .92
         self.match_style = 'all'
         self.table = gb.STAGE_GRADE_TABLE

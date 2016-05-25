@@ -14,7 +14,7 @@ class OneFieldPerSpecimen(object):
     extract the value of a field which has one or more values per specimen the from path text
     '''
     __version__ = 'OneFieldPerSpecimen1.0'
-    pre_negation = r'( not | no |negative |free of |without|against |(hx|history) of | \
+    pre_negation = r'( not | no |negative |previous|free of |without|against |(hx|history) of | \
                         to rule out|preclud| insufficient|suboptimal).{,75}'
     post_negation = r'.{,50}( unlikely| not (likely|identif)| negative)'
     ## default False flag; true means the slgorithm will infer some other value based on given input
@@ -72,8 +72,8 @@ class OneFieldPerSpecimen(object):
             text = text.lower()
             text = re.sub(r'[.,:;\\\/\-]', ' ', text)
             for finding in string_list:
-                if re.search(r'([\W]|^)' + finding + r'([\W]|$)', text) and \
-                   not re.search(self.pre_negation + finding + r'([\W]|$)', text) and \
+                if re.search(r'([\W]|^)' + '(' + finding + ')' + r'([\W]|$)', text) and \
+                   not re.search(self.pre_negation + '(' + finding + ')' + r'([\W]|$)', text) and \
                    not re.search(r'([\W]|^)' + finding + self.post_negation, text):
                     ## only return character offsets for the regular path text (not SpecimenSource)
                     if line_onset:

@@ -25,3 +25,5 @@ class PathSite(OneFieldPerSpecimen):
         ## relevant sections of the report ##
         self.good_section = r'SPECIMEN|Specimen|IMPRESSION|DIAGNOSIS|COMMENT|DX|DESCRIPTION|DESC|GROSS'
         self.bad_section = r'CLINICAL|Note'
+        self.pre_negation = r'( not | no |previous|negative |free of | near|above|below| from |without|against |(hx|history) of | \
+                        to rule out|preclud| insufficient|suboptimal).{,75}'
