@@ -35,7 +35,7 @@ class OneFieldPerReport(object):
             self.return_d = {gb.NAME: self.field_name, gb.VALUE: None, gb.CONFIDENCE: 0.0, \
                              gb.KEY: gb.ALL, gb.VERSION: self.get_version(),\
                              gb.STARTSTOPS: [], gb.TABLE: self.table}
-            ## match type object for equivilance test - this determines whether the value
+            ## match type object for equivalence test - this determines whether the value
             ## is based on the pattern match, or is a predetermined value
             sre_match_type = type(re.match("", ""))
             match = None
