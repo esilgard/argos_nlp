@@ -12,10 +12,11 @@ Diffuse large B-cell lymphoma;DLBCL;Diffuse large B cell lymphoma;mediastinal la
 Marginal Zone Lymphoma;Marginal zone B cell lymphoma;MZL;Mucosa Associated Lymphatic Tissue lymphoma;MALT;Mucosa Associated lymphoma
 Nodal Marginal Zone B-Cell Lymphoma;Nodal marginal zone B cell lymphoma;nodal zone B cell lymphoma;NMZL
 Splenic Marginal Zone Lymphoma;SMZL;Splenic zone lymphoma
-Anaplastic Lymphoma;ALCL;Anaplastic Large Cell Lymphoma
+Anaplastic Lymphoma
+ALCL;Anaplastic Large Cell Lymphoma
 Intravascular large B-cell lymphoma;Intravascular large B cell lymphoma
 Primary effusion lymphoma;effusion lymphoma
-Follicular Lymphoma;follicular center cell lymphoma
+Follicular Lymphoma;follicular center cell lymphoma;follicular center lymphoma;lymphoma[ ]+follicular;follicular cell lymphoma
 Lymphomatoid granulomatosis
 Plasmablastic lymphoma
 Primary central nervous system lymphoma;central nervous system lymphoma;CNS lymphoma
@@ -23,7 +24,7 @@ ATLL;Adult T-cell Leukemia/Lymphoma;Adult T cell Leukemia;Adult T cell Lymphoma;
 T-Cell Non-Hodgkin Lymphoma;T Cell Lymphoma
 Blastic NK-cell Lymphoma;Blastic NK cell Lymphoma
 Angioimmunoblastic Lymphoma
-Cutaneous T-cell lymphoma;Cutaneous T cell lymphoma;Cutaneous lymphoma
+Cutaneous T-cell lymphoma;Cutaneous T cell lymphoma;cutaneous lymphoma
 Enteropathy-type T-cell lymphoma;Enteropathy type T cell lymphoma;Enteropathy lymphoma
 Hematosplenic gamma-delta T-cell Lymphoma;Hematosplenic gamma delta T cell Lymphoma;Hematosplenic gamma delta
 Treatment-related T-cell lymphoma;Treatment related T cell lymphoma;Treatment related lymphoma
@@ -31,6 +32,15 @@ Mycosis Fungoides
 Sezary's Disease;Sezary s Disease;Sezarys Disease
 Leukemia, NOS;Lymphadenitis
 Acute Lymphocytic Leukemia;Acute Lymphoid Leukemia
-CLL;Chronic Lymphoid Leukemia;Hairy Cell Leukemia;Chronic Lymphocytic Leukemia;SLL;small lymphocytic lymphoma
+CLL;Chronic Lymphoid Leukemia;Hairy Cell Leukemia;Chronic Lymphocytic Leukemia
+SLL;small lymphocytic lymphoma
 Waldenstrom Macroglobulinemia
-Myeloproliferative Neoplasms;Polycythemia Vera;Essential Thrombocythemia;Myelofibrosis
+Polycythemia Vera
+Thrombocythemia
+Essential Thrombocythemia;Essential Thrombocytosis
+Thoracentesis
+Myelofibrosis
+Mastocytosis
+Pancytopenia
+Thrombocytopenia
+MGUS;monoclonal gammopathy of undetermined significance

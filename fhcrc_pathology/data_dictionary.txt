@@ -2,6 +2,7 @@ PathSpecimenType	Class
 PathSite	Class
 PathSide	Class
 PathHistology	Class
+ClinicalHistory	Class
 PathDate	Class
 Pathologist	Class
 OtherFinding	Class
