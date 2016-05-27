@@ -1,4 +1,4 @@
-{    
+{
 	"pathology": {
 		"groupings": [
 				{
@@ -803,15 +803,78 @@
 		]
 	},
 	"cytogenetics": {
+		"groupings": [
+				{
+					"level": "table",
+					"order": "alpha",
+					"orientation": "horizontal"
+				},
+				{
+					"level": "field",
+					"order": "alpha",
+					"orientation": "horizontal"
+				}
+			],
 		"tables":[
-			{"table":"AML_Cytogenetics",
+			{"table":"Cytogenetics",
 			"fields":[
+				{
+				"field":"Date",
+				"datatype":"date",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"KaryotypeString",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"AML_SWOG_RiskCategory",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":["Favorable","Unfavorable","Miscellaneous","Intermediate","Insufficient"]
+						}
+					]
+				},
 				{"field":"+8",
 				"datatype":"integer",
 				"closedClass":"False",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["aml"],
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"20q",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"mutations",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
 						"values":[]
 						}
 					]
@@ -821,7 +884,237 @@
 				"closedClass":"False",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["aml"],
+						{"diseaseGroup":["*"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"monosomies",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"t(9;22)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"warning",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"9q",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"-Y",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"t(15;17)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"t(16;16)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"3q",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"21q",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"del(9q)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"t(6;9)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"t(8;21)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"17p",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"inv(16)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"11q",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"del(16q)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"del(7q)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"del(5q)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"del(-5)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"del(-7)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"del(+6)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"trisomies",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"del(12p)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
 						"values":[]
 						}
 					]
@@ -860,13 +1153,13 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["AJCC_07","AJCC_10","AJCC_02"]
+						"values":["AJCC 7"]
 						}
 					]
 				},
 				{"field":"ClinStageT",
 				"datatype":"string",
-				"closedClass":"True",
+				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
@@ -876,7 +1169,7 @@
 				},
 				{"field":"ClinStageN",
 				"datatype":"string",
-				"closedClass":"True",
+				"closedClass":"false",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
@@ -886,7 +1179,7 @@
 					},
 				{"field":"ClinStageM",
 				"datatype":"string",
-				"closedClass":"True",
+				"closedClass":"False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
