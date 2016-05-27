@@ -59,8 +59,8 @@ git-revision.cmd
 sampleData/
 
 #any text feature file or model
-feature_mapping.txt
-models/
+*feature_mapping.txt
+*models/
 
 
 #ignore back-up files
