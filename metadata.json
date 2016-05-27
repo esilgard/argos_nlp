@@ -776,7 +776,7 @@
 							"values":["NO_MITOTIC","1","2","3"]
 							}
 						]
-					},				
+					},
 					{"field":"PathNotes",
 					"datatype":"string",
 						"closedClass":"False",
