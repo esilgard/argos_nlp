@@ -11,11 +11,13 @@ __version__ = 'iscn_string_cleaner1.0'
 
 def get(original_text, karyo_offset):
     '''
-    clean up the scca or uw string that contains the ISCN karyotype info
-    look for common formatting inconsistenies in the karyotype or
-    common free text interpretations
-    return the cleaned string and a dictionary (if applicable) of the swog risk interpretation
+    clean up the ISCN string that contains the ISCN karyotype info
+    look for common formatting inconsistenies in the karyotype or text interpretations
+    return the cleaned string and a risk classification
+    IF there is a free text interpretation
     '''
+
+    ## search for one of a couple possible (unambiguous) free text interpretations
     text = original_text
     interpretation = re.match(r'.*(insufficient).*', text, re.IGNORECASE)
     if not interpretation:
@@ -36,18 +38,20 @@ def get(original_text, karyo_offset):
                  gb.CONFIDENCE:.95, gb.VERSION:__version__, gb.STARTSTOPS:[{gb.START:0}, \
                 {gb.STOP:len(text)}]}], text
 
-    ## cut off FISH results in SCCA strings
+    ## cut off nuclear FISH results that may have different formatting and vocabulary
+    ## (currently regular fish is dealt with differently - this could probably change
     if 'nuc' in text:
         text = text[:text.find('nuc')]
     if 'NUC' in text:
         text = text[:text.find('NUC')]
-    ## account for strings with typo ":" (instead of ";") in the context of digit;digit
+        
+    ## account for strings with ":" (instead of ";") only in the context of digit;digit
     if re.search(r'[\d]:[\d]', text):
         typo = re.match(r'.*([\d]:[\d]).*', text).group(1)
         fix = re.sub(r':', r';', typo)
         text = re.sub(typo, fix, text)
 
-    ## get all text before the final cell count
+    ## get all text before the final cell count (
     text = text[:text.rfind(']') + 1]
     colon_index = text.find(':') + 1
     karyo_offset += colon_index  + len(text[colon_index:]) - len(text[colon_index:].lstrip())

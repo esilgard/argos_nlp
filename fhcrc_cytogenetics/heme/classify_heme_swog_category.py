@@ -1,23 +1,20 @@
+'''author@esilgard'''
 #
 # Copyright (c) 2015-2016 Fred Hutchinson Cancer Research Center
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
-import re,json
+import re
 import global_strings as gb
 
-
-'''author@esilgard'''
 __version__='classify_heme_category1.0'
-
 
 def get(cell_list, karyotype_string, karyo_offset):
     '''
         take a parsed list of cells
         where each element within the cell group has a list of dictionaries of abnormalities
-        as well as a cell count, a chromosome number, a warning, a chromosome, and 
-        a cell order (just the order the cell line was listed in the report)
-        
+        as well as a cell count, a chromosome number, a warning flag, a chromosome, and 
+        a cell order (just the order the cell line was listed in the report)        
         return the same list with an appended swog label dictionary
     '''
     return_errors = []

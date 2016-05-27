@@ -18,6 +18,7 @@ def get(karyotype_string, karyo_offset):
     return_list = []
     seperate_cell_types = karyotype_string.split('/')
     cell_type_order = 0
+
     for each_cell_type in seperate_cell_types:
         d = {}
         #cell_type_order makes up for the'/'
@@ -25,6 +26,7 @@ def get(karyotype_string, karyo_offset):
         d[gb.ABNORMALITIES] = []
         d[gb.CELL_ORDER] = cell_type_order
         cell_count = re.match(r'.*(\[c?p?([\d]+)\]).*', each_cell_type)
+
         if cell_count:
             try:
                 d[gb.CELL_COUNT] = cell_count.group(2)
@@ -77,7 +79,7 @@ def get(karyotype_string, karyo_offset):
             for i in range(len(d[gb.ABNORMALITIES])):
                 if isinstance(d[gb.ABNORMALITIES][i], str):
                     loss_gain = re.match(r'[ ]?([+-])[ ]?([\d\w\~\?]+)', d[gb.ABNORMALITIES][i])
-                    ## capture chromosome nums, sex, and 'or's/'?'s for ambiguous chroms
+                    ## capture chromosome nums, sex, and 'or' and '?' for ambiguous chroms
                     abnormal_chromosome = re.match(r'(.*)[(]([.\d;XY\?or ]+)[)](.*)',\
                     d[gb.ABNORMALITIES][i])
                     if loss_gain:
@@ -90,15 +92,17 @@ def get(karyotype_string, karyo_offset):
                         abnormal_chromosome = \
                         re.match(r'[ ]?([\d\-\~?\ ]*)[ ]?(mar|r|dmin|pstk+|inc)[ ]?',\
                         d[gb.ABNORMALITIES][i])
+                        ## record presense of other, unrecognized abnormality
                         if abnormal_chromosome:
                             d[gb.ABNORMALITIES][i] = {'other aberration': \
                             (abnormal_chromosome.group(1), abnormal_chromosome.group(2))}
                         else:
                             d[gb.WARNING] = 1
 
+        ## warning flag for error finding cell count
         else:
             d[gb.WARNING] = 1
         return_list.append(d)
         cell_type_order += 1
-
+            
     return return_list, None, list
