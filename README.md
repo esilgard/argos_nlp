@@ -19,34 +19,22 @@ This is the primary directory for the Fred Hutch natural language processing eng
 	* -ml = machine learning flag, this defaults to 'n' which means the engine will not require the language models needed to run the machine learning algorithms
 	* -a = algorithm flag, this defaults to 'y', which means the engine will run appropriate algorithms. If input parameter == 'n', then the engine will simply output text and tsv files.
 
-- global_strings.py
-	a set of string variables used in various scripts in this directory
+- global_strings.py: a set of string variables used in various scripts in this directory
 
-- make_text_output_directory.py
-	a python script to create a directory for output text files (the directory location is expected 
-	to match the input file name location)
+- make_text_output_directory.py: a python script to create a directory for output text files (the directory location is expected to match the input file name location)
 
-- metadata.json
-	a json document that houses all the relevant metadata for all document types, tables, fields, etc. This data is used to parse output and population dropdown fields in the user interface
+- metadata.json: a json document that houses all the relevant metadata for all document types, tables, fields, etc. This data is used to parse output and population dropdown fields in the user interface
 
-- metadata.py
-	a script to create a dictionary/json object that lists relevant metadata for the batch run 
-	(potential fields values, etc)
-	this document and disease group specific metadata (full version read in from metadata.json) 
-	will be used to population dropdowns in the front end/abstraction LabKey interface
+- metadata.py: 	a script to create a dictionary/json object that lists relevant metadata for the batch run 
+	(potential fields values, etc) this document and disease group specific metadata (full version read in from metadata.json) will be used to population dropdowns in the front end/abstraction LabKey interface
 
-- nlp_engine.py
-	the primary script for the natural language processing engine.  This requires a set of flagged command line arguments
-	as well as the command_line_flag file which gives their mappings, and input document(s)
+- nlp_engine.py: the primary script for the natural language processing engine.  This requires a set of flagged command line arguments as well as the command_line_flag file which gives their mappings, and input document(s)
 
-- output_results.py
-	output the final JSON object to the location specified by the command line -o flag
+- output_results.py: output the final JSON object to the location specified by the command line -o flag
 
-- version
-	a text file with the version number which is automatically updated by the post commit hook script
+- version: a text file with the version number which is automatically updated by the post commit hook script
 
-- schema.json
-	a json schema that dictates the appropriate output format for the engine (currently validation is an offline process)
+- schema.json: 	a json schema that dictates the appropriate output format for the engine (currently validation is an offline process)
 	
-- fhcrc_pathology
-	directory of modules for processing pathology reports
+- fhcrc_pathology: a directory of modules for processing pathology reports
+- fhcrc_cytogenetics: a directory of modules for processing cytogenetics reports
