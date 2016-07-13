@@ -36,5 +36,5 @@ def main(input_file):
             except EnvironmentError:
                 return (Exception, 'FATAL ERROR: failed to create directory: ' + output_directory + ' based on input filename ' + input_file)
     else:
-        return (Exception, 'FATAL ERROR: bad input file name: ' + input_file + ' program aborted; expects in file name to end with ".nlp.tsv" in order to appropriately\
+        return (Exception, 'FATAL ERROR: bad input file name: ' + input_file + ' program aborted; expects in file name to end with ".nlp" in order to appropriately\
                             label text file directory')

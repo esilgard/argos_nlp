@@ -89,10 +89,8 @@ for index in range(0, len(ARGS)-1, 2):
 ## build the dictionary for the json output ##
 OUTPUT_DICTIONARY[gb.CNTL] = {}
 OUTPUT_DICTIONARY[gb.CNTL]["engineVersion"] = __version__
-OUTPUT_DICTIONARY[gb.CNTL]["referenceId"] = "12345"
-OUTPUT_DICTIONARY[gb.CNTL]["docVersion"] = "document version"
-OUTPUT_DICTIONARY[gb.CNTL]["source"] = "document source"
-OUTPUT_DICTIONARY[gb.CNTL]["docDate"] = "doc date"
+OUTPUT_DICTIONARY[gb.CNTL]["docVersion"] = "document_version"
+OUTPUT_DICTIONARY[gb.CNTL]["source"] = "upstream_document_source"
 OUTPUT_DICTIONARY[gb.CNTL]["processDate"] = str(datetime.today().isoformat())
 metadata = metadata.get(NLP_ENGINE_PATH, ARGUMENTS)
 OUTPUT_DICTIONARY[gb.CNTL]["metadata"] = metadata

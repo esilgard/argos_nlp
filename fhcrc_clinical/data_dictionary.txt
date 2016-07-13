@@ -1,2 +1,2 @@
-TobaccoKeyword Class
-AlcoholKeyword Class
+TobaccoKeyword	Class
+AlcoholKeyword	Class
