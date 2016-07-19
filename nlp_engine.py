@@ -114,9 +114,10 @@ else:
     except ImportError:
         sys.stderr.write('FATAL ERROR: could not import module ' + ARGUMENTS.get('-t'))
         sys.exit(1)
-    MKDIR_ERRORS = make_text_output_directory.main(ARGUMENTS.get('-f'))
-    if MKDIR_ERRORS[0] == Exception:
-        sys.stderr.write(MKDIR_ERRORS[1])
+
+    csv_path = ARGUMENTS.get("-f")
+    if (".csv" not in csv_path):
+        sys.stderr.write("Error: unsuitable -f argument is not a .csv file: " + csv_path)
         sys.exit(1)
     OUTPUT, ERRORS, RETURN_TYPE = DOCUMENT_PROCESSER.process.main(ARGUMENTS)
 
@@ -128,8 +129,6 @@ else:
         OUTPUT_DICTIONARY[gb.REPORTS] = OUTPUT
         OUTPUT_DICTIONARY[gb.ERRS] = ERRORS
 
-    if MKDIR_ERRORS[0] == dict:        
-        OUTPUT_DICTIONARY[gb.ERRS].append(MKDIR_ERRORS[1])
     ## iterate through errors - CRASH for Exceptions and output Warnings
     if OUTPUT_DICTIONARY[gb.ERRS]:
         CRASH = False

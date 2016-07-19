@@ -18,8 +18,10 @@
 import sys, parser
 import os
 import global_strings as gb
+
 PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 __version__ = 'process_clinical1.0'
+
 
 ####################################################################################
 def get_fields(report_d, clinical_data_d):
@@ -29,7 +31,7 @@ def get_fields(report_d, clinical_data_d):
     clinical_data_d is a dict of values for each of the fields in data_d
     '''
     report_table_d = {}
-    error_list = []    
+    error_list = []
     data_elements = dict.fromkeys(clinical_data_d.keys())
 
     for field in data_elements:
@@ -37,8 +39,8 @@ def get_fields(report_d, clinical_data_d):
         try:
             module = __import__(field, globals(), locals(), [])
             if 'Class' in clinical_data_d.get(field):
-                    field_class = getattr(module, field)
-                    module = field_class()
+                field_class = getattr(module, field)
+                module = field_class()
         except EnvironmentError:
             return ([], [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
                 'FATAL ERROR could not import ' + field + ' module or class--- \
@@ -63,11 +65,13 @@ def get_fields(report_d, clinical_data_d):
     report_table_list = report_table_d.values()
     return report_table_list, error_list, list
 
+
 def get_data_d():
     ''' get resources '''
     d = dict((y.split('\t')[0], y.split('\t')[1].strip()) for y in \
-        open(PATH + os.path.sep + 'data_dictionary.txt', 'r').readlines())
+             open(PATH + os.path.sep + 'data_dictionary.txt', 'r').readlines())
     return d
+
 
 def main(arguments):
     '''
@@ -80,8 +84,9 @@ def main(arguments):
         if return_type != dict:
             return ([{}], [clinical_d], Exception)
     except IOError:
-        return([{}], [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: error in clinical note parser with input ' \
-            + arguments.get('-f') + ' --- program aborted'}], Exception)
+        return ([{}], [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: error in clinical note parser with input ' \
+                                                              + arguments.get('-f') + ' --- program aborted'}],
+                Exception)
     ## general clinical data dictionary ##
     clinical_data_d = get_data_d()
     field_value_output = []
@@ -89,30 +94,39 @@ def main(arguments):
     ## create a list of output field dictionaries ##
     for mrn in clinical_d:
         for accession in clinical_d[mrn]:
-            print 'processing report ',accession
+            print 'processing report ', accession
             field_value_d = {}
             field_value_d[gb.REPORT] = accession
             field_value_d[gb.MRN] = mrn
             field_value_d[gb.TABLES] = []
             ## write out canonical version of text file
             try:
-                with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + os.path.sep + accession + '.txt', 'wb') as out_text:
+                folder = arguments.get('-f')[:arguments.get('-f').find(
+                    '.csv')]  # the .nlp extension is required, and the +4 makes sure it
+                                  # is included in the final nir name. A bit duct-tapey for now but it works
+                # if the folder for txt files doesnt exist, create it
+                if not os.path.exists(folder):
+                    os.makedirs(folder)
+                #print ("Writing file to: " + folder + os.path.sep + accession + '.txt')
+
+                with open(folder + os.path.sep + accession + '.txt', 'wb') as out_text:
                     out_text.write(clinical_d[mrn][accession][(-1, 'FullText', 0)])
             except IOError:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
-                    'FATAL ERROR in clinical/process.py attempting to write text to files at'+ \
+                    'FATAL ERROR in clinical/process.py attempting to write text to files at' + \
                     arguments.get('-f') + os.path.sep + accession + + '.txt' \
-                    ' - unknown number of reports completed. ' + str(sys.exc_info()[1])}], list)
+                                                                      ' - unknown number of reports completed. ' + str(
+                        sys.exc_info()[1])}], list)
             ## if no Exceptions and "no algorithm" isn't there, then run appropriate algorithms
             if return_type != Exception:
                 if arguments.get('-a') == 'n':
                     pass
-                else:                    
-                    return_fields, return_errors, return_type = get_fields\
+                else:
+                    return_fields, return_errors, return_type = get_fields \
                         (clinical_d[mrn][accession], clinical_data_d)
                     field_value_d[gb.TABLES] += return_fields
                 field_value_output.append(field_value_d)
-            else:                    
+            else:
                 concatenated_error_string = ';'.join([x[gb.ERR_STR] for x in return_errors])
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR \
                     in process.get(fields) -unknown number of reports completed.  \
