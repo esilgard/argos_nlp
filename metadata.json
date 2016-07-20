@@ -1262,6 +1262,142 @@
 					]
 				}
 			]
+		},
+		{"table":"SocialHistories",
+		"fields":[
+			{"field": "AlcoholStatus",
+			"datatype": "string",
+			"closedClass": "True",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": [
+							"Non",
+							"Current",
+							"Former",
+							"History of Exposure",
+							"Unknown"
+						]
+					}
+				]
+			},
+			{"field": "AlcoholType",
+			"datatype": "string",
+			"closedClass": "False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": ["Beer", "Wine"]
+					}
+				]
+			},
+			{"field": "AlcoholAmount",
+			"datatype": "string",
+			"closedClass": "False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": ["Rare", "Minimal", "Occasional", "Moderate", "Heavy"]
+					}
+				]
+			},
+			{"field": "AlcoholDuration",
+			"datatype": "string",
+			"closedClass": "False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": []
+					}
+				]
+			},
+			{"field": "AlcoholStartDate",
+			"datatype": "date",
+			"closedClass": "False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": []
+					}
+				]
+			},
+			{"field": "AlcoholEndDate",
+			"datatype": "date",
+			"closedClass": "False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": []
+					}
+				]
+			},
+			{"field": "TobaccoStatus",
+			"datatype": "string",
+			"closedClass": "True",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": [
+							"Non",
+							"Current",
+							"Former",
+							"History of Exposure",
+							"Unknown"
+						]
+					}
+				]
+			},
+			{"field": "TobaccoType",
+			"datatype": "string",
+			"closedClass": "False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": ["Cigarettes", "Cigar", "Pipe", "Secondhand"]
+					}
+				]
+			},
+			{"field": "TobaccoAmount",
+			"datatype": "string",
+			"closedClass": "False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": ["1 pack/day", "2 packs/day", "1-2 packs/day"]
+					}
+				]
+			},
+			{"field": "TobaccoDuration",
+			"datatype": "string",
+			"closedClass": "False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": []
+					}
+				]
+			},
+			{"field": "TobaccoStartDate",
+			"datatype": "date",
+			"closedClass": "False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": []
+					}
+				]
+			},
+			{"field": "TobaccoEndDate",
+			"datatype": "date",
+			"closedClass": "False",
+			"diseaseProperties":
+				[
+					{"diseaseGroup": ["*"],
+					"values": []
+					}
+				]
+			}
+		]
 		}
 		]
 	}
