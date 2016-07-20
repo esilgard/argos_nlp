@@ -1,9 +1,9 @@
-((non|ex|never)-?)?smoke(r|d)?
+((non|ex|never)( |-)?)?smoke(s|r|d)?
 smoking
-tobac\S*
+tobacco
+(?<=\s)tobac\w*
 (\s|^)(\+|-) ?tob([^r]|$)
-cig(s)?
-(ex-)?cigarettes?( per day)?
+(ex-)?cig(arette)?s?( per day)?
 (\d*\+? +)?pack(s)? ((per)|a) day
 pack/day
 ((pack)|(one)) and a half (packs?)?

@@ -53,7 +53,7 @@ class KeywordHit(object):
                          STARTSTOPS: [], TABLE: self.table}
 
         # placeholder for some sort of match object or iterator ...whatever you need
-        matches = re.finditer(self.regex, full_text, re.DOTALL)
+        matches = re.finditer(self.regex, full_text, re.DOTALL | re.IGNORECASE)
         for match in matches:
             self.return_d[VALUE] = 'True'
             self.return_d[STARTSTOPS].append({START: match.start(1), STOP: match.end(1)})

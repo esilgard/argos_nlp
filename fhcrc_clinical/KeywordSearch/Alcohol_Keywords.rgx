@@ -1,7 +1,7 @@
-alcohol\S*
+alcohol\w*
 ethanol
-\S*drink\S*
-drunk\S*
+\w*drink\w*
+drunk\w*
 drank
 (glass|bottle) ?(\/|each|every|per) ?(day|w(ee)?k|mo(nth)?|y(ea)?r)
 beers?
