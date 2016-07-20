@@ -1,0 +1,11 @@
+alcohol\S*
+ethanol
+\S*drink\S*
+drunk\S*
+drank
+(glass|bottle) ?(\/|each|every|per) ?(day|w(ee)?k|mo(nth)?|y(ea)?r)
+beers?
+wine
+vodka
+bourbon
+whiskey
