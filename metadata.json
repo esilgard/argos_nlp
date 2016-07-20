@@ -1124,6 +1124,18 @@
 		]
 	},
 	"clinical": {
+	"groupings": [
+				{
+					"level": "table",
+					"order": "alpha",
+					"orientation": "horizontal"
+				},
+				{
+					"level": "field",
+					"order": "alpha",
+					"orientation": "horizontal"
+				}
+			],
 		"tables":[
 			{"table":"KeywordHitTable",
 			"fields":[
