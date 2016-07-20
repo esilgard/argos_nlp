@@ -17,7 +17,7 @@ def main(args):
 
     # default pointers
     schema_dir = "../schema.json"
-    sysout_dir = "../OUTPUT_W"
+    sysout_dir = "../transfer2.nlp.json"
 
     # if arguments provided, change default pointers
     if len(args) == 3:
