@@ -31,6 +31,5 @@ def main(args):
     # validate and print results: no error means the validation succeeded
     print(validate(sys_out, schema))
 
-
 if __name__ == '__main__':
     main(sys.argv)
