@@ -5,15 +5,16 @@
 #
 
 
-from KeywordHit import KeywordHit
-import global_strings as gb
+from fhcrc_clinical.KeywordSearch.KeywordHit import KeywordHit
+from fhcrc_clinical.KeywordSearch.KeywordGlobals import *
+
 
 class AlcoholKeyword(KeywordHit):
-    ''' find alcohol/drinking related keywords '''
+    """ find alcohol/drinking related keywords """
     __version__ = 'AlcoholKeyword1.0'
+
     def __init__(self):
         super(AlcoholKeyword, self).__init__()
         self.field_name = 'AlcoholKeyword'
-        ## parentheses make the match group capturable
-        self.regex = r'([Aa]lcohol)'
+        self.regex = KeywordHit.get_regex_from_file(ALCOHOL)
         self.table = 'KeywordHitTable'
