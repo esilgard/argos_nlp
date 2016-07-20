@@ -16,7 +16,7 @@
 #
 
 import sys, parser
-import os
+import os, csv
 import global_strings as gb
 
 PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
@@ -85,8 +85,7 @@ def main(arguments):
             return ([{}], [clinical_d], Exception)
     except IOError:
         return ([{}], [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: 'FATAL ERROR: error in clinical note parser with input ' \
-                                                              + arguments.get('-f') + ' --- program aborted'}],
-                Exception)
+                + arguments.get('-f') + ' --- program aborted'}], Exception)
     ## general clinical data dictionary ##
     clinical_data_d = get_data_d()
     field_value_output = []
@@ -94,29 +93,27 @@ def main(arguments):
     ## create a list of output field dictionaries ##
     for mrn in clinical_d:
         for accession in clinical_d[mrn]:
-            print 'processing report ', accession
             field_value_d = {}
             field_value_d[gb.REPORT] = accession
             field_value_d[gb.MRN] = mrn
             field_value_d[gb.TABLES] = []
             ## write out canonical version of text file
             try:
-                folder = arguments.get('-f')[:arguments.get('-f').find(
-                    '.csv')]  # the .nlp extension is required, and the +4 makes sure it
-                                  # is included in the final nir name. A bit duct-tapey for now but it works
-                # if the folder for txt files doesnt exist, create it
-                if not os.path.exists(folder):
-                    os.makedirs(folder)
-                #print ("Writing file to: " + folder + os.path.sep + accession + '.txt')
-
+                folder = arguments.get('-f')[:arguments.get('-f').find('.nlp')]
+                full_text = clinical_d[mrn][accession][(-1, 'FullText', 0)]
+                date = clinical_d[mrn][accession][(-2, gb.EVENT_DATE, 0)]
                 with open(folder + os.path.sep + accession + '.txt', 'wb') as out_text:
-                    out_text.write(clinical_d[mrn][accession][(-1, 'FullText', 0)])
+                    out_text.write(full_text)
+                with open(folder + os.path.sep + accession + '.nlp.tsv', 'wb') as csv_file:
+                    csv_writer = csv.writer(csv_file, delimiter=',')
+                    csv_writer.writerow([gb.MRN_CAPS, gb.FILLER_ORDER_NO, gb.EVENT_DATE, gb.OBSERVATION_VALUE])
+                    csv_writer.writerow([mrn, accession, date, full_text])
+                                     
             except IOError:
                 return (field_value_output, [{gb.ERR_TYPE: 'Exception', gb.ERR_STR: \
-                    'FATAL ERROR in clinical/process.py attempting to write text to files at' + \
-                    arguments.get('-f') + os.path.sep + accession + + '.txt' \
-                                                                      ' - unknown number of reports completed. ' + str(
-                        sys.exc_info()[1])}], list)
+                    'FATAL ERROR in clinical/process.py attempting to write text and tsv to files at' + \
+                    folder + os.path.sep + accession + '.txt' \
+                     ' - unknown number of reports completed. ' + str(sys.exc_info()[1])}], list)
             ## if no Exceptions and "no algorithm" isn't there, then run appropriate algorithms
             if return_type != Exception:
                 if arguments.get('-a') == 'n':

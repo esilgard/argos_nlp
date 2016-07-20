@@ -42,8 +42,8 @@ class KeywordHit(object):
                     self.return_d[gb.STARTSTOPS].append({gb.START:each_match.start(1), gb.STOP: each_match.end(1)})
 
             ## println to check on/debug char offsets
-            if self.return_d[gb.STARTSTOPS]:                
-                print 'keyword hit in ', self.__version__ , ' at ', [(a['startPosition'],a['stopPosition']) for a in self.return_d[gb.STARTSTOPS]]
+            #if self.return_d[gb.STARTSTOPS]:                
+            #    print 'keyword hit in ', self.__version__ , ' at ', [(a['startPosition'],a['stopPosition']) for a in self.return_d[gb.STARTSTOPS]]
             return ([self.return_d], list)
         except RuntimeError:
             return ([{gb.ERR_TYPE: 'Warning', gb.ERR_STR: 'ERROR in %s module.' \

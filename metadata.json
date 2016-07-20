@@ -1125,6 +1125,30 @@
 	},
 	"clinical": {
 		"tables":[
+			{"table":"KeywordHitTable",
+			"fields":[
+				{"field":"TobaccoKeyword",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"AlcoholKeyword",
+				"datatype":"string",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[]
+						}
+					]
+				}
+			]
+			},
 			{"table":"ClinicalStages",
 			"fields":[
 				{"field":"ClinStageDate",

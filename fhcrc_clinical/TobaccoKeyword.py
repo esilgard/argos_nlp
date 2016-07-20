@@ -7,7 +7,7 @@
 
 from KeywordHit import KeywordHit
 import global_strings as gb
-print 'importing tob keyword'
+
 class TobaccoKeyword(KeywordHit):
     ''' find tobacco/smoking related keywords '''
     __version__ = 'TobaccoKeyword1.0'
