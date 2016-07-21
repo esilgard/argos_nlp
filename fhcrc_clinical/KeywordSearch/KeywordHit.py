@@ -37,7 +37,7 @@ class KeywordHit(object):
     @staticmethod
     def get_regex_from_file(substance):
         # get regexes
-        filename = KEYWORD_FILE_DIR + substance + KEYWORD_FILE_SUFFIX
+        filename = PATH + substance + KEYWORD_FILE_SUFFIX
         with open(filename, "r") as regex_file:
             regex_lines = regex_file.readlines()
             regexes = [r[:-1] for r in regex_lines]     # remove "\n" at end of each regex line
@@ -59,6 +59,5 @@ class KeywordHit(object):
             self.return_d[STARTSTOPS].append({START: match.start(1), STOP: match.end(1)})
 
         # println to check on/debug char offsets
-        if self.return_d[STARTSTOPS]:
-            print 'keyword hit in ', self.__version__, ' at ', [(a['startPosition'], a['stopPosition']) for a in
-                                                            self.return_d[STARTSTOPS]]
+        #if self.return_d[STARTSTOPS]:
+        #    print 'keyword hit in ', self.__version__, ' at ', [(a['startPosition'], a['stopPosition']) for a in self.return_d[STARTSTOPS]]
