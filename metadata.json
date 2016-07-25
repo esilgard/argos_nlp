@@ -1161,256 +1161,175 @@
 				}
 			]
 			},
-			{"table":"ClinicalStages",
+			{"table":"SocialHistories",
 			"fields":[
-				{"field":"ClinStageDate",
-				"datatype":"date",
-				"closedClass":"False",
+				{"field": "AlcoholStatus",
+				"datatype": "string",
+				"closedClass": "True",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["*"],
-						"values":[]
+						{"diseaseGroup": ["*"],
+						"values": [
+								"current",
+								"former",
+								"user",
+                                "non"
+							]
 						}
 					]
 				},
-				{"field":"ClinicalStageDisease",
-				"datatype":"string",
-				"closedClass":"False",
+				{"field": "AlcoholAmount",
+				"datatype": "string",
+				"closedClass": "False",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["*"],
-						"values":["brain","breast","head_neck","heme","lung","GU","GI","sarcoma","gyn","other","skin","male_cancers"]
+						{"diseaseGroup": ["*"],
+						"values": ["1 drink/day", "occasional", "moderate", "heavy"]
 						}
 					]
 				},
-				{"field":"ClinStageSystem",
-				"datatype":"string",
-				"closedClass":"False",
+				{"field": "AlcoholDuration",
+				"datatype": "string",
+				"closedClass": "False",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["*"],
-						"values":["AJCC 7"]
+						{"diseaseGroup": ["*"],
+						"values": []
 						}
 					]
 				},
-				{"field":"ClinStageT",
-				"datatype":"string",
-				"closedClass":"False",
+				{"field": "AlcoholQuitDate",
+				"datatype": "date",
+				"closedClass": "False",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["*"],
-						"values":["Tis","T1","T1a","T1b","T1c","T2","T2a","T2b","T2c","T3","T3a","T3b","T3c","T4","T4a","T4b","T4c","TX"]
+						{"diseaseGroup": ["*"],
+						"values": []
 						}
 					]
 				},
-				{"field":"ClinStageN",
-				"datatype":"string",
-				"closedClass":"false",
+				{"field": "AlcoholQuitTimeAgo",
+				"datatype": "string",
+				"closedClass": "False",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["*"],
-						"values":["N0","N1","N1a","N1b","N1c","N2","N2a","N2b","N2c","N3","N3a","N3b","N3c","N4","N4a","N4b","N4c","NX"]
-						}
-					]
-					},
-				{"field":"ClinStageM",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":["M0","M1","M1a","M1b","M1c","M2","M2a","M2b","M2c","MX"]
+						{"diseaseGroup": ["*"],
+						"values": []
 						}
 					]
 				},
-				{"field":"ClinStageS",
-				"datatype":"string",
-				"closedClass":"True",
+				{"field": "AlcoholQuitAge",
+				"datatype": "string",
+				"closedClass": "False",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["*"],
-						"values":["I","Ia","Ib","Ic","IIa","IIb","IIc","IIIa","IIIb","IIIc","IV","IVa","IVb"]
+						{"diseaseGroup": ["*"],
+						"values": []
 						}
 					]
 				},
-				{"field":"ClinStageSide",
-				"datatype":"string",
-				"closedClass":"True",
+				{"field": "TobaccoStatus",
+				"datatype": "string",
+				"closedClass": "True",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["*"],
-						"values":["Right","Left","Bilateral","Midline"]
+						{"diseaseGroup": ["*"],
+						"values": [
+								"current",
+								"former",
+								"user",
+                                "non"
+							]
 						}
 					]
 				},
-				{"field":"ClinStagePhysician",
-				"datatype":"string",
-				"closedClass":"False",
+				{"field": "TobaccoType",
+				"datatype": "string",
+				"closedClass": "True",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["*"],
-						"values":[]
+						{"diseaseGroup": ["*"],
+						"values": ["smoke", "smokeless", "both"]
 						}
 					]
 				},
-				{"field":"ClinStageNotes",
-				"datatype":"string",
-				"closedClass":"False",
+				{"field": "TobaccoAmount",
+				"datatype": "string",
+				"closedClass": "False",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["*"],
-						"values":[]
+						{"diseaseGroup": ["*"],
+						"values": ["0.5 packs/day", "1 pack/day", "2 packs/day", "1-2 packs/day"]
 						}
 					]
 				},
-				{"field":"ClinStageQuality",
-				"datatype":"string",
-				"closedClass":"True",
+				{"field": "TobaccoDuration",
+				"datatype": "string",
+				"closedClass": "False",
 				"diseaseProperties":
 					[
-						{"diseaseGroup":["*"],
-						"values":["OUT","STD","REV"]
+						{"diseaseGroup": ["*"],
+						"values": []
+						}
+					]
+				},
+				{"field": "TobaccoQuitDate",
+				"datatype": "date",
+				"closedClass": "False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup": ["*"],
+						"values": []
+						}
+					]
+				},
+				{"field": "TobaccoQuitTimeAgo",
+				"datatype": "string",
+				"closedClass": "False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup": ["*"],
+						"values": []
+						}
+					]
+				},
+				{"field": "TobaccoQuitAge",
+				"datatype": "string",
+				"closedClass": "False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup": ["*"],
+						"values": []
+						}
+					]
+				},
+				{"field": "SecondhandStatus",
+				"datatype": "string",
+				"closedClass": "True",
+				"diseaseProperties":
+					[
+						{"diseaseGroup": ["*"],
+						"values": [
+								"current",
+								"former",
+                                "history",
+                                "no history"
+							]
+						}
+					]
+				},
+				{"field": "SecondhandAmount",
+				"datatype": "string",
+				"closedClass": "False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup": ["*"],
+						"values": ["heavy"]
 						}
 					]
 				}
 			]
-		},
-		{"table":"SocialHistories",
-		"fields":[
-			{"field": "AlcoholStatus",
-			"datatype": "string",
-			"closedClass": "True",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": [
-							"Non",
-							"Current",
-							"Former",
-							"History of Exposure",
-							"Unknown"
-						]
-					}
-				]
-			},
-			{"field": "AlcoholType",
-			"datatype": "string",
-			"closedClass": "False",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": ["Beer", "Wine"]
-					}
-				]
-			},
-			{"field": "AlcoholAmount",
-			"datatype": "string",
-			"closedClass": "False",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": ["Rare", "Minimal", "Occasional", "Moderate", "Heavy"]
-					}
-				]
-			},
-			{"field": "AlcoholDuration",
-			"datatype": "string",
-			"closedClass": "False",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": []
-					}
-				]
-			},
-			{"field": "AlcoholStartDate",
-			"datatype": "date",
-			"closedClass": "False",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": []
-					}
-				]
-			},
-			{"field": "AlcoholEndDate",
-			"datatype": "date",
-			"closedClass": "False",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": []
-					}
-				]
-			},
-			{"field": "TobaccoStatus",
-			"datatype": "string",
-			"closedClass": "True",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": [
-							"Non",
-							"Current",
-							"Former",
-							"History of Exposure",
-							"Unknown"
-						]
-					}
-				]
-			},
-			{"field": "TobaccoType",
-			"datatype": "string",
-			"closedClass": "False",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": ["Cigarettes", "Cigar", "Pipe", "Secondhand"]
-					}
-				]
-			},
-			{"field": "TobaccoAmount",
-			"datatype": "string",
-			"closedClass": "False",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": ["1 pack/day", "2 packs/day", "1-2 packs/day"]
-					}
-				]
-			},
-			{"field": "TobaccoDuration",
-			"datatype": "string",
-			"closedClass": "False",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": []
-					}
-				]
-			},
-			{"field": "TobaccoStartDate",
-			"datatype": "date",
-			"closedClass": "False",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": []
-					}
-				]
-			},
-			{"field": "TobaccoEndDate",
-			"datatype": "date",
-			"closedClass": "False",
-			"diseaseProperties":
-				[
-					{"diseaseGroup": ["*"],
-					"values": []
-					}
-				]
 			}
-		]
-		}
 		]
 	}
 }

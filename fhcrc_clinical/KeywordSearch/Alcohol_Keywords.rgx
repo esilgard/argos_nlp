@@ -1,11 +1,12 @@
-alcohol\w*
+(?<!isopropyl )(?<!isopropyl)(?<!iso )(?<!iso)alcohol\w*
 ethanol
-\w*drink\w*
-drunk\w*
-drank
-(glass|bottle) ?(\/|each|every|per) ?(day|w(ee)?k|mo(nth)?|y(ea)?r)
-beers?
-wine
-vodka
+(?<=\W)etoh(?=\W)
+(?<=\W)(non-?)?drink\w*
+(?<=\W)drunk\w*
+(?<=\W)drank
+(glass(es)?|bottles?) ?(\/|each|every|per) ?(day|w(ee)?k|mo(nth)?|y(ea)?r)
+(?<=\W)beers?
+(?<=\W)wine
+(?<=\W)vodka
 bourbon
 whiskey
