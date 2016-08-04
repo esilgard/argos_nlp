@@ -6,7 +6,7 @@ echo Smoke test fail, commit rejected. No output json file found in target direc
 exit 1
 
 :outputJsonOK
-if exist sampleData\transfer2\CN-14-99991.txt goto refFileOK
+if exist sampleData\transfer2\CN-44-99991.txt goto refFileOK
 echo Smoke test fail, commit rejected. Reference file CN-14-99991.txt not found in directory sampleData\transfer2
 exit 3
 
