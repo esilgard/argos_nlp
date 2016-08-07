@@ -4,3 +4,4 @@
 -o	required	output_file	a fully qualified path/name for the output file
 -a	not_required	no_algorithm_flag	this flag takes an optional boolean ('y'=run appropriate algorithms, 'n'=do not run any algorithms) default value is y
 -ml	not_required	machine_learning_flag	this flag takes an optional boolean ('y'=run appropriate ml algorithms, 'n'=do not run any ml algorithms) default value is n
+-sg	not_required	sub_disease_group	the id or name of the subdisease group (used for some algorithms)
