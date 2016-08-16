@@ -1,0 +1,2 @@
+echo "REMINDER: In Extraction/AttributeExtraction/train_model.bat you need to set your cp path to point to your stanford lib folder!"
+java -cp "*;C:\Users\wlane\Documents\Substance_IE_Data\stanford-ner-2015-12-09\lib\*;"%1 edu.stanford.nlp.ie.crf.CRFClassifier -prop %2

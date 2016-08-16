@@ -1,0 +1,17 @@
+((non|ex|never)( |-)?)?smoke(s|r|d)?
+smoking
+tobacco
+(?<=\W)tobac\w*
+(\s|^)(\+|-) ?tob([^r]|$)
+cigarettes?
+(?<=\W)cigs?(?=\W)
+(\d*\+? +)?pack(s)? ((per)|a) day
+pack/day
+\w+\s+and a half packs?
+pack and a half
+(\d+(-\d+)? )?pack years?
+(\d+-| +)?pack(-| )years?
+pack ?/ ?y(ea)?r
+nicotine
+chantix
+(?<=\W)cigars?
