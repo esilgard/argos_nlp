@@ -77,7 +77,7 @@ def main(arguments):
     return_errors = []
 
     # Extract substance information
-    patient_substance_info = extract_substance_info.main()
+    patient_substance_info = extract_substance_info.main()  # TODO -- make sure we're doing right process (train/test/execute)
 
     # create a list of output field dictionaries
     mrn_caisis_map, dict2 = load_caisis_silver_annotations()
