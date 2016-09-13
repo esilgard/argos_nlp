@@ -16,8 +16,10 @@ class PathSite(OneFieldPerSpecimen):
         super(PathSite, self).__init__()
         self.specimen_field_name = 'PathFindSite'
         self.overall_field_name = 'PathSite'
+        self.match_style = 'all'
         self.specimen_table = gb.FINDING_TABLE
-        self.overall_table = gb.PATHOLOGY_TABLE
+        self.table = gb.PATHOLOGY_TABLE
+        self.value_type = 'match'
         self.specimen_confidence = 0.85
         self.unlabled_specimen_confidence = 0.7
         ## reference lists & dictionaries ##

@@ -8,6 +8,7 @@
 import re
 import os
 import global_strings as gb
+import make_datetime
 PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 
 class OneFieldPerReport(object):
@@ -46,7 +47,6 @@ class OneFieldPerReport(object):
         return self.__version__
 
     def get(self, disease_group, dictionary):
-
         ''' find field match based on different match types (greedy, all, first, last) '''
         try:
             full_text = dictionary[(-1, 'FullText', 0, None)]
@@ -71,20 +71,18 @@ class OneFieldPerReport(object):
                                             (disease_group + os.path.sep + self.file_name_string)
                     
                     match = re.finditer('(' + self.regex + '(' + '|'.join(self.dz_specific_list) + '))', re.sub('.,;\\\/\-]', ' ', full_text.lower()), re.DOTALL)
+                
             if match:
                 if (self.value_type) != dict:
-                    self.return_d[gb.CONFIDENCE] = ('%.2f' % self.confidence)
+                    self.return_d[gb.CONFIDENCE] = ('%.2f' % self.confidence)                    
                 ## the field value will be based on the string match itself
                 if isinstance(match, sre_match_type):
-                    ## making the value into a datetime --
-                    ## TODO this should be moved into a separate class to handle other date formats
-                    if self.field_name == 'PathDate':
+                    if 'Date' in self.field_name:
                         year = match.group(3)
                         month = match.group(1)
                         day = match.group(2)
-                        if len(match.group(2)) == 1:
-                            day = '0' + match.group(2)
-                        self.return_d[gb.VALUE] = year + '-' + month + '-' + day
+                        date_obj = make_datetime.get((year,month,day),self.date_format_string)
+                        self.return_d[gb.VALUE] = date_obj
                         self.return_d[gb.STARTSTOPS].append\
                                     ({gb.START: match.start(1), gb.STOP: match.end(3)})
                     else:
@@ -96,15 +94,18 @@ class OneFieldPerReport(object):
                             self.return_d[gb.CONFIDENCE] = ('%.2f' % self.value_type.get(True)[1])
                         self.return_d[gb.STARTSTOPS].append\
                                         ({gb.START: match.start(1), gb.STOP:match.end(1)})
-                ## iterate through match iterator for 'all' style fields, which may have multiple
+                ## iterate through match iterator for 'all' style fields, which may have multiple matches
                 else:
                     field_set = set([])
                     for each_match in match:
+                        # get normalized string name from dictionary
                         if self.file_name_string:
                             field_set.add(self.dz_specific_standardizations[each_match.group(3)])
-                        elif not isinstance(self.value_type, dict):
-                            ## hacky string normalization for PathStageSystem
-                            field_set.add(each_match.group(1).replace(',', ''))
+                        ## just put match value in field_set
+                        if not isinstance(self.value_type, dict):
+                            if not self.file_name_string:
+                                ## hacky string normalization for PathStageSystem (although cellularityPercent also ends up here)
+                                field_set.add(each_match.group(1).replace(',', ''))
                         else:
                             field_set.add(self.value_type.get(True)[0])
                             self.return_d[gb.CONFIDENCE] = ('%.2f' % self.value_type.get(True)[1])

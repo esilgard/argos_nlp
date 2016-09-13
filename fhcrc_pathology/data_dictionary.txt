@@ -3,7 +3,9 @@ PathSite	Class
 PathSide	Class
 PathHistology	Class
 ClinicalHistory	Class
-PathDate	Class
+PathSignedDate	Class
+PathCollectedDate	Class
+PathReceivedDate	Class
 Pathologist	Class
 OtherFinding	Class
 PathQuality	Class
@@ -16,3 +18,5 @@ Her2FISH	MLClass
 Her2IHC	MLClass
 Nottingham	MLClass
 Mitotic	MLClass
+CellularityType	Class
+CellularityPercent	Class
