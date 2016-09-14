@@ -3,10 +3,12 @@ will = "will"
 spencer = "spencer"
 emily = "emily"
 
+
 # Runtime environments
 class RUNTIME_ENV:
     TRAIN = "train"
     EXECUTE = "execute"
+    TEST = "test"
 
 
 # Data Loading
@@ -21,8 +23,8 @@ ALCOHOL = "Alcohol"
 DRUG = "Drug"
 TOBACCO = "Tobacco"
 SECONDHAND = "Secondhand"
-SUBSTANCE_TYPES = [ALCOHOL, TOBACCO, SECONDHAND]
-ML_CLASSIFIER_SUBSTANCES = [TOBACCO, ALCOHOL, SECONDHAND]  # Substances using ML classification for event detection
+SUBSTANCE_TYPES = [ALCOHOL, TOBACCO]
+ML_CLASSIFIER_SUBSTANCES = [TOBACCO, ALCOHOL]  # Substances using ML classification for event detection
 KEYWORD_SUBSTANCES = [TOBACCO, ALCOHOL]
 
 # Classification Labels
@@ -60,7 +62,8 @@ ATTRIBS = dict()
 ATTRIBS[TOBACCO] = [TYPE, AMOUNT, DURATION, QUIT_DATE, QUIT_TIME_AGO, QUIT_AGE]
 ATTRIBS[SECONDHAND] = [AMOUNT]
 ATTRIBS[ALCOHOL] = [AMOUNT, DURATION, QUIT_DATE, QUIT_TIME_AGO, QUIT_AGE]
-ALL_ATTRIBS = [TYPE, AMOUNT, DURATION, QUIT_DATE, QUIT_TIME_AGO, QUIT_AGE]
+ALL_ATTRIBS = ATTRIBS[TOBACCO]
+KNOWN_SUBSTANCE_ATTRIBS = {TYPE: TOBACCO}  # Attributes which don't need ML to figure out substance
 FIELDS = [STATUS, TYPE, AMOUNT, DURATION, QUIT_DATE, QUIT_TIME_AGO, QUIT_AGE]
 
 # Model filename suffixes
@@ -83,3 +86,31 @@ POSITIVE = "Positive"
 NEGATIVE = "Negative"
 TOB_KEYWORD_VERSION = "TobaccoKeywordHit1.0"
 ALC_KEYWORD_VERSION = "AlcoholKeywordHit1.0"
+
+attrib_extraction_features = [
+    "useClassFeature=true",
+    "useWord=true",
+    "useNGrams=true",
+    "noMidNGrams=true",
+    "useDisjunctive=true",
+    "maxNGramLeng=3",
+    "usePrev=true",
+    "useNext=true",
+    "useSequences=true",
+    "usePrevSequences=true",
+    "maxLeft=1",
+    "useTypeSeqs=true",
+    "useTypeSeqs2=true",
+    "useTypeySequences=true",
+    "wordShape=chris2useLC"
+]
+
+entity_types = [
+    "Amount",
+    "Duration",
+    "QuitDate",
+    "QuitTimeAgo",
+    "QuitAge",
+    "Type",
+    "SecondhandAmount"
+]

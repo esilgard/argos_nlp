@@ -1,25 +1,32 @@
 # extract and output substance information using the models trained in train_models.py
 # output evaluation on test data or output results on unlabeled data
+import nltk
 
-from SystemUtilities.Configuration import *
+from DataLoading import DataLoader as DataLoader
 from DataModeling.DataModels import *
-from Extraction.EventDetection import Execution as EventDetectExecution
-from Extraction.EventDetection import Evaluation as EventDetectEvaluation
+from Evaluation import EventAndStatusEvaluate, AttributeEvaluate
 from Extraction import PatientFromDocs, DocFromSents
+from Extraction.AttributeExtraction import Execution as AttributeExtractionExec
+from Extraction.EventDetection import Execution as EventDetectExecution
 from Extraction.StatusClassification import Execution
-import DataLoading.DataLoader
+from Extraction.EventAttributeLinking import Execution as EventFilling
 from SystemUtilities import Shelver
+from SystemUtilities.Configuration import *
 
 
 def main():
-    # Load Data
-    patients = DataLoading.DataLoader.main(ENV)
+    print "Using NLTK v"+nltk.__version__
+    # Set which division of data to use
+    DATA_SPLIT = "Test"
 
-    # Determine sentence level info
-    extract_sentence_level_info(patients)
+    # Load Data
+    patients = DataLoader.main(DATA_SPLIT)
 
     Shelver.shelve_patients(patients)
     # patients = Shelver.unshelve_patients()
+
+    # Determine sentence level info
+    extract_sentence_level_info(patients)
 
     # Determine document level info
     DocFromSents.get_doc_level_info(patients)
@@ -28,9 +35,9 @@ def main():
     PatientFromDocs.get_patient_level_info(patients)
 
     Shelver.shelve_full_patients(patients)
-    # patients = Shelver.unshelve_full_patients()
+    #patients = Shelver.unshelve_full_patients()
 
-    if ENV != RUNTIME_ENV.EXECUTE:
+    if ENV == RUNTIME_ENV.TEST:
         evaluate_extraction(patients)
 
     return patients
@@ -45,46 +52,28 @@ def extract_sentence_level_info(patients):
     print("Classifying substance status...")
     Execution.classify_sentence_status(sentences_with_events)
 
+    # Extract Attributes
+    print("Extracting Attributes...")
+    AttributeExtractionExec.extract(patients, stanford_ner_path=STANFORD_NER_PATH)
+
+    # Link attributes to events:
+    print("Linking attributes to substance references...")
+    EventFilling.link_attributes_to_substances(patients)
+
 
 def evaluate_extraction(patients):
-    # Sentence level
-    evaluate_sent_level_info(patients)
-
-    # Evaluate document level status
-    evaluate_doc_level_info(patients)
-
-    # Evaluate patient level status
-
-    # Evaluate templates
-
-
-def evaluate_sent_level_info(patients):
-    # Status info detection
-
-    pass
-
-
-def evaluate_doc_level_info(patients):
     # Event detection
-    EventDetectEvaluation.evaluate(patients)
+    EventAndStatusEvaluate.evaluate_event_detection(patients)
 
     # Status classification
+    EventAndStatusEvaluate.evaluate_status_classification(patients)
 
     # Extraction of each attribute
+    AttributeEvaluate.evaluate_attributes(patients)
 
-    # Event-Attribute linking
+    # Event-Attribute linking?
 
-    # Template
-    pass
-
-
-def evaluate_patient_level_info(patients):
-    # Status classification
-
-    # Each attribute
-
-    # Template
-    pass
+    # Template?
 
 
 if __name__ == '__main__':

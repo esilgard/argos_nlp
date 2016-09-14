@@ -22,7 +22,7 @@ def tokenizeSentence(sentence):
 
     # Cheap tokenization reflecting Marty's current scheme
     for tok in toks:
-        tok = tok.rstrip(",.:;")
+        tok = tok.rstrip(",.:;)")
         final_toks.append(tok)
     return final_toks
 

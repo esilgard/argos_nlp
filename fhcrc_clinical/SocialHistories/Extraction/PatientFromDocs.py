@@ -1,5 +1,5 @@
-from SystemUtilities.Globals import *
-from DataModeling.DataModels import Event, PatientAttribute
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
+from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Event, PatientAttribute
 
 
 def get_patient_level_info(patients):
@@ -100,7 +100,7 @@ def get_attributes_for_all_docs(patient, substance):
             if doc_event.substance_type == substance:
                 for attrib in doc_event.attributes:
                     all_doc_attribs[attrib].append(doc_event.attributes[attrib])
-                    doc_ids[attrib].append(doc.id_num)
+                    doc_ids[attrib].append(doc.id)
 
     return all_doc_attribs, doc_ids
 
@@ -111,16 +111,17 @@ def create_patient_attributes(all_doc_attribs, all_doc_ids, patient_event):
         doc_ids = all_doc_ids[field]
 
         if doc_attribs:
-            # Choose the value for the paitent level field
+            # Choose the value for the patient level field
             selected_attrib, doc_id = select_patient_field_value(doc_attribs, doc_ids)
 
             # Create the patient attribute
             patient_event.attributes[field] = PatientAttribute(field, selected_attrib.span_start,
-                                                               selected_attrib.span_stop, selected_attrib.text, doc_id,
+                                                               selected_attrib.span_end, selected_attrib.text, doc_id,
                                                                doc_attribs, doc_ids)
 
 
 def select_patient_field_value(doc_attribs, doc_ids):
+    # TEMPORARY -- grab first attribute seen for field
     selected_attrib = doc_attribs[0]
     doc_id = doc_ids[0]
     for attrib, doc_id in zip(doc_attribs, doc_ids):

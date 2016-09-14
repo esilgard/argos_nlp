@@ -6,12 +6,12 @@ from os.path import isfile, join
 
 import re
 
-from SystemUtilities.Configuration import *
-from SystemUtilities.Globals import *
-from DataModeling.DataModels import Document, Patient
-from Extraction.KeywordSearch import KeywordSearch
+from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import *
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
+from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Document, Patient
+from fhcrc_clinical.SocialHistories.Extraction.KeywordSearch import KeywordSearch
 from nltk.tokenize import sent_tokenize
-from Preprocessing.get_docs_to_annotate import DataSplitter
+from fhcrc_clinical.SocialHistories.Preprocessing.get_docs_to_annotate import DataSplitter
 
 
 def main():

@@ -1,4 +1,4 @@
-from SystemUtilities.Globals import *
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
 
 
 # Source data data structures
@@ -21,6 +21,7 @@ class Document(Data):
         self.highlighted_spans = {}  # {substance : [gold HighlightedSpan]}
         self.text = text
         self.sent_list = []
+        self.all_attributes = {}
 
         self.keyword_hits = {}  # {substance_type : [KeywordHit objs]}
         self.keyword_hits_json = {}
@@ -34,6 +35,8 @@ class Sentence(Data):
         self.text = text
         self.span_in_doc_start = span_in_doc_start
         self.span_in_doc_end = span_in_doc_end
+        self.sentence_attribs = list()
+        self.attributes_per_substance = {subst for subst in SUBSTANCE_TYPES}  # {substance: {attribute_name: [Attributes]}}
 
         self.keyword_hits = {}  # {substance_type : [KeywordHit objs]}
         for substance in SUBSTANCE_TYPES:
@@ -82,7 +85,7 @@ class Event:
     def __init__(self, substance):
         self.substance_type = substance
         self.status = ""
-        self.attributes = {}    # {attrib_name: Attribute object}
+        self.attributes = {}    # {attrib_name: [Attribute object]}
 
 
 class DocumentEvent(Event):
@@ -108,27 +111,29 @@ class Attribute:
 class AnnotatedAttribute:
     def __init__(self, attribute_type, spans, text):
         self.type = attribute_type
-        self.spans = spans
+        self.all_value_spans = spans
         self.text = text
 
 
 class DocumentAttribute(Attribute):
-    def __init__(self, attribute_type, span_start, span_end, text, all_values_for_field):
+    def __init__(self, attribute_type, span_start, span_end, text, all_attributes_for_field):
         Attribute.__init__(self, attribute_type, span_start, span_end, text)
+        self.all_attributes = all_attributes_for_field    # list of all Attribute objects found at the sentence level
         self.all_value_spans = []   # list of Span objects -- all values found for this field
 
         # find all values' spans
-        spans = [Span(attrib.span_start, attrib.span_end) for attrib in all_values_for_field]
+        spans = [Span(attrib.span_start, attrib.span_end) for attrib in all_attributes_for_field]
         self.all_value_spans = spans
 
 
 class PatientAttribute(Attribute):
-    def __init__(self, attribute_type, span_start, span_end, text, doc_id, all_values_for_field, all_doc_ids):
+    def __init__(self, attribute_type, span_start, span_end, text, doc_id, all_attributes_for_field, all_doc_ids):
         Attribute.__init__(self, attribute_type, span_start, span_end, text)
+        self.document = doc_id  # the document that the selected value came from
 
-        self.document = doc_id
+        self.all_attributes = all_attributes_for_field   # {doc_id: [Attributes]} -- all Attribute objects for each doc
         self.all_doc_value_spans = {}   # {doc_id: [Span]} -- all values found for this field for each doc
 
         # find all spans for the attribute for all docs
-        for attrib, doc_id in zip(all_values_for_field, all_doc_ids):
+        for attrib, doc_id in zip(all_attributes_for_field, all_doc_ids):
             self.all_doc_value_spans[doc_id] = attrib.all_value_spans

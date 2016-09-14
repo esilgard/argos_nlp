@@ -1,9 +1,11 @@
-import Preprocessing.generate_notes
-import Preprocessing.filter_for_keywords
-import Preprocessing.split_into_f
-import SystemUtilities.Configuration as c
+import fhcrc_clinical.SocialHistories.Preprocessing.generate_notes
+import fhcrc_clinical.SocialHistories.Preprocessing.filter_for_keywords
+import fhcrc_clinical.SocialHistories.Preprocessing.split_into_f
+import fhcrc_clinical.SocialHistories.SystemUtilities.Configuration as c
 
 # Generate individual notes based on the results from the sql query
+from fhcrc_clinical.SocialHistories import Preprocessing
+
 print("Calling the note generation module...")
 Preprocessing.generate_notes.main()
 

@@ -5,21 +5,23 @@ from Extraction.StatusClassification import Training as StatusClassificationTrai
 from Extraction.EventAttributeLinking import Training as EventFillerTraining
 from Extraction.AttributeExtraction import Training as AttributeExtractionTraining
 from SystemUtilities import Shelver
-from SystemUtilities.Configuration import ENV
 
 
 def main():
+    # Set which division of data to use
+    DATA_SPLIT = "Train"
+
     # Load Data
-    patients = DataLoading.DataLoader.main(ENV)  # list of filled Patient objects
+    patients = DataLoading.DataLoader.main(DATA_SPLIT)  # list of filled Patient objects
+
+    #Shelver.shelve_patients(patients)
+    #patients = Shelver.unshelve_patients()
 
     # Event Detection
     EventDetectionTraining.train_event_detectors(patients)
 
     # Status classification
     StatusClassificationTraining.train_status_classifier(patients)
-
-    # Shelver.shelve_patients(patients)
-    # patients = Shelver.unshelve_patients()
 
     # Attribute Extraction
     AttributeExtractionTraining.train(patients)

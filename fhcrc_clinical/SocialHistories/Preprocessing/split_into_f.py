@@ -1,5 +1,5 @@
-import SystemUtilities.Configuration as c
-import SystemUtilities.Globals as g
+import fhcrc_clinical.SocialHistories.SystemUtilities.Configuration as c
+import fhcrc_clinical.SocialHistories.SystemUtilities.Globals as g
 import os
 import openpyxl
 import collections

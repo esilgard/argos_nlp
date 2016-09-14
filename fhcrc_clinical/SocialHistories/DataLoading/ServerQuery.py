@@ -1,12 +1,12 @@
 import labkey
 import re
-from DataModeling.DataModels import *
+from fhcrc_clinical.SocialHistories.DataModeling.DataModels import *
 from DataLoadingGlobals import *
 
 
 def get_annotations_from_server():
     """
-    :return: {annotator_id: {MRN: {doc_id: [Event]}}} where there is a gold Event for each substance type for each doc
+    :return: {annotator_id: {MRN: {doc_id: [Event]}}} -- the list of events has one gold Event for each substance
     """
     context = labkey.utils.create_server_context(SERVER, PROJECT, use_ssl=True)
 
@@ -42,6 +42,7 @@ def field_query_results(all_fields):
 
     filtered_fields = filter_fields(all_fields)
 
+    # Find fields per annotator
     for field in filtered_fields:
         annotator = field[CREATED_BY]
         if annotator not in field_results_per_annotator:
@@ -118,7 +119,7 @@ def convert_fields_to_substance_events(fields_per_report):
 
 
 def find_substance_field_names():
-    """Find the set of LabKey field names for each substance type"""
+    """ Find the set of LabKey field names for each substance type """
     fields_per_subst = {}
     for subst in SUBSTANCE_TYPES:
         # Status
@@ -158,8 +159,9 @@ def create_events():
 def fill_events(fields_per_report, report_id, substances_of_fields, events_per_report):
     fields = fields_per_report[report_id]
     for field in fields:
-        substance = substances_of_fields[field.name]
-        add_field_to_event(field, substance, events_per_report[report_id][substance])
+        if field.name in substances_of_fields:
+            substance = substances_of_fields[field.name]
+            add_field_to_event(field, substance, events_per_report[report_id][substance])
 
 
 def add_field_to_event(field, substance, event):
@@ -175,9 +177,9 @@ def add_field_to_event(field, substance, event):
 
 def match_reports_to_patients(events_per_report, all_reports):
     doc_events_per_patient = {annotator: {} for annotator in events_per_report}  # {annotator: {mrn: {doc: [Event]}}}
-    iaa_reports = [r for r in all_reports[ROWS] if r[JOB_ID] in IAA_JOB_IDS]
+    reports = [r for r in all_reports[ROWS] if r[JOB_ID] in JOB_IDS]
 
-    for report in iaa_reports:
+    for report in reports:
         add_events_to_patient(report, report[REPORT_ID], events_per_report, doc_events_per_patient)
 
     return doc_events_per_patient
@@ -219,7 +221,7 @@ def find_events_per_report(field_results_per_annotator, offset_results_per_annot
 
 def filter_fields(all_fields):
     # by job run ID
-    right_job_id_fields = [f for f in all_fields[ROWS] if f[REPORT_JOB_ID] in IAA_JOB_IDS]
+    right_job_id_fields = [f for f in all_fields[ROWS] if f[REPORT_JOB_ID] in JOB_IDS]
 
     # by SocialHistory table
     soc_history_fields = [f for f in right_job_id_fields if (f[u'TargetTable'] == SOC_HISTORIES)]

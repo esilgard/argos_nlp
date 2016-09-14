@@ -3,22 +3,32 @@ from sklearn.externals import joblib
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.svm import LinearSVC
 import numpy as np
-from SystemUtilities import Globals
-from SystemUtilities.Configuration import STATUS_CLASSF_FEATMAP_SUFFIX, STATUS_CLASSF_MODEL_SUFFIX, MODEL_DIR
+
+from fhcrc_clinical.SocialHistories.Extraction.EventDetection.Processing import flor_sentence_features_and_labels, load_flor_patients
+from fhcrc_clinical.SocialHistories.SystemUtilities import Globals
+from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import MODEL_DIR
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import STATUS_CLASSF_FEATMAP_SUFFIX, STATUS_CLASSF_MODEL_SUFFIX
 
 
 def train_status_classifier(patients):
     sentences = get_sentences_from_patients(patients)
 
+    # Load Florian data
+    flor_tbc_feats, flor_tbc_labels = flor_get_tob_features()
+
     # Create Feature-Label pairs for each Subs Abuse type
     alc_feats, alc_labels = get_features(sentences, Globals.ALCOHOL)
     tbc_feats, tbc_labels = get_features(sentences, Globals.TOBACCO)
-    scd_hnd_feats, scd_hnd_labels = get_features(sentences, Globals.SECONDHAND)
+    #scd_hnd_feats, scd_hnd_labels = get_features(sentences, Globals.SECONDHAND)
+
+    # Join flor's tobacco features and labels to regular tobacco features and labels
+    tbc_feats.extend(flor_tbc_feats)
+    tbc_labels.extend(flor_tbc_labels)
 
     # Create Model
     alc_classifier, alc_feature_map = train_model(alc_feats, alc_labels)
     tob_classifier, tob_feature_map = train_model(tbc_feats, tbc_labels)
-    scd_hnd_classifier, scd_hnd_feature_map = train_model(scd_hnd_feats, scd_hnd_labels)
+    #scd_hnd_classifier, scd_hnd_feature_map = train_model(scd_hnd_feats, scd_hnd_labels)
 
     # Set output directory pointers for model files
     classf_alc_file = MODEL_DIR + Globals.ALCOHOL + STATUS_CLASSF_MODEL_SUFFIX
@@ -34,8 +44,8 @@ def train_status_classifier(patients):
     Pickle.dump(alc_feature_map, open(featmap_alc_file, "wb"))
     joblib.dump(tob_classifier, classf_tob_file)
     Pickle.dump(tob_feature_map, open(featmap_tob_file, "wb"))
-    joblib.dump(scd_hnd_classifier, classf_scndhnd_file)
-    Pickle.dump(scd_hnd_feature_map, open(featmap_scndhnd_file, "wb"))
+    # joblib.dump(scd_hnd_classifier, classf_scndhnd_file)
+    # Pickle.dump(scd_hnd_feature_map, open(featmap_scndhnd_file, "wb"))
     pass
 
 def get_sentences_from_patients(patients):
@@ -46,6 +56,32 @@ def get_sentences_from_patients(patients):
                 if (len(sent_obj.gold_events)) > 0: # if the sentence has an event
                     sentences.append(sent_obj)
     return sentences
+
+def flor_get_tob_features():
+    # Mapping flor labels to our labels
+    mapping = {"past":Globals.FORMER, "user":Globals.USER, "non":Globals.NON, "current":Globals.CURRENT, "unknown":Globals.UNKNOWN}
+    doc_data = load_flor_patients()
+
+    feature_vecs = list()
+    labels = list()
+
+    for doc_id in doc_data:
+        doc = doc_data[doc_id]
+        for sent in doc:
+            vector = dict()
+            label = mapping[sent['TobaccoStatus']] # whatever the tobacco status is for this entry
+            input_list = sent["Sentence"].lower().rstrip(",.!?:;").split()
+            some_bigrams = list(get_bigrams(input_list))
+
+            for pair in some_bigrams:
+                vector[pair[0] + "_" + pair[1]] = True
+            for x in input_list:
+                vector[x] = True
+
+            labels.append(label)
+            feature_vecs.append(vector)
+    return feature_vecs, labels
+
 
 def get_features(sents, subs_type):
     feature_vecs = list()

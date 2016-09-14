@@ -1,6 +1,6 @@
 import csv
-from SystemUtilities.Globals import *
-from SystemUtilities.Configuration import IAA_DISAGREEMENT_LOG, IAA_OUT_FILE, SPAN_DISAGREEMENT_LOG
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
+from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import IAA_DISAGREEMENT_LOG, IAA_OUT_FILE, SPAN_DISAGREEMENT_LOG
 
 
 class FieldIAAInfo:
@@ -13,7 +13,7 @@ class FieldIAAInfo:
 
 
 def calculate_iaa(annotations, num_of_annotators):
-    """Use Fleiss Kappa for several annotator interrater agreement"""
+    """ Use Fleiss Kappa for several annotator interrater agreement """
     value_infos, highlight_infos = field_iaa_info(annotations)
 
     # kappa for each individual field
@@ -267,7 +267,7 @@ def field_disagreements_per_doc(disagreements, row, column_value_map, substance,
 
 
 def log_disagreements(value_disagreements, span_disagreements):
-    """ Output disagreements to a log file """
+    """ Output disagreements to a log file -- Span info is commented out"""
     # Get field value and span disagreements
     docs_with_disagreements = set(value_disagreements.keys()) | set(span_disagreements.keys())
 

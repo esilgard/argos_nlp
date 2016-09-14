@@ -1,20 +1,18 @@
-from SystemUtilities.Parameter_Configuration import SURR_WORDS_WINDOW
+from fhcrc_clinical.SocialHistories.SystemUtilities.Parameter_Configuration import SURR_WORDS_WINDOW
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import KNOWN_SUBSTANCE_ATTRIBS
 from Globals import *
-from DataModeling.DataModels import Attribute
+from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Attribute, Sentence
 
 
-def features(doc):
-    """ Features for data without annotations """
+def features(sent, previous_sent):
+    """ Features for data without annotations
+    @type sent: Sentence"""
     feature_sets = []
     attributes = []
 
-    previous_sent = None
-    for sent in doc.sent_list:
-        for event in sent.predicted_events:
-            for attrib in event.attributes:
-                add_attribute_feats(sent, attrib, previous_sent, feature_sets)
-                attributes.append(attrib)
-        previous_sent = sent
+    for attrib in sent.sentence_attribs:
+        add_attribute_feats(sent, attrib, previous_sent, feature_sets)
+        attributes.append(attrib)
 
     return feature_sets, attributes
 
@@ -37,20 +35,21 @@ def features_and_labels(patients):
 def add_sentence_feats_and_labels(sent, feature_sets, labels, previous_sent, doc):
     for gold_event in sent.gold_events:
         for attrib_type in gold_event.attributes:
-            # create an attrib object for every region highlighted by annotator for the field
-            attributes = highlighted_attributes(gold_event.attributes[attrib_type], doc)
+            if attrib_type not in KNOWN_SUBSTANCE_ATTRIBS:
+                # create an attrib object for every region highlighted by annotator for the field
+                attributes = highlighted_attributes(gold_event.attributes[attrib_type], doc)
 
-            # Add features and the label for each attribute object
-            for attrib in attributes:
-                add_attribute_feats(sent, attrib, previous_sent, feature_sets)
-                labels.append(gold_event.substance_type)
+                # Add features and the label for each attribute object
+                for attrib in attributes:
+                    add_attribute_feats(sent, attrib, previous_sent, feature_sets)
+                    labels.append(gold_event.substance_type)
 
 
 def highlighted_attributes(annotated_attribute, doc):
     """ Create Attribute object for every highlighted span of field """
     attributes = []     # list of Attribute object
 
-    for span in annotated_attribute.spans:
+    for span in annotated_attribute.all_value_spans:
         text = doc.text[span.start:span.stop]
         attribute_object = Attribute(annotated_attribute.type, span.start, span.stop, text)
         attributes.append(attribute_object)

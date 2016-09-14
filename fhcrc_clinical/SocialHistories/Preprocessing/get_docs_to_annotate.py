@@ -1,13 +1,13 @@
 import re
 
-import SystemUtilities.Configuration as c
-import SystemUtilities.Globals as g
+import fhcrc_clinical.SocialHistories.SystemUtilities.Configuration as c
+import fhcrc_clinical.SocialHistories.SystemUtilities.Globals as g
 import os
 import openpyxl
 import collections
 import csv
 
-from Preprocessing.CSVBatch import CSVBatch
+from fhcrc_clinical.SocialHistories.Preprocessing import *
 
 
 def write_unannotated_info_to_file(unannotated_documents):

@@ -1,11 +1,11 @@
 import cPickle as Pickle
 from sklearn.externals import joblib
 import numpy as np
-
-from Extraction import Classification
-from Extraction.Classification import vectorize_sentence, classify_many_instances
-from SystemUtilities.Configuration import MODEL_DIR, EVENT_DETECT_MODEL_SUFFIX, EVENT_DETECT_FEATMAP_SUFFIX, \
-    STATUS_CLASSF_FEATMAP_SUFFIX, STATUS_CLASSF_MODEL_SUFFIX, SUBSTANCE_TYPES
+from fhcrc_clinical.SocialHistories.SystemUtilities import Debugger
+from fhcrc_clinical.SocialHistories.Extraction import Classification
+from fhcrc_clinical.SocialHistories.Extraction.Classification import vectorize_sentence, classify_many_instances
+from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import *
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
 
 
 def classify_sentence_status(sentences):
@@ -17,6 +17,7 @@ def classify_sentence_status(sentences):
         # extract features
         features = extract_features(sentences)
 
+        # classify sentences
         classifications = classify_many_instances(classifier, feature_map, features)
 
         # assign classification directly to the sentence
@@ -25,6 +26,10 @@ def classify_sentence_status(sentences):
             for event in sent.predicted_events:
                 if event.substance_type == event_type:
                     event.status = classifications[i]
+
+        # DEBUG
+        Debugger.print_status_classification_results(sentences, classifications, event_type)
+        # end DEBUG
     pass
 
 

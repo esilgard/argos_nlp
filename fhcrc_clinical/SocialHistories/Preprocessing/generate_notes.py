@@ -1,11 +1,11 @@
 import openpyxl
 from os import listdir
 from os.path import isfile, join
-import SystemUtilities.Configuration as c
-import SystemUtilities.Globals as g
+import fhcrc_clinical.SocialHistories.SystemUtilities.Configuration as c
+import fhcrc_clinical.SocialHistories.SystemUtilities.Globals as g
 import re
 
-from Preprocessing.PreDoc import PreDoc
+from fhcrc_clinical.SocialHistories.Preprocessing.PreDoc import PreDoc
 
 
 def main():
@@ -36,7 +36,7 @@ def remove_date_dashes(event_date):
 
 def get_blobs():
     # read blob file into memory
-    with open(c.RAW_DATA_DIR, "rb") as f:
+    with open(c.data_dir + "/exposure_notes_utf8.txt", "rb") as f:
         data = f.read()
 
     # split on the defined delimiter
@@ -126,10 +126,10 @@ def write_note_files_to_disk(patients, flors_files):
     print("Raw data written into individual document txt files at: " + c.NOTE_OUTPUT_DIR)
 
     # write metadata file
-    with open(c.SUBSTANCE_IE_DATA_FOLDER + "marvelously_massive_metadata_muniments_dict.txt", "wb") as file:
+    with open(c.SUBSTANCE_IE_DATA_FOLDER + "id_MRN_timestamp_mappings.txt", "wb") as file:
         for key_id, value_tuple in document_metadata.iteritems():
             file.write(key_id + "\t" + value_tuple[0] + "\t" + value_tuple[1] + "\n")
-    print("Metatata for keyword-filtered documents written to: " + c.SUBSTANCE_IE_DATA_FOLDER + "marvelously_massive_metadata_muniments_dict.txt")
+    print("Metatata for keyword-filtered documents written to: " + c.SUBSTANCE_IE_DATA_FOLDER + "id_MRN_timestamp_mappings.txt")
     pass
 
 def get_docs_from_blobs(blobs):
@@ -159,7 +159,7 @@ def load_caisis_silver_annotations():
     # Read in metadata file (excel), creating:
     #  dict of {doc_id:patient_id}
     #  dict of {patient_id : [gold labels] }
-    wb = openpyxl.load_workbook(c.CAISIS_DIR)
+    wb = openpyxl.load_workbook(c.data_dir + "/resources/caisis_exposure_labels.xlsx")
     sheets = wb.get_sheet_names()
     mrn_caisis_dict = dict()
     caisis_gold_dict = dict()

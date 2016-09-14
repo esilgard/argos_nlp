@@ -1,4 +1,4 @@
-from SystemUtilities.Configuration import *
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
 
 
 def evaluate_doc_classifications(patients):

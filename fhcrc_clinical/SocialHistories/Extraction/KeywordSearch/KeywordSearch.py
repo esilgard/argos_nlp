@@ -1,7 +1,7 @@
 import re, os
 
-from SystemUtilities.Globals import *
-from DataModeling.DataModels import Span
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
+from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Span
 
 
 class KeywordHitJSON:

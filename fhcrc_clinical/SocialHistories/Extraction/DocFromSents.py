@@ -1,6 +1,6 @@
-from SystemUtilities.Globals import STATUS_HIERARCHY, UNKNOWN
-from Extraction.EventAttributeLinking import Execution as EventFilling
-from DataModeling.DataModels import DocumentEvent
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import STATUS_HIERARCHY, UNKNOWN, entity_types
+from fhcrc_clinical.SocialHistories.Extraction.EventAttributeLinking import Execution as EventFilling
+from fhcrc_clinical.SocialHistories.DataModeling.DataModels import DocumentEvent, DocumentAttribute
 
 
 def get_doc_level_info(patients):
@@ -12,8 +12,11 @@ def get_doc_level_info(patients):
             # doc status
             get_doc_level_status(doc)
 
-            # Tie attributes to substance references
-            EventFilling.link_attributes_to_substances(doc)
+            # roll sentence-level events to doc level
+            sentence_events_to_doc_level(doc)
+
+            # attributes
+            EventFilling.attributes_to_doc_level(doc)
 
 
 def find_doc_events(doc):
@@ -65,3 +68,25 @@ def doc_level_status(sentence_level_statuses):
             break
 
     return doc_status
+
+
+def sentence_events_to_doc_level(doc):
+    all_attributes_for_field = {}
+    for sentence in doc.sent_list:
+        if len(sentence.sentence_attribs) > 0:
+            for attrib in sentence.sentence_attribs:
+                if attrib.type not in all_attributes_for_field:
+                    all_attributes_for_field[attrib.type] = []
+                all_attributes_for_field[attrib.type].append(attrib)
+
+    # Unintelligently pick the first of each type to be the official Document-level attribute
+    for attrib_field_key in sorted(all_attributes_for_field.keys()):
+        attrib_list = all_attributes_for_field[attrib_field_key]
+        official_attrib_type = attrib_list[0].type
+        offcial_attrib_start = attrib_list[0].span_start
+        official_attrib_end = attrib_list[0].span_end
+        official_attrib_text = attrib_list[0].text
+        doc_attrib = DocumentAttribute(official_attrib_type, offcial_attrib_start, official_attrib_end, official_attrib_text, attrib_list)
+
+        doc.all_attributes[attrib_field_key] = doc_attrib
+

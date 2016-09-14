@@ -3,40 +3,68 @@ import csv
 import re
 from nltk.tokenize import *
 
-from DataLoading import ServerQuery
-from DataModeling.DataModels import Document, Event, Patient, Sentence
-from SystemUtilities import Configuration
-from SystemUtilities.Globals import *
-from Extraction.KeywordSearch import KeywordSearch
+from fhcrc_clinical.SocialHistories.DataLoading import ServerQuery
+from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Document, Event, Patient, Sentence
+from fhcrc_clinical.SocialHistories.SystemUtilities import Configuration
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
+from fhcrc_clinical.SocialHistories.Extraction.KeywordSearch import KeywordSearch
 from os import listdir
 from os.path import isfile, join
 import sys
-
 
 
 def main(environment):
     reload(sys)
     sys.setdefaultencoding('utf8')
 
-    print "Loading training data annotations from labkey server ..."
+    print "Loading data annotations from labkey server ..."
     annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
 
-    if environment == Configuration.RUNTIME_ENV.TRAIN:
+    if environment == "Train":
         split_set = load_split_info(environment)
-        labkey_training_patients = load_labkey_patients(annotation_metadata, split_set)
-        return labkey_training_patients
 
-    elif environment == Configuration.RUNTIME_ENV.EXECUTE:
-        split_set = load_split_info(Configuration.RUNTIME_ENV.TRAIN) # TODO: split should not be explicitly stated like this. It only is ATM b/c Labkey has no annotated testing data
+        labkey_training_patients = load_labkey_patients(annotation_metadata, split_set)
+
+        # Temporary split of training data into test/train
+        tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_training_patients) # Necessary because we only have labeled training data at the moment
+
+        return tmp_train_set
+
+    elif environment == "Test":
+        split_set = load_split_info("Train") # TODO: split should not be explicitly stated like this. It only is ATM b/c Labkey has no annotated testing data
+
         labkey_testing_patients = load_labkey_patients(annotation_metadata, split_set)
-        return labkey_testing_patients
+
+        # Temporary split of training data into test/train
+        tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_testing_patients) # Necessary because we only have labeled training data at the moment
+
+        return tmp_test_set
+
+def get_temporary_train_and_test_divisions(patients):
+    sorted_list = sorted(patients)
+    doc_count = len(sorted_list)
+    end_test_span = doc_count / 4 # the first 1/4 of the sorted data is the test_set
+    test_span = (0, end_test_span)
+
+    test_set = set()
+    train_set = set()
+
+    count = 0
+    for doc in sorted_list:
+        if count >= test_span[0] and count <=test_span[1]:
+            test_set.add(doc)
+        else:
+            train_set.add(doc)
+        count += 1
+    return train_set, test_set
+
 
 def load_split_info(environment):
     lines = list()
-    if environment == Configuration.RUNTIME_ENV.EXECUTE:
+    if environment == "Test":
         with open(Configuration.data_dir + "notes_dev_def.txt", "rb") as file:
             lines = file.read().splitlines()
-    elif environment == Configuration.RUNTIME_ENV.TRAIN:
+    elif environment == "Train":
         with open(Configuration.data_dir + "notes_train_def.txt", "rb") as file:
             lines = file.read().splitlines()
     return set(lines)
@@ -66,10 +94,74 @@ def get_doc_sentences(doc):
 
 
 def split_doc_text(text):
-    text= re.sub("\r", "",text) # Carriage Returns are EVIL !!!!!
+    text = re.sub("\r", "", text)  # Carriage Returns are EVIL !!!!!
     sentences = PunktSentenceTokenizer().sentences_from_text(text.encode("utf8"))
     spans = list(PunktSentenceTokenizer().span_tokenize(text.encode("utf8")))
+    sentences, spans = split_by_double_newline(sentences, spans)
     return sentences, spans
+
+
+def split_by_double_newline(sentences, spans):
+    """ Take the sentences split by NLTK and further split them by double newline chars """
+    split_sents = []
+    split_spans = []
+
+    for sent, span in zip(sentences, spans):
+        doc_begin_index = span[0]
+        nltk_sent_begin_index = 0
+        chars = list(sent)
+
+        # Find any splits in the sentences
+        last_char = ""
+        for nltk_sent_index, char in enumerate(chars):
+            # Check for double newline
+            doc_begin_index, nltk_sent_begin_index = check_for_double_newline(char, last_char, doc_begin_index,
+                                                                              nltk_sent_index, nltk_sent_begin_index,
+                                                                              chars, split_sents, split_spans)
+            last_char = char
+
+        # Add the last sent in the chunk
+        doc_end_index = span[1]
+        nltk_sent_index = len(chars)
+
+        add_current_sent_and_span(doc_begin_index, doc_end_index, nltk_sent_begin_index, nltk_sent_index, chars,
+                                  split_sents, split_spans)
+
+    return split_sents, split_spans
+
+
+def check_for_double_newline(char, last_char, doc_begin_index, nltk_sent_index, nltk_sent_begin_index, chars,
+                             split_sents, split_spans):
+
+    if char == '\n' and last_char == '\n':
+        doc_end_index = doc_begin_index + nltk_sent_index - nltk_sent_begin_index
+        add_current_sent_and_span(doc_begin_index, doc_end_index, nltk_sent_begin_index, nltk_sent_index, chars,
+                                  split_sents, split_spans)
+
+        nltk_sent_begin_index = nltk_sent_index + 1
+        doc_begin_index = doc_end_index + 1
+
+    return doc_begin_index, nltk_sent_begin_index
+
+
+def add_current_sent_and_span(doc_begin_index, doc_end_index, nltk_sent_begin_index, nltk_sent_end_index,
+                              chars, split_sents, split_spans):
+
+    span = (doc_begin_index, doc_end_index)
+    sent = "".join(chars[nltk_sent_begin_index:nltk_sent_end_index + 1])
+
+    if sent:
+        split_sents.append(sent)
+        split_spans.append(span)
+
+    # This is a dumb thing to handle the case that the doc ends with a double newline
+    else:
+        # Increment the end of the final span
+        end_span_begin, end_span_end = split_spans[-1]
+        del split_spans[-1]
+
+        end_span_end += 1
+        split_spans.append((end_span_begin, end_span_end))
 
 
 def assign_goldLabels_to_sents(sents, doc):
@@ -148,7 +240,7 @@ def load_data_repo(NOTE_OUTPUT_DIR):
     id_text_dict = dict()
     all_notes = [f for f in listdir(NOTE_OUTPUT_DIR) if isfile(join(NOTE_OUTPUT_DIR, f))]
     for note in all_notes:
-        with open(NOTE_OUTPUT_DIR + "\\" + note, "rb") as f:
+        with open(NOTE_OUTPUT_DIR + note, "rb") as f:
             id_text_dict[note] = f.read()
     return id_text_dict
 
