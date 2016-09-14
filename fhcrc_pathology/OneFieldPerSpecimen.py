@@ -170,7 +170,6 @@ class OneFieldPerSpecimen(object):
         ## will not currently pick up "summary cancer data" if specimen values were found
         ## back off model->cover case where there's no labeled specimen-=>assign to "UNK" specimen
         if not finding_set:
-            if 'Site' in self.overall_field_name: print self.specimen_table, 2
             specimen_finding_set, specimen_start_stops_set = self.get_specimen_finding\
                         ('', self.dz_specific_list, self.dz_specific_standardizations, d)
             ## back off to general findings
@@ -191,7 +190,6 @@ class OneFieldPerSpecimen(object):
                                  ("%.2f" % self.unlabled_specimen_confidence), gb.STARTSTOPS: \
                                  [{gb.START: char[0], gb.STOP:char[1]} for \
                                   char in specimen_start_stops_set]}
-                if 'Site' in self.overall_field_name: print self.specimen_table, 3
                 self.return_d_list.append(unk_finding_d)
                 if self.has_secondary_data_element == True:
                     self.add_secondary_data_elements(unk_finding_d, d[(-1, 'FullText', 0, None)])
@@ -200,7 +198,6 @@ class OneFieldPerSpecimen(object):
         if finding_set:
             if self.inference_flag:
                 finding_set = self.infer(finding_set)
-            if 'Site' in self.overall_field_name: print self.specimen_table, 3
             overall_finding_d = {gb.NAME: self.overall_field_name, gb.KEY: gb.ALL, \
                                  gb.TABLE: self.overall_table, gb.VALUE: ';'.join(sorted(finding_set)), \
                                  gb.CONFIDENCE: ("%.2f" % (sum([float(x.get(gb.CONFIDENCE)) \
