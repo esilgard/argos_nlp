@@ -14,6 +14,10 @@
 # limitations under the License.
 #
 
+# Example command to run clinical pipeline:
+#       python nlp_engine.py -g all -t clinical -f path_to_input_file_directory -o name_of_output_file
+
+
 import sys, os, codecs
 import output_results, make_text_output_directory, metadata
 from datetime import datetime
