@@ -5,14 +5,14 @@ a document with the usrId_documentId as the filename.
 '''
 import re
 import openpyxl
-import Preprocessing.get_splits as annotation_splitter
-import SystemUtilities.Configuration as c
-import SystemUtilities.Globals as g
+import fhcrc_clinical.SocialHistories.Preprocessing.get_splits as annotation_splitter
+import fhcrc_clinical.SocialHistories.SystemUtilities.Configuration as c
+import fhcrc_clinical.SocialHistories.SystemUtilities.Globals as g
 from os import listdir
 from os.path import isfile, join
 
-from Preprocessing.PreDoc import PreDoc
-from Preprocessing.PrePatient import PrePatient
+from fhcrc_clinical.SocialHistories.Preprocessing.PreDoc import PreDoc
+from fhcrc_clinical.SocialHistories.Preprocessing.PrePatient import PrePatient
 
 
 def load_caisis_silver_annotations():
@@ -209,7 +209,7 @@ with open(c.NOTE_OUTPUT_GOLD_LABELS_DIR + "patients_SILVER", "w") as patient_sil
                 #   {first_id : {date : [document]}}
                 # add_timestamp_to_dict(first_id, event_date, doc_text, id_timestamp_text_dict)
 
-                add_patient_and_doc_to_dict()
+                # add_patient_and_doc_to_dict()
                 pre_doc = PreDoc(event_date, doc_text)
                 pre_patient = PrePatient(first_id)
                 if pre_patient in prepatient_docs:
@@ -229,11 +229,11 @@ with open(c.NOTE_OUTPUT_GOLD_LABELS_DIR + "patients_SILVER", "w") as patient_sil
                 # second_id = get_special_doc_id(count, first_id, doc_text, flor_docId_text_dict, patient_doc_count,
                 #                                                                                 insertion_doc_count,
                 #                                                                                 id_timestamp_text_dict)
-                with open(c.NOTE_OUTPUT_DIR + first_id + "_" + second_id,
-                          "w") as writefile:  # was clinical_event_id, not count
-                    for line in re.split(r"\n", doc_text):
-                        writefile.write(line + "\n")
-                #
+                # with open(c.NOTE_OUTPUT_DIR + first_id + "_" + second_id,
+                #           "w") as writefile:  # was clinical_event_id, not count
+                #     for line in re.split(r"\n", doc_text):
+                #         writefile.write(line + "\n")
+                # #
                 # ##########################################
                 # ### write silver annotations to a file ###
                 # ##########################################

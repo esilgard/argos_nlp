@@ -8,6 +8,7 @@ import collections
 import csv
 
 from fhcrc_clinical.SocialHistories.Preprocessing import *
+from fhcrc_clinical.SocialHistories.Preprocessing.CSVBatch import CSVBatch
 
 
 def write_unannotated_info_to_file(unannotated_documents):

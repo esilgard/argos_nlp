@@ -54,7 +54,7 @@ class SubstanceField:
 
         # Field spans
         for span in attribute_obj.all_value_spans:
-            self.return_d[STARTSTOPS].append({START: span.start, STOP: span.end})
+            self.return_d[STARTSTOPS].append({START: span.start, STOP: span.stop})
 
     def fill_status(self, event):
         # Field value
@@ -62,7 +62,7 @@ class SubstanceField:
 
         # Field spans
         for span in event.status_spans:
-            self.return_d[STARTSTOPS].append({START: span.start, STOP: span.end})
+            self.return_d[STARTSTOPS].append({START: span.start, STOP: span.stop})
 
 
 def get_document(patients, mrn, accession, mrn_caisis_map):

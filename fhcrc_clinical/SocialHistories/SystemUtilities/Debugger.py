@@ -1,4 +1,4 @@
-from SystemUtilities import Configuration
+from fhcrc_clinical.SocialHistories.SystemUtilities import Configuration
 
 
 def print_status_classification_results(sentences, classifications, event_type):

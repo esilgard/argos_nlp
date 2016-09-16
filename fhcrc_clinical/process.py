@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 import sys, parser
 import os, csv
 import global_strings as gb
@@ -77,7 +76,8 @@ def main(arguments):
     return_errors = []
 
     # Extract substance information
-    patient_substance_info = extract_substance_info.main()  # TODO -- make sure we're doing right process (train/test/execute)
+    patient_substance_info = extract_substance_info.main("execute", arguments['-f'])
+    print "Finished extracting substance info"
 
     # create a list of output field dictionaries
     mrn_caisis_map, dict2 = load_caisis_silver_annotations()

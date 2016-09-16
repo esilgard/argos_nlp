@@ -1,6 +1,6 @@
 import csv
 from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
-from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import IAA_DISAGREEMENT_LOG, IAA_OUT_FILE, SPAN_DISAGREEMENT_LOG
+from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import IAA_DISAGREEMENT_LOG, IAA_OUT_FILE
 
 
 class FieldIAAInfo:

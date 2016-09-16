@@ -16,8 +16,7 @@
 
 # Example command to run clinical pipeline:
 #       python nlp_engine.py -g all -t clinical -f path_to_input_file_directory -o name_of_output_file
-
-
+import importlib
 import sys, os, codecs
 import output_results, make_text_output_directory, metadata
 from datetime import datetime
@@ -115,6 +114,7 @@ else:
     ## import and call appropriate module ##
     try:
         DOCUMENT_PROCESSER = __import__('fhcrc_'+ARGUMENTS.get('-t'), globals(), locals(), ['process'])
+
     except ImportError:
         sys.stderr.write('FATAL ERROR: could not import module ' + ARGUMENTS.get('-t'))
         sys.exit(1)

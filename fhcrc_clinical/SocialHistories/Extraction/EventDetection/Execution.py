@@ -1,7 +1,7 @@
-from SystemUtilities.Configuration import *
-from DataModeling.DataModels import Event
+from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import *
+from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Event
 from Processing import *
-from Extraction import Classification
+from fhcrc_clinical.SocialHistories.Extraction import Classification
 
 
 # Add sentence-level predicted events in Patient object

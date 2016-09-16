@@ -66,7 +66,7 @@ if USER == will:
     DEV_SPLIT_DIR = r"C:\Users\wlane\Documents\Substance_IE_Data\notes_dev"
     TEST_SPLIT_DIR = r"C:\Users\wlane\Documents\Substance_IE_Data\notes_testing\\"
     NOTE_OUTPUT_GOLD_LABELS_DIR = r"C:\Users\wlane\Documents\Substance_IE_Data\output_annotations\\"
-    MODEL_DIR = "C:\Users\wlane\Documents\Substance_IE_Data\\resources\Models\\"
+    MODEL_DIR = data_dir + os.path.sep + "resources" +os.path.sep + "Models" + os.path.sep
     # GOLD annotation sources
     gold_annotation_dir = r"/home/wlane/Documents/Substance_IE_Data/resources/Florian_Data/Florian/smoking_status/SmokingStatusAnnotator/resources/gold/"
     # Data sources

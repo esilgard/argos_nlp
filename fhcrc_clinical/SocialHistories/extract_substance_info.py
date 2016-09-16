@@ -14,15 +14,18 @@ from SystemUtilities import Shelver
 from SystemUtilities.Configuration import *
 
 
-def main():
-    print "Using NLTK v"+nltk.__version__
+def main(run_type=None, tsv_in=""):
     # Set which division of data to use
     DATA_SPLIT = "Test"
 
-    # Load Data
-    patients = DataLoader.main(DATA_SPLIT)
+    if run_type == "execute":
+        patients = DataLoader.main("execute", tsv_in)
 
-    Shelver.shelve_patients(patients)
+    # Load Data
+    else: # load data in either the test or train default configurations
+        patients = DataLoader.main(DATA_SPLIT)
+
+    #Shelver.shelve_patients(patients)
     # patients = Shelver.unshelve_patients()
 
     # Determine sentence level info

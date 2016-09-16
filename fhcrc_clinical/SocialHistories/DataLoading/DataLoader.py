@@ -12,15 +12,17 @@ from os import listdir
 from os.path import isfile, join
 import sys
 
+from fhcrc_clinical.parser import csv_parse
 
-def main(environment):
+
+def main(environment, tsv_in = ""):
     reload(sys)
     sys.setdefaultencoding('utf8')
 
-    print "Loading data annotations from labkey server ..."
-    annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
-
     if environment == "Train":
+        print "Loading data annotations from labkey (Train Environment)..."
+        annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
+
         split_set = load_split_info(environment)
 
         labkey_training_patients = load_labkey_patients(annotation_metadata, split_set)
@@ -31,6 +33,8 @@ def main(environment):
         return tmp_train_set
 
     elif environment == "Test":
+        print "Loading data annotations from labkey (Test environment) ..."
+        annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
         split_set = load_split_info("Train") # TODO: split should not be explicitly stated like this. It only is ATM b/c Labkey has no annotated testing data
 
         labkey_testing_patients = load_labkey_patients(annotation_metadata, split_set)
@@ -39,6 +43,11 @@ def main(environment):
         tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_testing_patients) # Necessary because we only have labeled training data at the moment
 
         return tmp_test_set
+
+    elif environment == "execute":
+        print "Loading data from provided tsv file: " + tsv_in
+        patients = build_patients_from_tsv(tsv_in)
+        return patients
 
 def get_temporary_train_and_test_divisions(patients):
     sorted_list = sorted(patients)
@@ -291,6 +300,47 @@ def build_patients_from_labkey(annId_patient_dict, docID_text_dict, split_set):
     labkey_patients = get_labkey_patients(labkey_documents)
     return labkey_patients
 
+def build_patients_from_tsv(tsv_in):
+    dict1, dict2 = csv_parse(tsv_in)
+    patients = build_patients_from_csv_parse(dict1)
+    return patients
+
+def build_patients_from_csv_parse(patient_dict):
+    patients = list()
+    for patient_id, docs in patient_dict.iteritems():
+        patient_documents, patient_caisis_id = get_patient_docs(docs)
+        patient_obj = Patient(patient_caisis_id)
+        patient_obj.doc_list = patient_documents
+        patients.append(patient_obj)
+    return patients
+
+def get_patient_docs(docs):
+    documents = list()
+    patient_caisis_id = None
+    for doc_id, fields in docs.iteritems():
+        patient_caisis_id = doc_id.split('_')[0]
+        sentence_objs, doc_text = get_sentences_from_field_tuples(fields, doc_id)
+        document_obj = Document(doc_id, doc_text)
+        document_obj.sent_list = sentence_objs
+        documents.append(document_obj)
+    return documents, patient_caisis_id
+
+def get_sentences_from_field_tuples(fields, doc_id):
+    full_text = ""
+    event_date=""
+    sentences = list()
+    for tuple, line in fields.iteritems():
+        if tuple[1] == "FullText":
+            full_text = line
+        elif tuple[1] == "EventDate":
+            event_date = line
+        else:
+            #Assume the line is a sentence
+            text_start_idx = tuple[2]
+            text_end_idx = len(line) + text_start_idx
+            sentence = Sentence(doc_id, line, text_start_idx, text_end_idx)
+            sentences.append(sentence)
+    return sentences, full_text
 
 if __name__ == '__main__':
     main(Configuration.RUNTIME_ENV.TRAIN)

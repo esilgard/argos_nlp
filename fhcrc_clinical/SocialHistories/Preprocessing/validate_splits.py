@@ -1,4 +1,4 @@
-import SystemUtilities.Configuration as c
+import fhcrc_clinical.SocialHistories.SystemUtilities.Configuration as c
 from os import listdir
 from os.path import isfile, join
 
