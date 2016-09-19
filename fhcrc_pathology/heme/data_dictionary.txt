@@ -1,0 +1,2 @@
+CellularityType	Class
+CellularityPercent	Class

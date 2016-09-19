@@ -18,5 +18,3 @@ Her2FISH	MLClass
 Her2IHC	MLClass
 Nottingham	MLClass
 Mitotic	MLClass
-CellularityType	Class
-CellularityPercent	Class
