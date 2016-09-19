@@ -1,3 +1,5 @@
+import os
+
 import fhcrc_clinical.SocialHistories.Preprocessing.generate_notes
 import fhcrc_clinical.SocialHistories.Preprocessing.filter_for_keywords
 import fhcrc_clinical.SocialHistories.Preprocessing.split_into_f
@@ -11,7 +13,7 @@ Preprocessing.generate_notes.main()
 
 # split into dev, train, and test
 print("Filtering data into dev train and test folders ...")
-Preprocessing.split_into_f.main(c.NOTE_OUTPUT_DIR)
+Preprocessing.split_into_f.main(os.path.join(c.DATA_DIR, "output"))
 # Filter full list of documents for keywords (smoking, tobacco), and produce
 #  a list of which ones need annotations
 print("Calling the keyword filter module")

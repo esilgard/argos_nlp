@@ -1,4 +1,5 @@
 import csv
+import os
 
 import re
 from nltk.tokenize import *
@@ -71,17 +72,17 @@ def get_temporary_train_and_test_divisions(patients):
 def load_split_info(environment):
     lines = list()
     if environment == "Test":
-        with open(Configuration.data_dir + "notes_dev_def.txt", "rb") as file:
+        with open(Configuration.DATA_DIR + "notes_dev_def.txt", "rb") as file:
             lines = file.read().splitlines()
     elif environment == "Train":
-        with open(Configuration.data_dir + "notes_train_def.txt", "rb") as file:
+        with open(Configuration.DATA_DIR + "notes_train_def.txt", "rb") as file:
             lines = file.read().splitlines()
     return set(lines)
 
 
 def load_labkey_patients(test_anns, split_set):
     # Load full data note repo from which TRAIN or TEST will pic and return a subset of docs
-    noteID_text_dict = load_data_repo(Configuration.NOTE_OUTPUT_DIR)
+    noteID_text_dict = load_data_repo(os.path.join(Configuration.DATA_DIR, "output"))
 
     labkey_patients = build_patients_from_labkey(test_anns, noteID_text_dict, split_set)
     return labkey_patients

@@ -1,6 +1,6 @@
 import csv
 from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
-from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import IAA_DISAGREEMENT_LOG, IAA_OUT_FILE
+from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import DATA_DIR
 
 
 class FieldIAAInfo:
@@ -272,7 +272,7 @@ def log_disagreements(value_disagreements, span_disagreements):
     docs_with_disagreements = set(value_disagreements.keys()) | set(span_disagreements.keys())
 
     # Set up file output
-    tsv_file = open(IAA_DISAGREEMENT_LOG, "wb")
+    tsv_file = open(DATA_DIR + "disagreement_log.txt", "wb")
     tsv_writer = csv.writer(tsv_file, delimiter='\t', quoting=csv.QUOTE_ALL)
     # span_tsv_file = open(SPAN_DISAGREEMENT_LOG, "wb")
     # span_tsv_writer = csv.writer(span_tsv_file, delimiter='\t', quoting=csv.QUOTE_ALL)

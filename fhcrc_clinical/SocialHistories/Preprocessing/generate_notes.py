@@ -1,3 +1,5 @@
+import os
+
 import openpyxl
 from os import listdir
 from os.path import isfile, join
@@ -36,7 +38,7 @@ def remove_date_dashes(event_date):
 
 def get_blobs():
     # read blob file into memory
-    with open(c.data_dir + "/exposure_notes_utf8.txt", "rb") as f:
+    with open(c.DATA_DIR + "/exposure_notes_utf8.txt", "rb") as f:
         data = f.read()
 
     # split on the defined delimiter
@@ -58,7 +60,7 @@ def get_blobs():
 
 
 def populate_split_dict(doc_dir, patients_dir):
-    the_dict=dict()
+    the_dict = dict()
     with open(doc_dir) as d:
         lines = d.readlines()
     for line in lines:
@@ -77,14 +79,23 @@ def populate_split_dict(doc_dir, patients_dir):
 
 
 def populate_dir_dict():
-    dev_dict= populate_split_dict(c.doc_dev_gold_dir, c.patients_dev_gold_dir)
-    train_dict =populate_split_dict(c.doc_train_gold_dir, c.patients_train_gold_dir)
-    test_dict = populate_split_dict(c.doc_test_gold_dir, c.patients_test_gold_dir)
-    return dev_dict,train_dict,test_dict
+    gold_annotation_dir = os.path.join(c.DATA_DIR, "resources", "Florian_Data", "Florian", "smoking_status",
+                                       "SmokingStatusAnnotator", "resources", "gold")
+    doc_dev_gold_dir = gold_annotation_dir + "documents_dev.gold"
+    doc_test_gold_dir = gold_annotation_dir + "documents_testing.gold"
+    doc_train_gold_dir = gold_annotation_dir + "documents_training.gold"
+    patients_dev_gold_dir = gold_annotation_dir + "patients_dev.gold"
+    patients_test_gold_dir = gold_annotation_dir + "patients_testing.gold"
+    patients_train_gold_dir = gold_annotation_dir + "patients_training.gold"
+
+    dev_dict = populate_split_dict(doc_dev_gold_dir, patients_dev_gold_dir)
+    train_dict = populate_split_dict(doc_train_gold_dir, patients_train_gold_dir)
+    test_dict = populate_split_dict(doc_test_gold_dir, patients_test_gold_dir)
+    return dev_dict, train_dict, test_dict
 
 
 def write_note_files_to_disk(patients, flors_files):
-    document_metadata= dict()
+    document_metadata = dict()
     dev_dict, train_dict, test_dict = populate_dir_dict()
     dev_docs = list()
     train_docs = list()
@@ -116,21 +127,22 @@ def write_note_files_to_disk(patients, flors_files):
 
         # write files
         for tup in this_data_is_from_flor:
-            with open(c.NOTE_OUTPUT_DIR + tup[0], "w") as writefile:
+            with open(os.path.join(c.DATA_DIR, "output", tup[0]), "w") as writefile:
                 for line in re.split(r"\n", tup[1]):
                     writefile.write(line + "\n")
         for tup in data_unique_to_our_set:
-            with open(c.NOTE_OUTPUT_DIR + tup[0], "w") as writefile:
+            with open(os.path.join(c.DATA_DIR, "output", tup[0]), "w") as writefile:
                 for line in re.split(r"\n", tup[1]):
                     writefile.write(line + "\n")
-    print("Raw data written into individual document txt files at: " + c.NOTE_OUTPUT_DIR)
+    print("Raw data written into individual document txt files at: " + os.path.join(c.DATA_DIR, "output"))
 
     # write metadata file
-    with open(c.SUBSTANCE_IE_DATA_FOLDER + "id_MRN_timestamp_mappings.txt", "wb") as file:
+    with open(c.DATA_DIR + "id_MRN_timestamp_mappings.txt", "wb") as file:
         for key_id, value_tuple in document_metadata.iteritems():
             file.write(key_id + "\t" + value_tuple[0] + "\t" + value_tuple[1] + "\n")
-    print("Metatata for keyword-filtered documents written to: " + c.SUBSTANCE_IE_DATA_FOLDER + "id_MRN_timestamp_mappings.txt")
+    print("Metatata for keyword-filtered documents written to: " + c.DATA_DIR + "id_MRN_timestamp_mappings.txt")
     pass
+
 
 def get_docs_from_blobs(blobs):
     documents = list()
@@ -159,7 +171,7 @@ def load_caisis_silver_annotations():
     # Read in metadata file (excel), creating:
     #  dict of {doc_id:patient_id}
     #  dict of {patient_id : [gold labels] }
-    wb = openpyxl.load_workbook(c.data_dir + "/resources/caisis_exposure_labels.xlsx")
+    wb = openpyxl.load_workbook(c.DATA_DIR + "/resources/caisis_exposure_labels.xlsx")
     sheets = wb.get_sheet_names()
     mrn_caisis_dict = dict()
     caisis_gold_dict = dict()
@@ -200,9 +212,10 @@ def insert_appropriate_num_of_zeros(doc_num_count):
 
 def load_florText_florDocNum_dict():
     id_note = dict()
-    onlyfiles = [f for f in listdir(c.FLORIAN_FULL_DATA) if isfile(join(c.FLORIAN_FULL_DATA, f))]
+    onlyfiles = [f for f in listdir(os.path.join(c.DATA_DIR, "resources", "Florian_Data", "sortedNotes", "all")) if
+                 isfile(join(os.path.join(c.DATA_DIR, "resources", "Florian_Data", "sortedNotes", "all"), f))]
     for file in onlyfiles:
-        with open(c.FLORIAN_FULL_DATA + file) as f:
+        with open(os.path.join(c.DATA_DIR, "resources", "Florian_Data", "sortedNotes", "all", file)) as f:
             text = f.read()
         normalized_note_text = normalize_note_text(text)
         if normalized_note_text != "":

@@ -1,17 +1,24 @@
 """ This script takes Florian's keyword-filtered texts and writes them as tsv files in a given directory """
 import csv
+import os
 from os import listdir
 from os.path import isfile, join
 import fhcrc_clinical.SocialHistories.SystemUtilities.Configuration as c
 
 
 def get_splits():
+    gold_annotation_dir = os.path.join(c.DATA_DIR, "resources", "Florian_Data", "Florian", "smoking_status",
+                                       "SmokingStatusAnnotator", "resources", "gold")
+    doc_dev_gold_dir = os.path.join(gold_annotation_dir, "documents_dev.gold")
+    doc_test_gold_dir = os.path.join(gold_annotation_dir, "documents_testing.gold")
+    doc_train_gold_dir = os.path.join(gold_annotation_dir, "documents_training.gold")
+
     # read in the different split lists
-    with open(c.doc_dev_gold_dir,"rb") as dev:
+    with open(doc_dev_gold_dir,"rb") as dev:
         devlines = dev.readlines()
-    with open(c.doc_train_gold_dir, "rb") as train:
+    with open(doc_train_gold_dir, "rb") as train:
         trainlines = train.readlines()
-    with open(c.doc_test_gold_dir, "rb") as test:
+    with open(doc_test_gold_dir, "rb") as test:
         testlines = test.readlines()
     return trainlines, testlines, devlines
 
@@ -39,7 +46,9 @@ def write_csv(id_text):
 
 
 def get_doc_ids():
-    with open(c.doc_all_gold_dir, "rb") as file:
+    gold_annotation_dir = os.path.join(c.DATA_DIR, "resources", "Florian_Data", "Florian", "smoking_status",
+                                       "SmokingStatusAnnotator", "resources", "gold")
+    with open(os.path.join(gold_annotation_dir, "documents.gold"), "rb") as file:
         doc_ids = file.readlines()
     return doc_ids
 

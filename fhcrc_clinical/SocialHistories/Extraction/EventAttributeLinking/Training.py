@@ -12,8 +12,8 @@ def train_event_fillers(patients):
     classifier, feature_map = Classification.train_classifier(features, labels)
 
     # Write models to file
-    classf_file = MODEL_DIR + EVENT_FILLER_MODEL_NAME
-    featmap_file = MODEL_DIR + EVENT_FILLER_FEATMAP_NAME
+    classf_file = os.path.join(MODEL_DIR, EVENT_FILLER_MODEL_NAME)
+    featmap_file = os.path.join(MODEL_DIR, EVENT_FILLER_FEATMAP_NAME)
 
     joblib.dump(classifier, classf_file)
     Pickle.dump(feature_map, open(featmap_file, "wb"))

@@ -43,14 +43,17 @@ def get_fields(report_d, clinical_data_d, mrn, accession, patient_substance_info
         field_value, return_type = get_field_values(module, report_d, field, mrn, accession, patient_substance_info,
                                                     mrn_caisis_map)
 
+
         # organize fields by tables, then individual records, then individual fields
         if return_type == list:
             for each_field in field_value:
-                table = each_field.get(gb.TABLE)
-                report_table_d[table] = report_table_d.get(table, {})
-                report_table_d[table][gb.TABLE] = table
-                report_table_d[table][gb.FIELDS] = report_table_d[table].get(gb.FIELDS, [])
-                report_table_d[table][gb.FIELDS].append(each_field)
+                # catch and release fields with NULL/None value ToDo: Make this into a downstream filter of some kind?
+                if each_field['Value'] != None:
+                    table = each_field.get(gb.TABLE)
+                    report_table_d[table] = report_table_d.get(table, {})
+                    report_table_d[table][gb.TABLE] = table
+                    report_table_d[table][gb.FIELDS] = report_table_d[table].get(gb.FIELDS, [])
+                    report_table_d[table][gb.FIELDS].append(each_field)
         else:
             error_list += field_value
 

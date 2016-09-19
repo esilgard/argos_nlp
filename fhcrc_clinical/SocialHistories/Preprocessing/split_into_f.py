@@ -9,9 +9,18 @@ from shutil import copyfile
 
 
 def populate_dir_dict():
-    dev_dict = populate_split_dict(c.doc_dev_gold_dir, c.patients_dev_gold_dir)
-    train_dict = populate_split_dict(c.doc_train_gold_dir, c.patients_train_gold_dir)
-    test_dict = populate_split_dict(c.doc_test_gold_dir, c.patients_test_gold_dir)
+    gold_annotation_dir = os.path.join(c.DATA_DIR, "resources", "Florian_Data", "Florian", "smoking_status",
+                                       "SmokingStatusAnnotator", "resources", "gold")
+    doc_dev_gold_dir = gold_annotation_dir + "documents_dev.gold"
+    doc_test_gold_dir = gold_annotation_dir + "documents_testing.gold"
+    doc_train_gold_dir = gold_annotation_dir + "documents_training.gold"
+    patients_dev_gold_dir = gold_annotation_dir + "patients_dev.gold"
+    patients_test_gold_dir = gold_annotation_dir + "patients_testing.gold"
+    patients_train_gold_dir = gold_annotation_dir + "patients_training.gold"
+
+    dev_dict = populate_split_dict(doc_dev_gold_dir, patients_dev_gold_dir)
+    train_dict = populate_split_dict(doc_train_gold_dir, patients_train_gold_dir)
+    test_dict = populate_split_dict(doc_test_gold_dir, patients_test_gold_dir)
     return dev_dict, train_dict, test_dict
 
 
@@ -35,18 +44,24 @@ def populate_split_dict(doc_dir, patients_dir):
 
 
 def main(dir):
+    NOTE_OUTPUT_DIR = os.path.join(c.DATA_DIR, "output")
+    TRAIN_SPLIT_DIR = os.path.join(c.DATA_DIR, "notes_training", "")
+    DEV_SPLIT_DIR = os.path.join(c.DATA_DIR, "notes_dev", "")
+    TEST_SPLIT_DIR = os.path.join(c.DATA_DIR, "notes_testing", "")
+
+
     dev_dic, train_dict, test_dict = populate_dir_dict()
     onlyfiles = [f for f in listdir(dir) if isfile(join(dir, f))]
 
     # create split dirs if they dont exist
-    if not os.path.exists(c.DEV_SPLIT_DIR):
-        os.makedirs(c.DEV_SPLIT_DIR)
+    if not os.path.exists(DEV_SPLIT_DIR):
+        os.makedirs(DEV_SPLIT_DIR)
 
-    if not os.path.exists(c.TEST_SPLIT_DIR):
-        os.makedirs(c.TEST_SPLIT_DIR)
+    if not os.path.exists(TEST_SPLIT_DIR):
+        os.makedirs(TEST_SPLIT_DIR)
 
-    if not os.path.exists(c.TRAIN_SPLIT_DIR):
-        os.makedirs(c.TRAIN_SPLIT_DIR)
+    if not os.path.exists(TRAIN_SPLIT_DIR):
+        os.makedirs(TRAIN_SPLIT_DIR)
 
 
     # make splits
@@ -55,24 +70,24 @@ def main(dir):
         id = file.split("-")[0]
         id = id.split("_")[0]
         if id in dev_dic:
-            copyfile(c.NOTE_OUTPUT_DIR + "\\" + file, c.DEV_SPLIT_DIR+ "\\" + file)
+            copyfile(NOTE_OUTPUT_DIR + "\\" + file, DEV_SPLIT_DIR+ "\\" + file)
         elif id in train_dict:
-            copyfile(c.NOTE_OUTPUT_DIR + "\\" + file, c.TRAIN_SPLIT_DIR+ "\\" + file)
+            copyfile(NOTE_OUTPUT_DIR + "\\" + file, TRAIN_SPLIT_DIR+ "\\" + file)
         elif id in test_dict:
-            copyfile(c.NOTE_OUTPUT_DIR + "\\" + file, c.TEST_SPLIT_DIR+ "\\" + file)
+            copyfile(NOTE_OUTPUT_DIR + "\\" + file, TEST_SPLIT_DIR+ "\\" + file)
         else:
             if count == 0:
-                copyfile(c.NOTE_OUTPUT_DIR + file, c.DEV_SPLIT_DIR+ "\\" + file)
-                dev_dic[id] = c.DEV_SPLIT_DIR+ "\\" + file
+                copyfile(NOTE_OUTPUT_DIR + file, DEV_SPLIT_DIR+ "\\" + file)
+                dev_dic[id] = DEV_SPLIT_DIR+ "\\" + file
             elif count == 1:
-                copyfile(c.NOTE_OUTPUT_DIR + "\\" + file, c.TEST_SPLIT_DIR+ "\\" + file)
-                test_dict[id] = c.TEST_SPLIT_DIR + "\\" + file
+                copyfile(NOTE_OUTPUT_DIR + "\\" + file, TEST_SPLIT_DIR+ "\\" + file)
+                test_dict[id] = TEST_SPLIT_DIR + "\\" + file
             else:
-                copyfile(c.NOTE_OUTPUT_DIR + "\\" + file, c.TRAIN_SPLIT_DIR+ "\\" + file)
-                train_dict[id] = c.TRAIN_SPLIT_DIR + "\\" + file
+                copyfile(NOTE_OUTPUT_DIR + "\\" + file, TRAIN_SPLIT_DIR+ "\\" + file)
+                train_dict[id] = TRAIN_SPLIT_DIR + "\\" + file
             count += 1
             count %= 5
 
 
 if __name__ == '__main__':
-    main(c.NOTE_OUTPUT_DIR)
+    main(os.path.join(c.DATA_DIR, "output"))

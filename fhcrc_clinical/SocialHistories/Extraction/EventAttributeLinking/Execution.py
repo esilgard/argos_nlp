@@ -23,8 +23,8 @@ def link_attributes_to_substances(patients):
 
 
 def load_event_filling_classifier():
-    classifier_file = MODEL_DIR + EVENT_FILLER_MODEL_NAME
-    feature_map_file = MODEL_DIR + EVENT_FILLER_FEATMAP_NAME
+    classifier_file = os.path.join(MODEL_DIR, EVENT_FILLER_MODEL_NAME)
+    feature_map_file = os.path.join(MODEL_DIR, EVENT_FILLER_FEATMAP_NAME)
 
     classifier, feature_map = Classification.load_classifier(classifier_file, feature_map_file)
     return classifier, feature_map

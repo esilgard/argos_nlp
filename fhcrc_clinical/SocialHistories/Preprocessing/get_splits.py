@@ -9,7 +9,7 @@ def load_caisis_silver_annotations():
     # Read in metadata file (excel), creating:
     #  dict of {doc_id:patient_id}
     #  dict of {patient_id : [gold labels] }
-    wb = openpyxl.load_workbook(c.CAISIS_DIR)
+    wb = openpyxl.load_workbook(os.path.join(c.DATA_DIR, "resources", "caisis_exposure_labels.xlsx")) # data_dir + /resources/caisis_exposure_labels.xlsx
     sheets = wb.get_sheet_names()
     mrn_caisis_dict = dict()
     caisis_gold_dict = dict()
@@ -29,10 +29,14 @@ def load_caisis_silver_annotations():
 
 
 def write_new_splits_to_file(document_or_patient, dev_dict, test_dict, train_dict):
-    tmp = 0
+    gold_annotation_dir = os.path.join(c.DATA_DIR, "resources", "Florian_Data", "Florian", "smoking_status",
+                                       "SmokingStatusAnnotator", "resources", "gold")
+
+    patients_dev_gold_dir = gold_annotation_dir + "patients_dev.gold"
+
     if document_or_patient == "patient":
         od = collections.OrderedDict(sorted(dev_dict.items()))
-        with open(c.patients_dev_gold_dir) as file:
+        with open(patients_dev_gold_dir) as file:
             for key, value in od:
                 file.write(key + "\t" + value)
 
@@ -41,7 +45,7 @@ def write_new_splits_to_file(document_or_patient, dev_dict, test_dict, train_dic
 
 def split_patient_data(patients_dev_dict, patients_test_dict, patients_train_dict, caisis_silver_dict):
     # Read in expanded data set and determine which documents/patients are not already accounted for in Flor's split
-    full_data_set_dir = c.data_repo_dir
+    full_data_set_dir = os.path.join(c.DATA_DIR, "output")
     unassigned = set()
     seen_patients = set()
     patient_level_split_assignments = dict()
@@ -102,7 +106,7 @@ def split_patient_data(patients_dev_dict, patients_test_dict, patients_train_dic
 
 
 def split_document_data(doc_dev_dict, doc_test_dict, doc_train_dict, assignments):
-    full_data_set_dir = c.data_repo_dir
+    full_data_set_dir = os.path.join(c.DATA_DIR, "output")
     for file in os.listdir(full_data_set_dir):
         p_d = file.split("_")
         patient_id = p_d[0]
@@ -128,12 +132,14 @@ def get_splits():
     # load silver data for easy annotation mapping
     mrn_caisis_dict, caisis_silver_dict = load_caisis_silver_annotations()
 
-    doc_dev_gold_dir = c.doc_dev_gold_dir
-    doc_test_gold_dir = c.doc_test_gold_dir
-    doc_train_gold_dir = c.doc_train_gold_dir
-    patients_test_gold_dir = c.patients_test_gold_dir
-    patients_train_gold_dir = c.patients_train_gold_dir
-    patients_dev_gold_dir = c.patients_dev_gold_dir
+    gold_annotation_dir = os.path.join(c.DATA_DIR, "resources", "Florian_Data", "Florian", "smoking_status",
+                                       "SmokingStatusAnnotator", "resources", "gold")
+    doc_dev_gold_dir = gold_annotation_dir + "documents_dev.gold"
+    doc_test_gold_dir = gold_annotation_dir + "documents_testing.gold"
+    doc_train_gold_dir = gold_annotation_dir + "documents_training.gold"
+    patients_dev_gold_dir = gold_annotation_dir + "patients_dev.gold"
+    patients_test_gold_dir = gold_annotation_dir + "patients_testing.gold"
+    patients_train_gold_dir = gold_annotation_dir + "patients_training.gold"
 
     dev_dirs = [doc_dev_gold_dir, patients_dev_gold_dir]
     test_dirs = [doc_test_gold_dir, patients_test_gold_dir]

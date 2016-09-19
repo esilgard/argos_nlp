@@ -16,16 +16,16 @@ def main(dirs):
     test = sorted(test)
     train = sorted(train)
 
-    with open(c.data_dir+"notes_dev_def.txt", "wb") as file:
+    with open(c.DATA_DIR+ "notes_dev_def.txt", "wb") as file:
         for item in dev:
             file.writelines(item + "\n")
-    with open(c.data_dir + "notes_test_def.txt", "wb") as file:
+    with open(c.DATA_DIR + "notes_test_def.txt", "wb") as file:
         for item in test:
             file.writelines(item + "\n")
-    with open(c.data_dir + "notes_train_def.txt", "wb") as file:
+    with open(c.DATA_DIR + "notes_train_def.txt", "wb") as file:
         for item in train:
             file.writelines(item + "\n")
 
 
 if __name__ == '__main__':
-    main([c.DEV_SPLIT_DIR, c.TEST_SPLIT_DIR, c.TRAIN_SPLIT_DIR])
+    main([os.path.join(c.DATA_DIR, "notes_dev", ""), os.path.join(c.DATA_DIR, "notes_testing", ""), os.path.join(c.DATA_DIR, "notes_training", "")])

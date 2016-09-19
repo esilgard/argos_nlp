@@ -214,14 +214,13 @@ def evaluate_total_performance(attribute_type, value_eval_data, value_span_eval_
         all_span_overlap_eval_data[substance].calculate_precision_recall_f1()
 
         # Output eval
-        value_eval_data[substance].output(ATTRIB_VALUE_EVAL_FILENAME + "_" + substance + "_" + attribute_type)
-        # value_span_eval_data[substance].output(ATTRIB_VALUE_SPAN_EVAL_FILENAME + "_" + substance + "_" + attribute_type)
-        all_span_eval_data[substance].output(ATTRIB_ALL_SPAN_EVAL_FILENAME + "_" + substance + "_" + attribute_type)
-        all_span_overlap_eval_data[substance].output(ATTRIB_ALL_SPAN_OVERLAP_EVAL_FILENAME + "_" + substance +
-                                                     "_" + attribute_type)
+        value_eval_data[substance].output(os.path.join(DATA_DIR, "Evaluation", "AttribValueEval", substance + "_" + attribute_type))
+        all_span_eval_data[substance].output(os.path.join(DATA_DIR, r"Evaluation", "AttribAllSpanEval", substance + "_" + attribute_type))
+        all_span_overlap_eval_data[substance].output(os.path.join(DATA_DIR, "Evaluation", "AttribAllSpanOverlapEval", "_", substance +
+                                                     "_" + attribute_type))
 
     # Total across substances
-    find_total_field_performance(value_eval_data, attribute, ATTRIB_VALUE_EVAL_FILENAME)
+    find_total_field_performance(value_eval_data, attribute, os.path.join(DATA_DIR, "Evaluation", "AttribValueEval"))
     # find_total_field_performance(value_span_eval_data, attribute, ATTRIB_VALUE_SPAN_EVAL_FILENAME)
-    find_total_field_performance(all_span_eval_data, attribute, ATTRIB_ALL_SPAN_EVAL_FILENAME)
-    find_total_field_performance(all_span_overlap_eval_data, attribute, ATTRIB_ALL_SPAN_OVERLAP_EVAL_FILENAME)
+    find_total_field_performance(all_span_eval_data, attribute, os.path.join(DATA_DIR, "Evaluation", "AttribAllSpanEval"))
+    find_total_field_performance(all_span_overlap_eval_data, attribute, os.path.join(DATA_DIR, "Evaluation", "AttribAllSpanOverlapEval"))

@@ -3,6 +3,7 @@ from sklearn.externals import joblib
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.svm import LinearSVC
 import numpy as np
+import os
 
 from fhcrc_clinical.SocialHistories.Extraction.EventDetection.Processing import flor_sentence_features_and_labels, load_flor_patients
 from fhcrc_clinical.SocialHistories.SystemUtilities import Globals
@@ -31,12 +32,12 @@ def train_status_classifier(patients):
     #scd_hnd_classifier, scd_hnd_feature_map = train_model(scd_hnd_feats, scd_hnd_labels)
 
     # Set output directory pointers for model files
-    classf_alc_file = MODEL_DIR + Globals.ALCOHOL + STATUS_CLASSF_MODEL_SUFFIX
-    classf_tob_file = MODEL_DIR + Globals.TOBACCO + STATUS_CLASSF_MODEL_SUFFIX
-    classf_scndhnd_file = MODEL_DIR + Globals.SECONDHAND + STATUS_CLASSF_MODEL_SUFFIX
-    featmap_alc_file = MODEL_DIR + Globals.ALCOHOL + STATUS_CLASSF_FEATMAP_SUFFIX
-    featmap_tob_file = MODEL_DIR + Globals.TOBACCO + STATUS_CLASSF_FEATMAP_SUFFIX
-    featmap_scndhnd_file = MODEL_DIR + Globals.SECONDHAND + STATUS_CLASSF_FEATMAP_SUFFIX
+    classf_alc_file = os.path.join(MODEL_DIR, Globals.ALCOHOL, STATUS_CLASSF_MODEL_SUFFIX)
+    classf_tob_file = os.path.join(MODEL_DIR, Globals.TOBACCO, STATUS_CLASSF_MODEL_SUFFIX)
+    classf_scndhnd_file = os.path.join(MODEL_DIR, Globals.SECONDHAND, STATUS_CLASSF_MODEL_SUFFIX)
+    featmap_alc_file = os.path.join(MODEL_DIR, Globals.ALCOHOL, STATUS_CLASSF_FEATMAP_SUFFIX)
+    featmap_tob_file = os.path.join(MODEL_DIR, Globals.TOBACCO, STATUS_CLASSF_FEATMAP_SUFFIX)
+    featmap_scndhnd_file = os.path.join(MODEL_DIR, Globals.SECONDHAND, STATUS_CLASSF_FEATMAP_SUFFIX)
 
 
     # write models files

@@ -1,7 +1,6 @@
 from Evaluate import *
 from fhcrc_clinical.KeywordSearch.KeywordGlobals import *
-from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import SENT_EVENT_DETECT_EVAL_FILENAME, DOC_EVENT_DETECT_EVAL_FILENAME, \
-    SENT_STATUS_CLASSF_EVAL_FILENAME, DOC_STATUS_CLASSF_EVAL_FILENAME
+from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import DATA_DIR
 from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import UNKNOWN
 
 
@@ -51,12 +50,12 @@ def calculate_and_output_eval(sentence_eval_data, doc_eval_data, eventDetect_or_
         doc_filename=""
         if eventDetect_or_statusClassf == "eventdetect":
             # Output evaluation
-            sentence_filename = SENT_EVENT_DETECT_EVAL_FILENAME + "_" + substance
-            doc_filename = DOC_EVENT_DETECT_EVAL_FILENAME + "_" + substance
+            sentence_filename = os.path.join(DATA_DIR, "Evaluation","SentEventDetectionEval", substance)
+            doc_filename = os.path.join(DATA_DIR, "Evaluation", "DocEventDetectionEval", substance)
         elif eventDetect_or_statusClassf == "statusclassf":
             # Output evaluation
-            sentence_filename = SENT_STATUS_CLASSF_EVAL_FILENAME + "_" + substance
-            doc_filename = DOC_STATUS_CLASSF_EVAL_FILENAME + "_" + substance
+            sentence_filename = os.path.join(DATA_DIR, "Evaluation", "SentStatusClassificationEval", substance)
+            doc_filename = os.path.join(DATA_DIR, "Evaluation", "DocStatusClassificationEval", substance)
 
         sentence_eval_data[substance].output(sentence_filename)
         doc_eval_data[substance].output(doc_filename)

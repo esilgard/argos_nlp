@@ -12,16 +12,16 @@ from fhcrc_clinical.SocialHistories.Preprocessing.CSVBatch import CSVBatch
 
 
 def write_unannotated_info_to_file(unannotated_documents):
-    with open(c.SUBSTANCE_IE_DATA_FOLDER + "docs_to_annotate.txt", "w") as f:
+    with open(c.DATA_DIR + "docs_to_annotate.txt", "w") as f:
         for doc in unannotated_documents:
             f.write(doc.id + "\n")
-    print("List of documents to annotate written to: " + c.SUBSTANCE_IE_DATA_FOLDER + "docs_to_annotate.txt")
+    print("List of documents to annotate written to: " + c.DATA_DIR + "docs_to_annotate.txt")
     pass
 
 
 def get_metadata_dict():
     metadata = dict()
-    with open(c.SUBSTANCE_IE_DATA_FOLDER + "marvelously_massive_metadata_muniments_dict.txt", "rb") as f:
+    with open(c.DATA_DIR + "marvelously_massive_metadata_muniments_dict.txt", "rb") as f:
         lines = f.readlines()
     for line in lines:
         items = line.split()
@@ -97,7 +97,7 @@ def write_docs_needing_annotation_to_csv_batches(documents_needing_annotation, s
     batches = get_batches(documents_needing_annotation)
     metadata_dict = get_metadata_dict()
     for batch in batches:
-        with open(c.DOCS_NEEDING_ANNOTATION_DIR +"\\"+split+"\\"+ "annotation_batch_" + str(batch.id) + ".nlp.tsv", "wb") as csvfile:
+        with open(os.path.join(c.DATA_DIR, "Docs_to_annotate", split, "annotation_batch_", str(batch.id), ".nlp.tsv"), "wb") as csvfile:
             batch_writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
             batch_writer.writerow(["MRN", "FillerOrderNo", "EventDate", "ObservationValue"])
             for document in batch.documents:
@@ -105,7 +105,7 @@ def write_docs_needing_annotation_to_csv_batches(documents_needing_annotation, s
                 mrn = metadata_dict[id][0]
                 timestamp = metadata_dict[id][1]
                 batch_writer.writerow([mrn, id, timestamp, document.text])
-    print("tsv batch files ready for annotation written to: " + c.DOCS_NEEDING_ANNOTATION_DIR)
+    print("tsv batch files ready for annotation written to: " + os.path.join(c.DATA_DIR, "Docs_to_annotate"))
     pass
 
 
@@ -175,12 +175,15 @@ class DataSplitter:
         return docs_belonging_to_relevant_split
 
     def get_splits(self, split):
-        doc_dev_gold_dir = c.doc_dev_gold_dir
-        doc_test_gold_dir = c.doc_test_gold_dir
-        doc_train_gold_dir = c.doc_train_gold_dir
-        patients_test_gold_dir = c.patients_test_gold_dir
-        patients_train_gold_dir = c.patients_train_gold_dir
-        patients_dev_gold_dir = c.patients_dev_gold_dir
+        gold_annotation_dir = os.path.join(c.DATA_DIR, "resources", "Florian_Data", "Florian", "smoking_status",
+                                           "SmokingStatusAnnotator", "resources", "gold")
+        doc_dev_gold_dir = gold_annotation_dir, "documents_dev.gold"
+        doc_test_gold_dir = gold_annotation_dir + "documents_testing.gold"
+        doc_train_gold_dir = gold_annotation_dir + "documents_training.gold"
+        patients_all_gold_dir = gold_annotation_dir + "patients.gold"
+        patients_dev_gold_dir = gold_annotation_dir + "patients_dev.gold"
+        patients_test_gold_dir = gold_annotation_dir + "patients_testing.gold"
+        patients_train_gold_dir = gold_annotation_dir + "patients_training.gold"
 
         dev_dirs = [doc_dev_gold_dir, patients_dev_gold_dir]
         test_dirs = [doc_test_gold_dir, patients_test_gold_dir]

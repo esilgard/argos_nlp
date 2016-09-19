@@ -1,6 +1,8 @@
+import os
+
 from fhcrc_clinical.SocialHistories.DataLoading import ServerQuery
 from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Span, AnnotatedAttribute
-from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import ADJUDICATION_DIR, data_dir
+from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import DATA_DIR
 from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import ATTRIBS
 import openpyxl
 import cPickle as Pickle
@@ -54,7 +56,7 @@ def main():
                             event.attributes[attribute].all_value_spans = determine_all_spans(spans[doc_id][field_name])
 
     # save to pickle
-    Pickle.dump(patients, open(data_dir + "adjudicated_batch_o", "wb"))
+    Pickle.dump(patients, open(DATA_DIR + "adjudicated_batch_o", "wb"))
 
 
 def get_adjudicated_values():
@@ -62,7 +64,7 @@ def get_adjudicated_values():
     Return values from excel file containing adjudicated batch 0 values
     :return: {doc_id: {field_name: value}}
     """
-    wb = openpyxl.load_workbook(ADJUDICATION_DIR)
+    wb = openpyxl.load_workbook(os.path.join(DATA_DIR, "Adjudication"))
     sheets = wb.get_sheet_names()
     sheet_name = sheets[0]
     sheet = wb.get_sheet_by_name(sheet_name)
