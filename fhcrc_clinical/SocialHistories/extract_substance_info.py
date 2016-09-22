@@ -1,7 +1,5 @@
 # extract and output substance information using the models trained in train_models.py
 # output evaluation on test data or output results on unlabeled data
-import nltk
-
 from DataLoading import DataLoader as DataLoader
 from DataModeling.DataModels import *
 from Evaluation import EventAndStatusEvaluate, AttributeEvaluate
@@ -18,6 +16,7 @@ def main(run_type=None, tsv_in=""):
     # Set which division of data to use
     DATA_SPLIT = "Test"
 
+    print "Using data_dir: " + DATA_DIR
     if run_type == "execute":
         patients = DataLoader.main("execute", tsv_in)
 
@@ -29,16 +28,16 @@ def main(run_type=None, tsv_in=""):
     # patients = Shelver.unshelve_patients()
 
     # Determine sentence level info
-    extract_sentence_level_info(patients)
+    #extract_sentence_level_info(patients)
+
+    #Shelver.shelve_full_patients(patients)
+    patients = Shelver.unshelve_full_patients()
 
     # Determine document level info
     DocFromSents.get_doc_level_info(patients)
 
     # Determine patient level info
     PatientFromDocs.get_patient_level_info(patients)
-
-    Shelver.shelve_full_patients(patients)
-    #patients = Shelver.unshelve_full_patients()
 
     if ENV == RUNTIME_ENV.TEST:
         evaluate_extraction(patients)

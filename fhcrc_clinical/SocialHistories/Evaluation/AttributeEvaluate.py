@@ -214,9 +214,9 @@ def evaluate_total_performance(attribute_type, value_eval_data, value_span_eval_
         all_span_overlap_eval_data[substance].calculate_precision_recall_f1()
 
         # Output eval
-        value_eval_data[substance].output(os.path.join(DATA_DIR, "Evaluation", "AttribValueEval", substance + "_" + attribute_type))
-        all_span_eval_data[substance].output(os.path.join(DATA_DIR, r"Evaluation", "AttribAllSpanEval", substance + "_" + attribute_type))
-        all_span_overlap_eval_data[substance].output(os.path.join(DATA_DIR, "Evaluation", "AttribAllSpanOverlapEval", "_", substance +
+        value_eval_data[substance].output(os.path.join(DATA_DIR, "Evaluation", "AttribValueEval" +"_"+substance + "_" + attribute_type))
+        all_span_eval_data[substance].output(os.path.join(DATA_DIR, r"Evaluation", "AttribAllSpanEval"+"_"+ substance + "_" + attribute_type))
+        all_span_overlap_eval_data[substance].output(os.path.join(DATA_DIR, "Evaluation", "AttribAllSpanOverlapEval"+"_"+ substance +
                                                      "_" + attribute_type))
 
     # Total across substances

@@ -34,8 +34,8 @@ def classify_sentence_status(sentences):
 
 
 def load_classifier(event_type):
-    classifier_file = os.path.join(MODEL_DIR, event_type, STATUS_CLASSF_MODEL_SUFFIX)
-    feature_map_file = os.path.join(MODEL_DIR, event_type, STATUS_CLASSF_FEATMAP_SUFFIX)
+    classifier_file = os.path.join(MODEL_DIR, event_type+ STATUS_CLASSF_MODEL_SUFFIX)
+    feature_map_file = os.path.join(MODEL_DIR, event_type+ STATUS_CLASSF_FEATMAP_SUFFIX)
 
     classifier, feature_map = Classification.load_classifier(classifier_file, feature_map_file)
 

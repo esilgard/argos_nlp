@@ -1,10 +1,11 @@
+import os
 import re
 from nltk import StanfordNERTagger
 
 from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Attribute
 from fhcrc_clinical.SocialHistories.SystemUtilities import Globals
 from fhcrc_clinical.SocialHistories.Extraction.AttributeExtraction.SentenceTokenizer import strip_sec_headers_tokenized_text
-from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import ATTRIB_EXTRACTION_DIR_HOME, STANFORD_NER_PATH, data_dir
+from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import ATTRIB_EXTRACTION_DIR_HOME, STANFORD_NER_PATH, DATA_DIR
 from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import entity_types
 
 
@@ -54,10 +55,10 @@ def tokenize_sentence(sent_obj):
 
 
 def write_crf_classified_stuff_to_file(tokd_sentences, classified_text, type):
-    with open(data_dir + r"DebugOutputs\attrib_extr_tokd_sentences_"+type+"_DEBUG.txt", "wb") as file:
+    with open(os.path.join(DATA_DIR, "DebugOutputs", "attrib_extr_tokd_sentences_"+type+"_DEBUG.txt"), "wb") as file:
         for sent in tokd_sentences:
             file.write(str(sent)+"\n")
-    with open(data_dir + r"DebugOutputs\attrib_extr_clssfd_sentences_"+type+"_DEBUG.txt", "wb") as file:
+    with open(os.path.join(DATA_DIR, "DebugOutputs", "attrib_extr_clssfd_sentences_"+type +"_DEBUG.txt"), "wb") as file:
         for sent in classified_text:
             file.write(str(sent)+"\n")
     pass

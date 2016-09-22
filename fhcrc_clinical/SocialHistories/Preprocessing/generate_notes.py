@@ -81,12 +81,12 @@ def populate_split_dict(doc_dir, patients_dir):
 def populate_dir_dict():
     gold_annotation_dir = os.path.join(c.DATA_DIR, "resources", "Florian_Data", "Florian", "smoking_status",
                                        "SmokingStatusAnnotator", "resources", "gold")
-    doc_dev_gold_dir = gold_annotation_dir + "documents_dev.gold"
-    doc_test_gold_dir = gold_annotation_dir + "documents_testing.gold"
-    doc_train_gold_dir = gold_annotation_dir + "documents_training.gold"
-    patients_dev_gold_dir = gold_annotation_dir + "patients_dev.gold"
-    patients_test_gold_dir = gold_annotation_dir + "patients_testing.gold"
-    patients_train_gold_dir = gold_annotation_dir + "patients_training.gold"
+    doc_dev_gold_dir = os.path.join(gold_annotation_dir, "documents_dev.gold")
+    doc_test_gold_dir = os.path.join(gold_annotation_dir, "documents_testing.gold")
+    doc_train_gold_dir = os.path.join(gold_annotation_dir, "documents_training.gold")
+    patients_dev_gold_dir = os.path.join(gold_annotation_dir, "patients_dev.gold")
+    patients_test_gold_dir = os.path.join(gold_annotation_dir, "patients_testing.gold")
+    patients_train_gold_dir = os.path.join(gold_annotation_dir, "patients_training.gold")
 
     dev_dict = populate_split_dict(doc_dev_gold_dir, patients_dev_gold_dir)
     train_dict = populate_split_dict(doc_train_gold_dir, patients_train_gold_dir)
@@ -171,7 +171,7 @@ def load_caisis_silver_annotations():
     # Read in metadata file (excel), creating:
     #  dict of {doc_id:patient_id}
     #  dict of {patient_id : [gold labels] }
-    wb = openpyxl.load_workbook(c.DATA_DIR + "/resources/caisis_exposure_labels.xlsx")
+    wb = openpyxl.load_workbook(os.path.join(c.DATA_DIR, "resources", "caisis_exposure_labels.xlsx"))
     sheets = wb.get_sheet_names()
     mrn_caisis_dict = dict()
     caisis_gold_dict = dict()

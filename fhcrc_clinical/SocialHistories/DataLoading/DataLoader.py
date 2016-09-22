@@ -2,8 +2,7 @@ import csv
 import os
 
 import re
-from nltk.tokenize import *
-
+import nltk
 from fhcrc_clinical.SocialHistories.DataLoading import ServerQuery
 from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Document, Event, Patient, Sentence
 from fhcrc_clinical.SocialHistories.SystemUtilities import Configuration
@@ -16,44 +15,24 @@ import sys
 from fhcrc_clinical.parser import csv_parse
 
 
-def main(environment, tsv_in = ""):
+def main(environment, tsv_in=""):
     reload(sys)
     sys.setdefaultencoding('utf8')
 
-    if environment == "Train":
-        print "Loading data annotations from labkey (Train Environment)..."
-        annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
+    # Options for "Test" and "Train" data loading pipelines used to live here but have been removed.
+    # The Argos-based NLP engine never needs to do anything but access the execution pipeline
+    # with pre-trained models, so that is what remains below.
 
-        split_set = load_split_info(environment)
-
-        labkey_training_patients = load_labkey_patients(annotation_metadata, split_set)
-
-        # Temporary split of training data into test/train
-        tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_training_patients) # Necessary because we only have labeled training data at the moment
-
-        return tmp_train_set
-
-    elif environment == "Test":
-        print "Loading data annotations from labkey (Test environment) ..."
-        annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
-        split_set = load_split_info("Train") # TODO: split should not be explicitly stated like this. It only is ATM b/c Labkey has no annotated testing data
-
-        labkey_testing_patients = load_labkey_patients(annotation_metadata, split_set)
-
-        # Temporary split of training data into test/train
-        tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_testing_patients) # Necessary because we only have labeled training data at the moment
-
-        return tmp_test_set
-
-    elif environment == "execute":
+    if environment == "execute":
         print "Loading data from provided tsv file: " + tsv_in
         patients = build_patients_from_tsv(tsv_in)
         return patients
 
+
 def get_temporary_train_and_test_divisions(patients):
     sorted_list = sorted(patients)
     doc_count = len(sorted_list)
-    end_test_span = doc_count / 4 # the first 1/4 of the sorted data is the test_set
+    end_test_span = doc_count / 4  # the first 1/4 of the sorted data is the test_set
     test_span = (0, end_test_span)
 
     test_set = set()
@@ -61,7 +40,7 @@ def get_temporary_train_and_test_divisions(patients):
 
     count = 0
     for doc in sorted_list:
-        if count >= test_span[0] and count <=test_span[1]:
+        if count >= test_span[0] and count <= test_span[1]:
             test_set.add(doc)
         else:
             train_set.add(doc)
@@ -89,6 +68,9 @@ def load_labkey_patients(test_anns, split_set):
 
 
 def get_doc_sentences(doc):
+    if doc.id == "109289_86":
+        tmp = 9
+
     # Split sentences
     split_sentences, sent_spans = split_doc_text(doc.text)
 
@@ -105,8 +87,8 @@ def get_doc_sentences(doc):
 
 def split_doc_text(text):
     text = re.sub("\r", "", text)  # Carriage Returns are EVIL !!!!!
-    sentences = PunktSentenceTokenizer().sentences_from_text(text.encode("utf8"))
-    spans = list(PunktSentenceTokenizer().span_tokenize(text.encode("utf8")))
+    sentences = nltk.tokenize.PunktSentenceTokenizer().sentences_from_text(text.encode("utf8"))
+    spans = list(nltk.tokenize.PunktSentenceTokenizer().span_tokenize(text.encode("utf8")))
     sentences, spans = split_by_double_newline(sentences, spans)
     return sentences, spans
 
@@ -142,7 +124,6 @@ def split_by_double_newline(sentences, spans):
 
 def check_for_double_newline(char, last_char, doc_begin_index, nltk_sent_index, nltk_sent_begin_index, chars,
                              split_sents, split_spans):
-
     if char == '\n' and last_char == '\n':
         doc_end_index = doc_begin_index + nltk_sent_index - nltk_sent_begin_index
         add_current_sent_and_span(doc_begin_index, doc_end_index, nltk_sent_begin_index, nltk_sent_index, chars,
@@ -156,7 +137,6 @@ def check_for_double_newline(char, last_char, doc_begin_index, nltk_sent_index, 
 
 def add_current_sent_and_span(doc_begin_index, doc_end_index, nltk_sent_begin_index, nltk_sent_end_index,
                               chars, split_sents, split_spans):
-
     span = (doc_begin_index, doc_end_index)
     sent = "".join(chars[nltk_sent_begin_index:nltk_sent_end_index + 1])
 
@@ -250,7 +230,7 @@ def load_data_repo(NOTE_OUTPUT_DIR):
     id_text_dict = dict()
     all_notes = [f for f in listdir(NOTE_OUTPUT_DIR) if isfile(join(NOTE_OUTPUT_DIR, f))]
     for note in all_notes:
-        with open(NOTE_OUTPUT_DIR + note, "rb") as f:
+        with open(os.path.join(NOTE_OUTPUT_DIR, note), "rb") as f:
             id_text_dict[note] = f.read()
     return id_text_dict
 
@@ -301,23 +281,29 @@ def build_patients_from_labkey(annId_patient_dict, docID_text_dict, split_set):
     labkey_patients = get_labkey_patients(labkey_documents)
     return labkey_patients
 
+
 def build_patients_from_tsv(tsv_in):
     dict1, dict2 = csv_parse(tsv_in)
     patients = build_patients_from_csv_parse(dict1)
     return patients
 
+
 def build_patients_from_csv_parse(patient_dict):
     patients = list()
+    # print "WL DEBUG0.00001" + str(patient_dict)
     for patient_id, docs in patient_dict.iteritems():
+        # print "WL DEBUG1: " + str(docs)
         patient_documents, patient_caisis_id = get_patient_docs(docs)
         patient_obj = Patient(patient_caisis_id)
         patient_obj.doc_list = patient_documents
         patients.append(patient_obj)
     return patients
 
+
 def get_patient_docs(docs):
     documents = list()
     patient_caisis_id = None
+    # print "WL DEBUG2: " + str(docs)
     for doc_id, fields in docs.iteritems():
         patient_caisis_id = doc_id.split('_')[0]
         sentence_objs, doc_text = get_sentences_from_field_tuples(fields, doc_id)
@@ -326,9 +312,10 @@ def get_patient_docs(docs):
         documents.append(document_obj)
     return documents, patient_caisis_id
 
+
 def get_sentences_from_field_tuples(fields, doc_id):
     full_text = ""
-    event_date=""
+    event_date = ""
     sentences = list()
     for tuple, line in fields.iteritems():
         if tuple[1] == "FullText":
@@ -336,12 +323,25 @@ def get_sentences_from_field_tuples(fields, doc_id):
         elif tuple[1] == "EventDate":
             event_date = line
         else:
-            #Assume the line is a sentence
+            # Assume the line is a sentence
             text_start_idx = tuple[2]
             text_end_idx = len(line) + text_start_idx
-            sentence = Sentence(doc_id, line, text_start_idx, text_end_idx)
-            sentences.append(sentence)
+
+            # Going off of the nlp engine's sentence segmentation is no good
+            # split "lines" down into better sentences here, realign spans
+            better_sentences, spans = split_doc_text(line)
+            realigned_spans = list()
+            for span in spans:
+                realigned_spans.append((text_start_idx+span[0], text_start_idx+span[1]))
+
+            for i in range(0,len(better_sentences), 1):
+                text_start_idx = realigned_spans[i][0]
+                text_end_idx = realigned_spans[i][1]
+                sentence = Sentence(doc_id, better_sentences[i], text_start_idx, text_end_idx)
+                sentences.append(sentence)
+
     return sentences, full_text
+
 
 if __name__ == '__main__':
     main(Configuration.RUNTIME_ENV.TRAIN)

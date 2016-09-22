@@ -1,4 +1,6 @@
 import csv
+import os
+
 from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
 from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import DATA_DIR
 
@@ -333,7 +335,7 @@ def get_disagreeing_values(values, values_are_spans):
 
 
 def output_iaa(value_infos, highlight_infos, num_of_annotators):
-    iaa_file = open(IAA_OUT_FILE, "w")
+    iaa_file = open(os.path.join(DATA_DIR, "IAA_OUT.txt"), "w")
 
     for subst in SUBSTANCE_TYPES:
         iaa_file.write("\n" + subst + "\n")

@@ -1,6 +1,6 @@
 from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import STATUS_HIERARCHY, UNKNOWN, entity_types
 from fhcrc_clinical.SocialHistories.Extraction.EventAttributeLinking import Execution as EventFilling
-from fhcrc_clinical.SocialHistories.DataModeling.DataModels import DocumentEvent, DocumentAttribute
+from fhcrc_clinical.SocialHistories.DataModeling.DataModels import DocumentEvent, DocumentAttribute, Span
 
 
 def get_doc_level_info(patients):
@@ -36,38 +36,43 @@ def substances_found_in_sents(doc):
 
 def get_doc_level_status(doc):
     """ Get document level status from sentence level statuses """
-
     for doc_event in doc.predicted_events:
         substance = doc_event.substance_type
 
         sentence_level_statuses = get_sent_level_statuses_for_doc(doc, substance)
-        doc_status = doc_level_status(sentence_level_statuses)
+        doc_status, spans = doc_level_status(sentence_level_statuses)
 
         doc_event.status = doc_status
+        doc_event.status_spans = spans
+        # spans get set here
 
 
 def get_sent_level_statuses_for_doc(doc, substance):
     """ Get all values of status in the doc's sentences for the given substance """
-    sentence_level_statuses = set()
+    sentence_level_statuses = dict()
 
     for sent in doc.sent_list:
         for event in sent.predicted_events:
             if event.substance_type == substance:
-                sentence_level_statuses.add(event.status)
+                if event.status not in sentence_level_statuses:
+                    sentence_level_statuses[event.status] = list()
+                sentence_level_statuses[event.status].append((sent.span_in_doc_start, sent.span_in_doc_end))
 
     return sentence_level_statuses
 
 
 def doc_level_status(sentence_level_statuses):
     doc_status = UNKNOWN
+    spans = []
 
     # Go through precedence-ordered list of statuses and take the first one found
     for status in STATUS_HIERARCHY:
         if status in sentence_level_statuses:
             doc_status = status
+            spans = convert_tupleSpans_to_SpanObjs(sentence_level_statuses[status])
             break
 
-    return doc_status
+    return doc_status, spans
 
 
 def sentence_events_to_doc_level(doc):
@@ -90,3 +95,8 @@ def sentence_events_to_doc_level(doc):
 
         doc.all_attributes[attrib_field_key] = doc_attrib
 
+def convert_tupleSpans_to_SpanObjs(list_of_tuple_spans):
+    spans = list()
+    for tuple_span in list_of_tuple_spans:
+        spans.append(Span(tuple_span[0], tuple_span[1]))
+    return spans

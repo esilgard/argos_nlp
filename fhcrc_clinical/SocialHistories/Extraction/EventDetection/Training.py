@@ -1,9 +1,9 @@
 from sklearn.externals import joblib
 import cPickle as Pickle
 
-from SystemUtilities.Configuration import *
+from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import *
 from Processing import *
-from Extraction import Classification
+from fhcrc_clinical.SocialHistories.Extraction import Classification
 
 def train_event_detectors(patients):
 

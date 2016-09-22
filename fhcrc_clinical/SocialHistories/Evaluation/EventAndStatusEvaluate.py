@@ -50,12 +50,12 @@ def calculate_and_output_eval(sentence_eval_data, doc_eval_data, eventDetect_or_
         doc_filename=""
         if eventDetect_or_statusClassf == "eventdetect":
             # Output evaluation
-            sentence_filename = os.path.join(DATA_DIR, "Evaluation","SentEventDetectionEval", substance)
-            doc_filename = os.path.join(DATA_DIR, "Evaluation", "DocEventDetectionEval", substance)
+            sentence_filename = os.path.join(DATA_DIR, "Evaluation","SentEventDetectionEval"+"_"+ substance)
+            doc_filename = os.path.join(DATA_DIR, "Evaluation", "DocEventDetectionEval"+"_"+ substance)
         elif eventDetect_or_statusClassf == "statusclassf":
             # Output evaluation
-            sentence_filename = os.path.join(DATA_DIR, "Evaluation", "SentStatusClassificationEval", substance)
-            doc_filename = os.path.join(DATA_DIR, "Evaluation", "DocStatusClassificationEval", substance)
+            sentence_filename = os.path.join(DATA_DIR, "Evaluation", "SentStatusClassificationEval"+"_"+ substance)
+            doc_filename = os.path.join(DATA_DIR, "Evaluation", "DocStatusClassificationEval"+"_"+ substance)
 
         sentence_eval_data[substance].output(sentence_filename)
         doc_eval_data[substance].output(doc_filename)

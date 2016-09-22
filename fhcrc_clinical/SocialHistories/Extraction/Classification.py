@@ -1,4 +1,4 @@
-from sklearn.externals import joblib
+import sklearn
 import cPickle as Pickle
 import numpy as np
 from sklearn.feature_extraction import DictVectorizer
@@ -69,10 +69,10 @@ def load_classifier(classifier_file, feature_map_file):
     feature_map = None
 
     try:
-        classifier = joblib.load(classifier_file)
+        classifier = sklearn.externals.joblib.load(classifier_file)
         feature_map = Pickle.load(open(feature_map_file, "rb"))
     except IOError:
-        print("Error: can't find trained models. Run \"train_models.py\" and make sure model files are in the correct"
-              "location with the correct names")
+        print("Error: can't find trained models. Run \"train_models.py\" and make sure model files are in the correct "
+              "location with the correct name \n we looked in the following dir: \n\t" + classifier_file)
 
     return classifier, feature_map
