@@ -13,22 +13,22 @@ from SystemUtilities.Configuration import *
 
 
 def main(run_type=None, tsv_in=""):
-    # Set which division of data to use
-    DATA_SPLIT = "Test"
-
-    print "Using data_dir: " + DATA_DIR
-    if run_type == "execute":
-        patients = DataLoader.main("execute", tsv_in)
-
-    # Load Data
-    else: # load data in either the test or train default configurations
-        patients = DataLoader.main(DATA_SPLIT)
-
-    #Shelver.shelve_patients(patients)
-    # patients = Shelver.unshelve_patients()
-
-    # Determine sentence level info
-    #extract_sentence_level_info(patients)
+    # #Set which division of data to use
+    # DATA_SPLIT = "Test"
+    #
+    # print "Using data_dir: " + DATA_DIR
+    # if run_type == "execute":
+    #     patients = DataLoader.main("execute", tsv_in)
+    #
+    # # Load Data
+    # else: # load data in either the test or train default configurations
+    #     patients = DataLoader.main(DATA_SPLIT)
+    #
+    # #Shelver.shelve_patients(patients)
+    # #patients = Shelver.unshelve_patients()
+    #
+    # # Determine sentence level info
+    # extract_sentence_level_info(patients)
 
     #Shelver.shelve_full_patients(patients)
     patients = Shelver.unshelve_full_patients()

@@ -106,7 +106,7 @@ def attributes_to_doc_level(doc):
 
 def create_document_attribute(all_values_for_field, span_in_doc_start):
     # Choose document level value
-    selected_value = select_doc_value_from_all_values(all_values_for_field, span_in_doc_start)
+    selected_value, all_values_for_field = select_doc_value_from_all_values(all_values_for_field, span_in_doc_start)
 
     # Create document level attribute object
     document_attribute = DocumentAttribute(selected_value.type, selected_value.span_start, selected_value.span_end,
@@ -117,10 +117,11 @@ def create_document_attribute(all_values_for_field, span_in_doc_start):
 
 def select_doc_value_from_all_values(all_attributes, span_in_doc_start):
     """@type all_attributes: List(Attribute) """
+    # Add index within document to index within sentence
+    for attrib in all_attributes:
+        attrib.span_start += span_in_doc_start
+        attrib.span_end += span_in_doc_start
+
     # TODO -- better selection criteria: prefer by precision then prefer by amount
     selected_value = all_attributes[0]
-
-    # Add index within document to index within sentence
-    selected_value.span_start += span_in_doc_start
-    selected_value.span_end += span_in_doc_start
-    return selected_value
+    return selected_value, all_attributes

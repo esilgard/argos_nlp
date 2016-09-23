@@ -68,9 +68,6 @@ def load_labkey_patients(test_anns, split_set):
 
 
 def get_doc_sentences(doc):
-    if doc.id == "109289_86":
-        tmp = 9
-
     # Split sentences
     split_sentences, sent_spans = split_doc_text(doc.text)
 

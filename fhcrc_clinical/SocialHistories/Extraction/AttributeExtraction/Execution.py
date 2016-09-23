@@ -82,7 +82,6 @@ def classify_sentences(all_sentences, model_name, stanford_ner_path, type):
         tokenized_text = tokenize_sentence(sent)
         tokd_sentences.append(tokenized_text)
 
-
     classified_text = stanford_tagger.tag_sents(tokd_sentences)
 
     # DEBUG
