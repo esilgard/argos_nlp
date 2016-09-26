@@ -3,6 +3,7 @@
 from DataLoading import DataLoader as DataLoader
 from DataModeling.DataModels import *
 from Evaluation import EventAndStatusEvaluate, AttributeEvaluate
+from Postprocessing import postprocessing
 from Extraction import PatientFromDocs, DocFromSents
 from Extraction.AttributeExtraction import Execution as AttributeExtractionExec
 from Extraction.EventDetection import Execution as EventDetectExecution
@@ -38,6 +39,9 @@ def main(run_type=None, tsv_in=""):
 
     # Determine patient level info
     PatientFromDocs.get_patient_level_info(patients)
+
+    # Post-processing: sets of rules to clean up obvious contradictions
+    postprocessing.clean_doc_lvl_predictions(patients)
 
     if ENV == RUNTIME_ENV.TEST:
         evaluate_extraction(patients)
