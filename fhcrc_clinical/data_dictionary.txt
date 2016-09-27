@@ -1,2 +1,15 @@
-TobaccoKeyword	Class
-AlcoholKeyword	Class
+AlcoholStatus   Class
+AlcoholAmount   Class
+AlcoholDuration Class
+AlcoholQuitDate Class
+AlcoholQuitTimeAgo  Class
+AlcoholQuitAge  Class
+TobaccoStatus   Class
+TobaccoType Class
+TobaccoAmount   Class
+TobaccoDuration Class
+TobaccoQuitDate Class
+TobaccoQuitTimeAgo  Class
+TobaccoQuitAge  Class
+SecondhandStatus    Class
+SecondhandAmount    Class

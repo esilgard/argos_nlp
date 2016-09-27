@@ -1137,30 +1137,6 @@
 				}
 			],
 		"tables":[
-			{"table":"KeywordHitTable",
-			"fields":[
-				{"field":"TobaccoKeyword",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":[]
-						}
-					]
-				},
-				{"field":"AlcoholKeyword",
-				"datatype":"string",
-				"closedClass":"False",
-				"diseaseProperties":
-					[
-						{"diseaseGroup":["*"],
-						"values":[]
-						}
-					]
-				}
-			]
-			},
 			{"table":"SocialHistories",
 			"fields":[
 				{"field": "AlcoholStatus",
@@ -1245,7 +1221,7 @@
 				},
 				{"field": "TobaccoType",
 				"datatype": "string",
-				"closedClass": "True",
+				"closedClass": "False",
 				"diseaseProperties":
 					[
 						{"diseaseGroup": ["*"],

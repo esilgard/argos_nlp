@@ -14,11 +14,14 @@
 # limitations under the License.
 #
 
+# Example command to run clinical pipeline:
+#       python nlp_engine.py -g all -t clinical -f path_to_input_file_directory -o name_of_output_file
+import importlib
 import sys, os, codecs
 import output_results, make_text_output_directory, metadata
 from datetime import datetime
 import global_strings as gb
-
+import traceback
 '''
 initial script of the Argos/NLP engine do deal with command line parsing and module outputs
 should exit with a non-zero status for any fatal errors and
@@ -111,8 +114,11 @@ else:
     ## import and call appropriate module ##
     try:
         DOCUMENT_PROCESSER = __import__('fhcrc_'+ARGUMENTS.get('-t'), globals(), locals(), ['process'])
-    except ImportError:
+
+    except ImportError, e:
         sys.stderr.write('FATAL ERROR: could not import module ' + ARGUMENTS.get('-t'))
+        sys.stderr.write("\n\tPrimary cause of error: " + str(e))
+        traceback.print_exc()
         sys.exit(1)
 
     MKDIR_ERRORS = make_text_output_directory.main(ARGUMENTS.get('-f'))

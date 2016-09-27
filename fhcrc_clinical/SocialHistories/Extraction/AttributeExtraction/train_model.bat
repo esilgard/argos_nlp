@@ -1,0 +1,1 @@
+java -cp "*;"%3";"%1 edu.stanford.nlp.ie.crf.CRFClassifier -prop %2
