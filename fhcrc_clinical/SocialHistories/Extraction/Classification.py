@@ -2,6 +2,7 @@ import sklearn
 import cPickle as Pickle
 import numpy as np
 from sklearn.feature_extraction import DictVectorizer
+from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.svm import LinearSVC
 
 
@@ -18,8 +19,8 @@ def train_classifier(feature_dicts, labels):
 
 def vectorize_train_data(sentences, labels):
     # convert to vectors
-    dict_vec = DictVectorizer()
-    sentence_vectors = dict_vec.fit_transform(sentences).toarray()
+    dict_vec = DictVectorizer(sparse=True)
+    sentence_vectors = dict_vec.fit_transform(sentences)#.toarray()
 
     # map features to the appropriate index in the established SVM vector representation for each classifier
     feature_names = dict_vec.get_feature_names()

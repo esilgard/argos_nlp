@@ -33,6 +33,11 @@ def create_train_file(training_sent_objs, train_file_name, type):
     Sorry about the crazy embedded FOR loops and indents.
     I will modularize better to make it prettier. - Martin
     """
+    ## DEBUG write training sentence data to file (for use with crf suite development)
+    with open(train_file_name+".CRFSUITE", "w") as f:
+        for sent in training_sent_objs:
+            f.write(sent.text)
+
     train_file = open(train_file_name, 'w')
     for sent_obj in training_sent_objs:
         if len(sent_obj.gold_events) > 0: # if the sentence is predicted to have an event
@@ -45,6 +50,8 @@ def create_train_file(training_sent_objs, train_file_name, type):
                 end = match.end()
                 pointer = sent_offset + start
                 word = match.group(0).rstrip(",.:;)")
+
+
                 if word not in {"SOCIAL", "HISTORY", "SUBSTANCE",
                                     "ABUSE"}:  # see tokenizer in utils, they must both match
                     train_file.write(word)

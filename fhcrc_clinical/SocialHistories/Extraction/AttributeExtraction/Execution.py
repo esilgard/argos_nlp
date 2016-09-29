@@ -7,7 +7,9 @@ from fhcrc_clinical.SocialHistories.SystemUtilities import Globals
 from fhcrc_clinical.SocialHistories.Extraction.AttributeExtraction.SentenceTokenizer import strip_sec_headers_tokenized_text
 from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import ATTRIB_EXTRACTION_DIR_HOME, STANFORD_NER_PATH, DATA_DIR
 from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import entity_types
-
+# import os
+# java_path = "C:/FAKEPATH/Java/jdk1.7.0_11/bin/java.exe"
+# os.environ['JAVAHOME'] = java_path
 
 def extract(patients, model_path=ATTRIB_EXTRACTION_DIR_HOME,
          stanford_ner_path=STANFORD_NER_PATH):
@@ -85,7 +87,7 @@ def classify_sentences(all_sentences, model_name, stanford_ner_path, type):
     classified_text = stanford_tagger.tag_sents(tokd_sentences)
 
     # DEBUG
-    write_crf_classified_stuff_to_file(tokd_sentences, classified_text, type)
+    #write_crf_classified_stuff_to_file(tokd_sentences, classified_text, type)
     # end DEBUG
     tmp=0
 
@@ -107,11 +109,16 @@ def test_model_in_mem(stanford_ner_path, model_name, sent_obj, type):
         start = match.start()
         end = match.end()
         word = match.group(0)
-        tokenized_text.append(word.rstrip(",.;:)("))
+        tokenized_text.append(word.rstrip(",.;:)").lstrip("(").replace("/", "+=+")) # b/c stanford strips '/'
         spans.append((start,end))
+
     tokenized_text = strip_sec_headers_tokenized_text(tokenized_text)
     classified_text = stanford_tagger.tag(tokenized_text)
 
+    # restore '/' from '+=+'
+    for t in range(len(classified_text)):
+        new_t = (classified_text[t][0].replace("+=+", "/"), classified_text[t][1])
+        classified_text[t] = new_t
 
     # Expand tuple to have span as well
     len_diff = len(spans) - len(classified_text) #Headers were stripped, so if this occured in the previous step, we have t account for the offset

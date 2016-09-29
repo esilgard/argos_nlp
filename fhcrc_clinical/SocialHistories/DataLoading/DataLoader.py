@@ -19,11 +19,35 @@ def main(environment, tsv_in=""):
     reload(sys)
     sys.setdefaultencoding('utf8')
 
-    # Options for "Test" and "Train" data loading pipelines used to live here but have been removed.
-    # The Argos-based NLP engine never needs to do anything but access the execution pipeline
-    # with pre-trained models, so that is what remains below.
 
-    if environment == "execute":
+    if environment == "Train":
+        print "Loading data annotations from labkey server ..."
+        annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
+
+        print ("Loading split info ...")
+        split_set = load_split_info(environment)
+
+        print ("Loading labkey patients ...")
+        labkey_training_patients = load_labkey_patients(annotation_metadata, split_set)
+
+        # Temporary split of training data into test/train
+        tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_training_patients) # Necessary because we only have labeled training data at the moment
+
+        return tmp_train_set
+
+    elif environment == "Test":
+        print "Loading data annotations from labkey server ..."
+        annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
+
+        split_set = load_split_info("Train") # TODO: split should not be explicitly stated like this. It only is ATM b/c Labkey has no annotated testing data
+
+        labkey_testing_patients = load_labkey_patients(annotation_metadata, split_set)
+
+        # Temporary split of training data into test/train
+        tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_testing_patients) # Necessary because we only have labeled training data at the moment
+        return tmp_test_set
+
+    elif environment == "execute":
         print "Loading data from provided tsv file: " + tsv_in
         patients = build_patients_from_tsv(tsv_in)
         return patients
@@ -60,9 +84,10 @@ def load_split_info(environment):
 
 
 def load_labkey_patients(test_anns, split_set):
-    # Load full data note repo from which TRAIN or TEST will pic and return a subset of docs
-    noteID_text_dict = load_data_repo(os.path.join(Configuration.DATA_DIR, "output"))
-
+    # Load full data note repo from which TRAIN or TEST will pick and return a subset of docs
+    print "\tLoading full data note repo ..."
+    noteID_text_dict = load_data_repo(os.path.join(Configuration.DATA_DIR, "output"), split_set)
+    print ("\tBuilding Patients from Labkey data ...")
     labkey_patients = build_patients_from_labkey(test_anns, noteID_text_dict, split_set)
     return labkey_patients
 
@@ -223,12 +248,13 @@ def load_patient_labels(patient_gold_labels_path):
     return pid_label
 
 
-def load_data_repo(NOTE_OUTPUT_DIR):
+def load_data_repo(NOTE_OUTPUT_DIR, doc_ids):
     id_text_dict = dict()
     all_notes = [f for f in listdir(NOTE_OUTPUT_DIR) if isfile(join(NOTE_OUTPUT_DIR, f))]
     for note in all_notes:
-        with open(os.path.join(NOTE_OUTPUT_DIR, note), "rb") as f:
-            id_text_dict[note] = f.read()
+        if note in doc_ids:
+            with open(os.path.join(NOTE_OUTPUT_DIR, note), "rb") as f:
+                id_text_dict[note] = f.read()
     return id_text_dict
 
 
@@ -274,7 +300,9 @@ def get_labkey_patients(labkey_documents):
 
 
 def build_patients_from_labkey(annId_patient_dict, docID_text_dict, split_set):
+    print("Building Labkey documents ...")
     labkey_documents = get_labkey_documents(annId_patient_dict, docID_text_dict, split_set)
+    print("Building Labkey patients ...")
     labkey_patients = get_labkey_patients(labkey_documents)
     return labkey_patients
 

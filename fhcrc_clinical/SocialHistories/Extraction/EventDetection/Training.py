@@ -22,8 +22,8 @@ def train_event_detectors(patients):
         classifier, feature_map = Classification.train_classifier(sent_feat_dicts, labels_per_subst[substance_type])
 
         # Save to file
-        classf_file = MODEL_DIR + substance_type + EVENT_DETECT_MODEL_SUFFIX
-        featmap_file = MODEL_DIR + substance_type + EVENT_DETECT_FEATMAP_SUFFIX
+        classf_file = os.path.join(MODEL_DIR,  substance_type + EVENT_DETECT_MODEL_SUFFIX)
+        featmap_file = os.path.join(MODEL_DIR, substance_type + EVENT_DETECT_FEATMAP_SUFFIX)
 
         joblib.dump(classifier, classf_file)
         Pickle.dump(feature_map, open(featmap_file, "wb"))

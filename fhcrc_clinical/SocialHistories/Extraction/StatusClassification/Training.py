@@ -32,12 +32,12 @@ def train_status_classifier(patients):
     #scd_hnd_classifier, scd_hnd_feature_map = train_model(scd_hnd_feats, scd_hnd_labels)
 
     # Set output directory pointers for model files
-    classf_alc_file = os.path.join(MODEL_DIR, Globals.ALCOHOL+ "_" + STATUS_CLASSF_MODEL_SUFFIX)
-    classf_tob_file = os.path.join(MODEL_DIR, Globals.TOBACCO+ "_" + STATUS_CLASSF_MODEL_SUFFIX)
-    classf_scndhnd_file = os.path.join(MODEL_DIR, Globals.SECONDHAND+ "_" + STATUS_CLASSF_MODEL_SUFFIX)
-    featmap_alc_file = os.path.join(MODEL_DIR, Globals.ALCOHOL + "_" +STATUS_CLASSF_FEATMAP_SUFFIX)
-    featmap_tob_file = os.path.join(MODEL_DIR, Globals.TOBACCO+ "_" + STATUS_CLASSF_FEATMAP_SUFFIX)
-    featmap_scndhnd_file = os.path.join(MODEL_DIR, Globals.SECONDHAND+ "_" + STATUS_CLASSF_FEATMAP_SUFFIX)
+    classf_alc_file = os.path.join(MODEL_DIR, Globals.ALCOHOL+ STATUS_CLASSF_MODEL_SUFFIX)
+    classf_tob_file = os.path.join(MODEL_DIR, Globals.TOBACCO+ STATUS_CLASSF_MODEL_SUFFIX)
+    classf_scndhnd_file = os.path.join(MODEL_DIR, Globals.SECONDHAND+  STATUS_CLASSF_MODEL_SUFFIX)
+    featmap_alc_file = os.path.join(MODEL_DIR, Globals.ALCOHOL + STATUS_CLASSF_FEATMAP_SUFFIX)
+    featmap_tob_file = os.path.join(MODEL_DIR, Globals.TOBACCO+ STATUS_CLASSF_FEATMAP_SUFFIX)
+    featmap_scndhnd_file = os.path.join(MODEL_DIR, Globals.SECONDHAND+ STATUS_CLASSF_FEATMAP_SUFFIX)
 
 
     # write models files

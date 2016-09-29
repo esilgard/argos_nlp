@@ -44,7 +44,13 @@ def get_doc_level_status(doc):
 
         doc_event.status = doc_status
         doc_event.status_spans = spans
-        # spans get set here
+
+    # Remove events who's predicted status is unknown
+    new_predicted_events = list()
+    for doc_event in doc.predicted_events:
+        if doc_event.status != UNKNOWN:
+            new_predicted_events.append(doc_event)
+    doc.predicted_events = new_predicted_events
 
 
 def get_sent_level_statuses_for_doc(doc, substance):
@@ -64,6 +70,10 @@ def get_sent_level_statuses_for_doc(doc, substance):
 def doc_level_status(sentence_level_statuses):
     doc_status = UNKNOWN
     spans = []
+
+    #DEBUG
+    if UNKNOWN in sentence_level_statuses:
+        pause=9
 
     # Go through precedence-ordered list of statuses and take the first one found
     for status in STATUS_HIERARCHY:

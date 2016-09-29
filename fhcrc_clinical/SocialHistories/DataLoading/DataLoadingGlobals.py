@@ -19,4 +19,4 @@ DOC_ID = 'ReportNo'
 REPORT_JOB_ID = 'ReportId/JobRunId'
 JOB_ID = "JobRunId"
 
-JOB_IDS = {95, 98, 99, 100, 101, 102, 105, 106}  # IAA_JOB_IDS = {95, 96, 97}
+JOB_IDS = {95, 98, 99, 100, 101, 102, 105, 106, 120}  # IAA_JOB_IDS = {95, 96, 97}
