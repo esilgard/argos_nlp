@@ -1,3 +1,4 @@
+from fhcrc_clinical.SocialHistories.Extraction.KeywordSearch import KeywordSearch
 from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import *
 from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Event
 from Processing import *
@@ -19,7 +20,7 @@ def detect_sentence_events(patients):
                                                 sentences_predicted_to_have_events)
 
     # Substances detected with rules
-    # -- would go here --
+    # -- would go here
 
     return sentences_predicted_to_have_events
 
@@ -39,9 +40,11 @@ def classify_sent_for_substance(classifier, feature_map, sent, substance, senten
 
     # Add detected event to sentence
     if classifications[0] == HAS_SUBSTANCE:
-        event = Event(substance)
-        sent.predicted_events.append(event)
-        sentences_predicted_to_have_events.append(sent)
+        has_substance_keyword = KeywordSearch.search_keywords_in_sentence(sent.text)
+        if has_substance_keyword:
+            event = Event(substance)
+            sent.predicted_events.append(event)
+            sentences_predicted_to_have_events.append(sent)
 
 
 
