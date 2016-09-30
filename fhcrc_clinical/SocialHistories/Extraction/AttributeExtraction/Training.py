@@ -49,7 +49,7 @@ def create_train_file(training_sent_objs, train_file_name, type):
                 start = match.start()
                 end = match.end()
                 pointer = sent_offset + start
-                word = match.group(0).rstrip(",.:;)")
+                word = match.group(0).rstrip(",.:;)").lstrip("(").replace("/", "+=+")  #in training and test we have to make this substitution becase Stanford strips the "/"
 
 
                 if word not in {"SOCIAL", "HISTORY", "SUBSTANCE",

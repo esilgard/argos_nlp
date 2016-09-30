@@ -71,10 +71,6 @@ def doc_level_status(sentence_level_statuses):
     doc_status = UNKNOWN
     spans = []
 
-    #DEBUG
-    if UNKNOWN in sentence_level_statuses:
-        pause=9
-
     # Go through precedence-ordered list of statuses and take the first one found
     for status in STATUS_HIERARCHY:
         if status in sentence_level_statuses:
