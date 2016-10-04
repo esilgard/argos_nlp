@@ -9,6 +9,7 @@ def word2features(sent, i):
         'word.isupper=%s' % word.isupper(),
         'word.istitle=%s' % word.istitle(),
         'word.isdigit=%s' % word.isdigit(),
+        'word[0].isupper=%s' % word[0].isupper(),
         'postag=' + postag,
         'postag[:2]=' + postag[:2],
     ]
@@ -40,6 +41,7 @@ def word2features(sent, i):
 
     return features
 
+
 def get_sentences_with_subsinfo_from_patients(patients):
     sentences = list()
     for patient in patients:
@@ -49,15 +51,19 @@ def get_sentences_with_subsinfo_from_patients(patients):
                     sentences.append(sent_obj)
     return sentences
 
+
 def sent2features(sent):
 
     return [word2features(sent, i) for i in range(len(sent))]
 
+
 def sent2labels(sent):
     return [label for token, postag, label in sent]
 
+
 def sent2tokens(sent):
     return [token for token in sent]
+
 
 def sent2tokensWLabels(sent):
     return [token for token, postag, label in sent]
