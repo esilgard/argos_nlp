@@ -27,16 +27,15 @@ def train(patients, model_path=ATTRIB_EXTRACTION_DIR_HOME, script_path=os.path.j
 
         train_model(stanford_ner_path, prop_file_name, script_path+train_script_name)
 
-
 def create_train_file(training_sent_objs, train_file_name, type):
     """
     Sorry about the crazy embedded FOR loops and indents.
     I will modularize better to make it prettier. - Martin
     """
     ## DEBUG write training sentence data to file (for use with crf suite development)
-    with open(train_file_name+".CRFSUITE", "w") as f:
-        for sent in training_sent_objs:
-            f.write(sent.text)
+    # with open(train_file_name+".CRFSUITE", "w") as f:
+    #     for sent in training_sent_objs:
+    #         f.write(sent.text)
 
     train_file = open(train_file_name, 'w')
     for sent_obj in training_sent_objs:

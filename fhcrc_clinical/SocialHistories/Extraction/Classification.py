@@ -20,6 +20,12 @@ def train_classifier(feature_dicts, labels):
 def vectorize_train_data(sentences, labels):
     # convert to vectors
     dict_vec = DictVectorizer(sparse=True)
+
+    # # make sure all features are decoded as utf-8. This is stupid
+    # for sentence in sentences:
+    #     for feat_name, val in sentence.iteritems():
+    #         feat_name = feat_name.decode("utf8")
+
     sentence_vectors = dict_vec.fit_transform(sentences)#.toarray()
 
     # map features to the appropriate index in the established SVM vector representation for each classifier

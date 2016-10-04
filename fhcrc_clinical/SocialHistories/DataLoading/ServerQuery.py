@@ -212,11 +212,11 @@ def add_events_to_patient(report, report_id, events_per_report, doc_events_per_p
 def fill_annotation_objects(field_results_per_annotator, offset_results_per_annotator, reports):
     """ Go through fields for each annotator and group the fields currently jumbled together into their respective
     documents and group documents by MRN """
-    print ("Finding events per report (ServerQuery.py ln219) ...")
+    #print ("Finding events per report (ServerQuery.py ln219) ...")
     events_per_report = find_events_per_report(field_results_per_annotator, offset_results_per_annotator)
-    print ("Matching reports to patients (ServerQuery.py ln221)...")
+    #print ("Matching reports to patients (ServerQuery.py ln221)...")
     patient_doc_annotations = match_reports_to_patients(events_per_report, reports)
-    print("\tFinished matching ...")
+    #print("\tFinished matching ...")
     return patient_doc_annotations
 
 

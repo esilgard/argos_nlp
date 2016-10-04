@@ -5,7 +5,8 @@ from DataModeling.DataModels import *
 from Evaluation import EventAndStatusEvaluate, AttributeEvaluate
 from Postprocessing import postprocessing
 from Extraction import PatientFromDocs, DocFromSents
-from Extraction.AttributeExtraction import Execution as AttributeExtractionExec
+from Extraction.AttributeExtraction import Execution_CRFSuite as AttributeExtractionExec
+from Extraction.AttributeExtraction import Execution as AttributeExtractionStanford
 from Extraction.EventDetection import Execution as EventDetectExecution
 from Extraction.StatusClassification import Execution
 from Extraction.EventAttributeLinking import Execution as EventFilling
@@ -60,8 +61,8 @@ def extract_sentence_level_info(patients):
 
     # Extract Attributes
     print("Extracting Attributes...")
-    AttributeExtractionExec.extract(patients, stanford_ner_path=STANFORD_NER_PATH)
-
+    #AttributeExtractionStanford.extract(patients, stanford_ner_path=STANFORD_NER_PATH)
+    AttributeExtractionExec.extract(patients)
     # Link attributes to events:
     print("Linking attributes to substance references...")
     EventFilling.link_attributes_to_substances(patients)
