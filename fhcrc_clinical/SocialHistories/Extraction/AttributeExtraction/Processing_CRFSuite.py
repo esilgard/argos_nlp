@@ -138,7 +138,6 @@ def get_sentences_with_subsinfo_from_patients(patients):
 
 
 def sent2features(sent):
-
     return [word2features(sent, i) for i in range(len(sent))]
 
 

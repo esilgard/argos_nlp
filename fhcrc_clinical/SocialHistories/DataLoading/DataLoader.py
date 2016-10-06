@@ -56,7 +56,7 @@ def main(environment, tsv_in=""):
 def get_temporary_train_and_test_divisions(patients):
     sorted_list = sorted(patients)
     doc_count = len(sorted_list)
-    end_test_span = doc_count / 4  # the first 1/4 of the sorted data is the test_set
+    end_test_span = doc_count / 5  # the first 1/5 of the sorted data is the test_set
     test_span = (0, end_test_span)
 
     test_set = set()
@@ -111,6 +111,15 @@ def split_doc_text(text):
     text = re.sub("\r", "", text)  # Carriage Returns are EVIL !!!!!
     sentences = nltk.tokenize.PunktSentenceTokenizer().sentences_from_text(text.encode("utf8"))
     spans = list(nltk.tokenize.PunktSentenceTokenizer().span_tokenize(text.encode("utf8")))
+
+    # #if a sentence ends in '?' append the next sentence to it, combine spans
+    # for i in range(len(sentences)-1):
+    #     sent = sentences[i]
+    #     if sent.endswith('?'):
+    #         if i+1 < len(sentences)-1:
+    #             sent += " " + sentences[i+1]
+    #             spans[i] = (spans[i][0], spans[i][1]+spans[i+1][1])
+
     sentences, spans = split_by_double_newline(sentences, spans)
     return sentences, spans
 

@@ -20,6 +20,7 @@ def extract(patients, model_path=ATTRIB_EXTRACTION_DIR_HOME):
 def test(test_sents, model_name, type):
     print "Pulling out " + type + " information ..."
     tagger = pycrfsuite.Tagger()
+    print "\tOpening model at: " + model_name
     tagger.open(model_name)
     tagged_sents = list()
 
@@ -38,6 +39,12 @@ def test(test_sents, model_name, type):
         predictions = tagger.tag(sent2features(tagged_sent))
         classified_text = zip(tokenized_text,predictions)
         print classified_text
+        #DEBUG
+        ind=len(classified_text)-1
+        if ind >= 0:
+            last=classified_text[ind]
+            if last[1] == 'Amount':
+                pause=9
         # Expand tuple to have span as well
         final_class_and_span = list()
         for idx, tup in enumerate(classified_text):
@@ -77,7 +84,7 @@ def get_sentences_with_info_plus_sentence_after(patients):
 def get_attributes(crf_classification_tuple_list):
     attribs = list()
     i = 0
-    while i < len(crf_classification_tuple_list)-1:
+    while i < len(crf_classification_tuple_list):
         crf_classification_tuple = crf_classification_tuple_list[i]
         classL = crf_classification_tuple[1]
         start = crf_classification_tuple[2]
@@ -85,7 +92,7 @@ def get_attributes(crf_classification_tuple_list):
             full_begin_span = start
             full_end_span = start
             full_text = ""
-            while i < len(crf_classification_tuple_list)-1 and classL == crf_classification_tuple_list[i][1]:
+            while i < len(crf_classification_tuple_list) and classL == crf_classification_tuple_list[i][1]:
                 crf_classification_tuple = crf_classification_tuple_list[i]
                 full_text += crf_classification_tuple[0] + " "
                 full_end_span = crf_classification_tuple[3]

@@ -33,14 +33,13 @@ def load_train_data(sentences, attrib_type):
 
 
 def train_data(x_train, y_train, model_name):
-    trainer = pycrfsuite.Trainer(verbose=False)
+    trainer = pycrfsuite.Trainer(verbose=True)
     for xseq, yseq in zip(x_train, y_train):
         trainer.append(xseq, yseq)
 
     trainer.set_params({
-        'algorithm': 'lbfgs',
-        'c1': 1.0,  # coefficient for L1 penalty
-        'c2': 1e-3,  # coefficient for L2 penalty
+        'c1': .1,#1.0,  # coefficient for L1 penalty
+        'c2': .1, #1e-3,  # coefficient for L2 penalty
         'max_iterations': 100,  # stop earlier
 
         # include transitions that are possible, but not observed
