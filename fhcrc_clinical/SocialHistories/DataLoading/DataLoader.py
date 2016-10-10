@@ -112,13 +112,14 @@ def split_doc_text(text):
     sentences = nltk.tokenize.PunktSentenceTokenizer().sentences_from_text(text.encode("utf8"))
     spans = list(nltk.tokenize.PunktSentenceTokenizer().span_tokenize(text.encode("utf8")))
 
-    # #if a sentence ends in '?' append the next sentence to it, combine spans
-    # for i in range(len(sentences)-1):
-    #     sent = sentences[i]
-    #     if sent.endswith('?'):
-    #         if i+1 < len(sentences)-1:
-    #             sent += " " + sentences[i+1]
-    #             spans[i] = (spans[i][0], spans[i][1]+spans[i+1][1])
+    #if a sentence ends in '?' append the next sentence to it, combine spans
+    for i in range(len(sentences)):
+        sent = sentences[i]
+        if sent.endswith('?'):
+            if i+1 < len(sentences):
+                sent += " " + sentences[i+1]
+                spans[i] = (spans[i][0], spans[i][1]+spans[i+1][1])
+                sentences[i+1] = " "
 
     sentences, spans = split_by_double_newline(sentences, spans)
     return sentences, spans

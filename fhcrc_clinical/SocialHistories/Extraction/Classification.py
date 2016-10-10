@@ -21,14 +21,9 @@ def vectorize_train_data(sentences, labels):
     # convert to vectors
     dict_vec = DictVectorizer(sparse=True)
 
-    # # make sure all features are decoded as utf-8. This is stupid
-    # for sentence in sentences:
-    #     for feat_name, val in sentence.iteritems():
-    #         feat_name = feat_name.decode("utf8")
-
     sentence_vectors = dict_vec.fit_transform(sentences)#.toarray()
-
     # map features to the appropriate index in the established SVM vector representation for each classifier
+    sentence_vectors = sentence_vectors.toarray()
     feature_names = dict_vec.get_feature_names()
     feature_map = {}
     for index, feat in enumerate(feature_names):
@@ -44,6 +39,8 @@ def classify_many_instances(classifier, feature_map, features_per_instance):
     # Vectorize sentences and classify
     test_vectors = [vectorize_sentence(feats, feature_map) for feats in features_per_instance]
     test_array = np.reshape(test_vectors, (number_of_sentences, number_of_features))
+    # dict_vec = DictVectorizer(sparse=True)
+    # test_array = dict_vec.transform(test_vectors)
     classifications = classifier.predict(test_array)
 
     return classifications

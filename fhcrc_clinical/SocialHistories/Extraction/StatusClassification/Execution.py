@@ -1,6 +1,8 @@
 import cPickle as Pickle
 from sklearn.externals import joblib
 import numpy as np
+
+from fhcrc_clinical.SocialHistories.Extraction.StatusClassification.Shared_Processing import get_feature_vectors
 from fhcrc_clinical.SocialHistories.SystemUtilities import Debugger
 from fhcrc_clinical.SocialHistories.Extraction import Classification
 from fhcrc_clinical.SocialHistories.Extraction.Classification import vectorize_sentence, classify_many_instances
@@ -15,10 +17,10 @@ def classify_sentence_status(sentences):
         classifier, feature_map = load_classifier(event_type)
 
         # extract features
-        features = extract_features(sentences)
+        feature_vectors = get_feature_vectors(sentences)
 
         # classify sentences
-        classifications = classify_many_instances(classifier, feature_map, features)
+        classifications = classify_many_instances(classifier, feature_map, feature_vectors)
 
         # assign classification directly to the sentence
         for i in range(0, len(sentences), 1):
@@ -40,23 +42,3 @@ def load_classifier(event_type):
     classifier, feature_map = Classification.load_classifier(classifier_file, feature_map_file)
 
     return classifier, feature_map
-
-
-def extract_features(sents):
-    feature_vecs = list()
-    for sent in sents:
-        vector = dict()
-        input_list = sent.text.lower().rstrip(",.!?:;").split()
-        some_bigrams = list(get_bigrams(input_list))
-
-        for pair in some_bigrams:
-            vector[pair[0] + "_" + pair[1]] = True
-        for x in input_list:
-            vector[x] = True
-
-        feature_vecs.append(vector)
-    return feature_vecs
-
-
-def get_bigrams(input_list):
-    return zip(input_list, input_list[1:])
