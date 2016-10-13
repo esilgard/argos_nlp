@@ -33,7 +33,7 @@ def load_train_data(sentences, attrib_type):
 
 
 def train_data(x_train, y_train, model_name):
-    trainer = pycrfsuite.Trainer(verbose=True)
+    trainer = pycrfsuite.Trainer(verbose=False)
     for xseq, yseq in zip(x_train, y_train):
         trainer.append(xseq, yseq)
 

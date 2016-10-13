@@ -1,8 +1,3 @@
-"""The ServerQuery is only used to import data for training and testing. This Labkey-based NLP
-pipeline is only concerned with the execution pipeline, which takes new data as input. This module is therefore
-obsolete in this context and had to be commented out because it has dependencies which are not installed on
-the Labkey Server environments."""
-
 import labkey
 import re
 from fhcrc_clinical.SocialHistories.DataModeling.DataModels import *
