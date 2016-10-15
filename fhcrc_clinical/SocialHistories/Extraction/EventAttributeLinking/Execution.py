@@ -110,7 +110,7 @@ def create_document_attribute(all_values_for_field, span_in_doc_start):
 
     # Create document level attribute object
     document_attribute = DocumentAttribute(selected_value.type, selected_value.span_start, selected_value.span_end,
-                                           selected_value.text, all_values_for_field)
+                                           selected_value.text, all_values_for_field, selected_value.probability)
 
     return document_attribute
 

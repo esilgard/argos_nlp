@@ -97,7 +97,8 @@ def sentence_events_to_doc_level(doc):
         offcial_attrib_start = attrib_list[0].span_start
         official_attrib_end = attrib_list[0].span_end
         official_attrib_text = attrib_list[0].text
-        doc_attrib = DocumentAttribute(official_attrib_type, offcial_attrib_start, official_attrib_end, official_attrib_text, attrib_list)
+        official_attrib_probability = attrib_list[0].probability
+        doc_attrib = DocumentAttribute(official_attrib_type, offcial_attrib_start, official_attrib_end, official_attrib_text, attrib_list, official_attrib_probability)
 
         doc.all_attributes[attrib_field_key] = doc_attrib
 

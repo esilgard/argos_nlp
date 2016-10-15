@@ -32,7 +32,7 @@ def main(environment, tsv_in=""):
 
         # Temporary split of training data into test/train
         tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_training_patients) # Necessary because we only have labeled training data at the moment
-
+        print("\tLoaded " + str(len(tmp_train_set)) + " train patients (thats " + str(len(tmp_test_set)) + " saved for testing)")
         return tmp_train_set
 
     elif environment == "Test":
@@ -45,6 +45,7 @@ def main(environment, tsv_in=""):
 
         # Temporary split of training data into test/train
         tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_testing_patients) # Necessary because we only have labeled training data at the moment
+        print("\tLoaded " + str(len(tmp_test_set)) + " test patients (thats " + str(len(tmp_train_set)) + " saved for training)")
         return tmp_test_set
 
     elif environment == "execute":

@@ -27,7 +27,9 @@ def detect_sentence_events(patients):
 
 def load_event_classifier(event_type):
     classifier_file = os.path.join(MODEL_DIR, event_type + EVENT_DETECT_MODEL_SUFFIX)
+    print("\tClassifier File at: " + os.path.join(MODEL_DIR, event_type + EVENT_DETECT_MODEL_SUFFIX))
     feature_map_file = os.path.join(MODEL_DIR, event_type + EVENT_DETECT_FEATMAP_SUFFIX)
+    print("\tFeatMap File at: " + os.path.join(MODEL_DIR, event_type + EVENT_DETECT_FEATMAP_SUFFIX))
 
     classifier, feature_map = Classification.load_classifier(classifier_file, feature_map_file)
     return classifier, feature_map

@@ -27,7 +27,7 @@ def test(test_sents, model_name, type):
     #do tokenization/preprocessing on sentences
     toked_test_sents, obsolete_label_ignore = tokenize_sentences(test_sents)
 
-    for i in range(0, len(toked_test_sents)-1, 1):
+    for i in range(0, len(toked_test_sents), 1):
         tokd_sent=toked_test_sents[i]
         sent_obj = test_sents[i]
         # Tag for POS
@@ -37,18 +37,14 @@ def test(test_sents, model_name, type):
         tokenized_text, spans = recover_spans(sent_obj.text)
         # Predict type sequence
         predictions = tagger.tag(sent2features(tagged_sent))
+        probability = tagger.probability(predictions)
+
         classified_text = zip(tokenized_text,predictions)
-        print classified_text
-        #DEBUG
-        ind=len(classified_text)-1
-        if ind >= 0:
-            last=classified_text[ind]
-            if last[1] == 'Amount':
-                pause=9
-        # Expand tuple to have span as well
+        #print classified_text
+        # Expand tuple to have span as well as probability
         final_class_and_span = list()
         for idx, tup in enumerate(classified_text):
-            combined = (classified_text[idx][0], classified_text[idx][1], spans[idx][0], spans[idx][1])
+            combined = (classified_text[idx][0], classified_text[idx][1], spans[idx][0], spans[idx][1], probability)
             final_class_and_span.append(combined)
         # Set prediction in sentence object
         sent_obj.sentence_attribs.extend(get_attributes(final_class_and_span))
@@ -97,7 +93,7 @@ def get_attributes(crf_classification_tuple_list):
                 full_text += crf_classification_tuple[0] + " "
                 full_end_span = crf_classification_tuple[3]
                 i += 1
-            attrib = Attribute(classL, full_begin_span, full_end_span, full_text)
+            attrib = Attribute(classL, full_begin_span, full_end_span, full_text, probability=crf_classification_tuple[4])
             attribs.append(attrib)
         i += 1
     return attribs

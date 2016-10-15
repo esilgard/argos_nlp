@@ -52,6 +52,9 @@ class SubstanceField:
         # Field value
         self.return_d[VALUE] = attribute_obj.text
 
+        # Field probability
+        self.return_d['confidence'] = attribute_obj.probability
+
         # Field spans
         for span in attribute_obj.all_value_spans:
             self.return_d[STARTSTOPS].append({START: span.start, STOP: span.stop})

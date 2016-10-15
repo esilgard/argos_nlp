@@ -54,7 +54,7 @@ def extract_sentence_level_info(patients):
     # Find substance references
     print("Classifying substance references...")
     sentences_with_events = EventDetectExecution.detect_sentence_events(patients)
-
+    print("\t" + str(len(sentences_with_events)) + " sentences with events found")
     # Classify substance status
     print("Classifying substance status...")
     Execution.classify_sentence_status(sentences_with_events)
