@@ -86,6 +86,10 @@ class Event:
         self.substance_type = substance
         self.status = ""
         self.attributes = {}    # {attrib_name: [Attribute object]}
+        self.confidence=0.0
+
+    def set_confidence(self, conf_val):
+        self.confidence = conf_val
 
 
 class DocumentEvent(Event):

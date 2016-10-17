@@ -31,6 +31,15 @@ def vectorize_train_data(sentences, labels):
     return sentence_vectors, np.array(labels), feature_map
 
 
+def transform_svm_nums_to_probabilities(decision_func_results):
+    probabilities = list()
+    for result_array in decision_func_results:
+        max_result = max(result_array)
+        probability = 1/(1 + np.math.exp(-max_result))
+        probabilities.append(probability)
+    return probabilities
+
+
 def classify_many_instances(classifier, feature_map, features_per_instance):
     number_of_sentences = len(features_per_instance)
     number_of_features = len(feature_map)
@@ -41,7 +50,10 @@ def classify_many_instances(classifier, feature_map, features_per_instance):
     # dict_vec = DictVectorizer(sparse=True)
     # test_array = dict_vec.transform(test_vectors)
     classifications = classifier.predict(test_array)
-    return classifications
+    decision_func_results = classifier.decision_function(test_array)
+    probabilities = transform_svm_nums_to_probabilities(decision_func_results)
+
+    return classifications, probabilities
 
 
 def classify_instance(classifier, feature_map, features):

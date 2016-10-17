@@ -20,7 +20,8 @@ def classify_sentence_status(sentences):
         feature_vectors = get_feature_vectors(sentences)
 
         # classify sentences
-        classifications = classify_many_instances(classifier, feature_map, feature_vectors)
+        classifications, probabilities = classify_many_instances(classifier, feature_map, feature_vectors)
+
 
         # assign classification directly to the sentence
         for i in range(0, len(sentences), 1):
@@ -28,6 +29,7 @@ def classify_sentence_status(sentences):
             for event in sent.predicted_events:
                 if event.substance_type == event_type:
                     event.status = classifications[i]
+                    event.set_confidence(probabilities[i])
 
         # DEBUG
         Debugger.print_status_classification_results(sentences, classifications, event_type)
