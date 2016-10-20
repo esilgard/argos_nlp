@@ -54,6 +54,7 @@ def extract_sentence_level_info(patients):
     # Find substance references
     print("Classifying substance references...")
     sentences_with_events = EventDetectExecution.detect_sentence_events(patients)
+    #sentences_with_events = nEventDetectExecution.detect_sentence_events(patients)
     print("\t" + str(len(sentences_with_events)) + " sentences with events found")
     # Classify substance status
     print("Classifying substance status...")
@@ -61,7 +62,6 @@ def extract_sentence_level_info(patients):
 
     # Extract Attributes
     print("Extracting Attributes...")
-    #AttributeExtractionStanford.extract(patients, stanford_ner_path=STANFORD_NER_PATH)
     AttributeExtractionExec.extract(patients)
     # Link attributes to events:
     print("Linking attributes to substance references...")

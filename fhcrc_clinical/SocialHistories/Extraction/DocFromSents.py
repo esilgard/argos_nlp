@@ -80,7 +80,7 @@ def doc_level_status(sentence_level_statuses):
         if status in sentence_level_statuses:
             doc_status = status
             spans = convert_tupleSpans_to_SpanObjs(sentence_level_statuses[status])
-            confidences = extract_confidence_numbers(sentence_level_statuses[status])
+            confidences = extract_confidence_numbers(sentence_level_statuses[status])[0]
             max_confidence_for_this_status = max(confidences)
             break
 

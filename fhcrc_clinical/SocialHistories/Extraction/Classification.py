@@ -2,8 +2,12 @@ import sklearn
 import cPickle as Pickle
 import numpy as np
 from sklearn.feature_extraction import DictVectorizer
-from sklearn.feature_extraction.text import HashingVectorizer
+from sklearn.feature_extraction.text import HashingVectorizer, CountVectorizer, TfidfTransformer
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import Pipeline
 from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
 
 
 def train_classifier(feature_dicts, labels):
@@ -11,7 +15,7 @@ def train_classifier(feature_dicts, labels):
     sent_vectors, labels_for_classifier, feature_map = vectorize_train_data(feature_dicts, labels)
 
     # Create Model
-    classifier = LinearSVC()
+    classifier = SVC(kernel="linear", probability=True)
     classifier.fit(sent_vectors, labels_for_classifier)
 
     return classifier, feature_map
@@ -20,7 +24,6 @@ def train_classifier(feature_dicts, labels):
 def vectorize_train_data(sentences, labels):
     # convert to vectors
     dict_vec = DictVectorizer(sparse=True)
-
     sentence_vectors = dict_vec.fit_transform(sentences)#.toarray()
     # map features to the appropriate index in the established SVM vector representation for each classifier
     feature_names = dict_vec.get_feature_names()
@@ -35,7 +38,7 @@ def transform_svm_nums_to_probabilities(decision_func_results):
     probabilities = list()
     for result_array in decision_func_results:
         max_result = max(result_array)
-        probability = 1/(1 + np.math.exp(-max_result))
+        probability = 1 / (1 + np.math.exp(-max_result))
         probabilities.append(probability)
     return probabilities
 
@@ -47,11 +50,9 @@ def classify_many_instances(classifier, feature_map, features_per_instance):
     # Vectorize sentences and classify
     test_vectors = [vectorize_sentence(feats, feature_map) for feats in features_per_instance]
     test_array = np.reshape(test_vectors, (number_of_sentences, number_of_features))
-    # dict_vec = DictVectorizer(sparse=True)
-    # test_array = dict_vec.transform(test_vectors)
     classifications = classifier.predict(test_array)
-    decision_func_results = classifier.decision_function(test_array)
-    probabilities = transform_svm_nums_to_probabilities(decision_func_results)
+    #decision_func_results = classifier.decision_function(test_array)
+    probabilities = classifier.predict_proba(test_array)#transform_svm_nums_to_probabilities(decision_func_results)
 
     return classifications, probabilities
 

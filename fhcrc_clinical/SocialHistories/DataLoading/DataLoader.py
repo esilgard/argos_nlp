@@ -42,10 +42,11 @@ def main(environment, tsv_in=""):
         split_set = load_split_info("Train") # TODO: split should not be explicitly stated like this. It only is ATM b/c Labkey has no annotated testing data
 
         labkey_testing_patients = load_labkey_patients(annotation_metadata, split_set)
-
         # Temporary split of training data into test/train
         tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_testing_patients) # Necessary because we only have labeled training data at the moment
         print("\tLoaded " + str(len(tmp_test_set)) + " test patients (thats " + str(len(tmp_train_set)) + " saved for training)")
+        # for pat in tmp_test_set:
+        #     print "\t" + str(pat.id)
         return tmp_test_set
 
     elif environment == "execute":
@@ -113,18 +114,44 @@ def split_doc_text(text):
     sentences = nltk.tokenize.PunktSentenceTokenizer().sentences_from_text(text.encode("utf8"))
     spans = list(nltk.tokenize.PunktSentenceTokenizer().span_tokenize(text.encode("utf8")))
 
-    #if a sentence ends in '?' append the next sentence to it, combine spans
-    for i in range(len(sentences)):
-        sent = sentences[i]
-        if sent.endswith('?'):
-            if i+1 < len(sentences):
-                sent += " " + sentences[i+1]
-                spans[i] = (spans[i][0], spans[i][1]+spans[i+1][1])
-                sentences[i+1] = " "
+    #sentences, spans = split_by_double_newline(sentences, spans)
+    sentences, spans = split_by_single_newlines(sentences, spans)
+    sentences, spans = rejoin_sents_on_leading_punctuation(sentences, spans)
 
-    sentences, spans = split_by_double_newline(sentences, spans)
     return sentences, spans
 
+def rejoin_sents_on_leading_punctuation(sentences, spans):
+    # if a sentence ends in punctuation that implies related info in next sentence, append the next sentence to it, combine spans
+    for i in range(len(sentences)):
+        sent = sentences[i]
+        if sent.rstrip().endswith(('?', ':', ';', '-')) or sent.istitle():
+            if i + 1 < len(sentences):
+                sentences[i] += " " + sentences[i + 1]
+                spans[i] = (spans[i][0], spans[i + 1][1])
+                sentences[i + 1] = " "
+    return sentences, spans
+
+
+def split_by_single_newlines(sentences, spans):
+    final_sentences = []
+    final_spans=[]
+    for i in range(len(sentences)):
+        sent = sentences[i]
+        sents = sent.split('\n')
+        span_split = get_spans_of_split_sent(sents, spans[i])
+        final_spans.extend(span_split)
+        final_sentences.extend(sents)
+    return final_sentences, final_spans
+
+def get_spans_of_split_sent(sent_list, span):
+    spans = []
+    count_begin = span[0]
+    for sent in sent_list:
+        count_end = count_begin + len(sent)
+        spans.append((count_begin, count_end))
+        count_end += 1
+        count_begin = count_end
+    return spans
 
 def split_by_double_newline(sentences, spans):
     """ Take the sentences split by NLTK and further split them by double newline chars """

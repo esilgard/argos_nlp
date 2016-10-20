@@ -11,7 +11,6 @@ def link_attributes_to_substances(patients):
     for patient in patients:
         for doc in patient.doc_list:
             previous_sent = None
-
             for sent in doc.sent_list:
                 # Find all values for all fields for all substances
                 attributes_per_substance = find_attributes_per_substance(classifier, feature_map, sent, previous_sent)

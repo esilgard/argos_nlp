@@ -1,11 +1,13 @@
 import cPickle as Pickle
+
+import re
 from sklearn.externals import joblib
 import os
 
 from fhcrc_clinical.SocialHistories.Extraction.Classification import train_classifier
 from fhcrc_clinical.SocialHistories.Extraction.EventDetection.Processing import flor_sentence_features_and_labels, load_flor_patients
 from fhcrc_clinical.SocialHistories.Extraction.StatusClassification.Shared_Processing import get_bigrams, \
-    get_feature_vectors
+    get_feature_vectors, flor_get_feature_vectors
 from fhcrc_clinical.SocialHistories.SystemUtilities import Globals
 from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import MODEL_DIR
 from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import STATUS_CLASSF_FEATMAP_SUFFIX, STATUS_CLASSF_MODEL_SUFFIX, \
@@ -15,7 +17,7 @@ from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import STATUS_CLASSF
 def train_status_classifier(patients):
     sentences = get_sentences_from_patients(patients)
     # Load Florian data
-    flor_tbc_feats, flor_tbc_labels = flor_get_tob_features()
+    flor_tbc_feats, flor_tbc_labels = flor_get_feature_vectors()
     for subs_type in SUBSTANCE_TYPES:
         # Create Feature-Label pairs for each Subs Abuse type
         feats = get_feature_vectors(sentences)
@@ -24,7 +26,9 @@ def train_status_classifier(patients):
             # Join flor's tobacco features and labels to regular tobacco features and labels
             feats.extend(flor_tbc_feats)
             labels.extend(flor_tbc_labels)
+            
         # Create Model
+        print("Training Status Classifier on " + str(len(feats)) + " sentences")
         classifier, feature_map = train_classifier(feats, labels)
         # Set output directory pointers for model files
         classf_file = os.path.join(MODEL_DIR, subs_type + STATUS_CLASSF_MODEL_SUFFIX)
@@ -34,7 +38,7 @@ def train_status_classifier(patients):
         Pickle.dump(feature_map, open(featmap_file, "wb"))
     pass
 
-
+    
 def get_sentences_from_patients(patients):
     sentences = list()
     for patient in patients:
@@ -43,32 +47,6 @@ def get_sentences_from_patients(patients):
                 if (len(sent_obj.gold_events)) > 0: # if the sentence has an event
                     sentences.append(sent_obj)
     return sentences
-
-
-def flor_get_tob_features():
-    # Mapping flor labels to our labels
-    mapping = {"past":Globals.FORMER, "user":Globals.USER, "non":Globals.NON, "current":Globals.CURRENT, "unknown":Globals.UNKNOWN}
-    doc_data = load_flor_patients()
-
-    feature_vecs = list()
-    labels = list()
-
-    for doc_id in doc_data:
-        doc = doc_data[doc_id]
-        for sent in doc:
-            vector = dict()
-            label = mapping[sent['TobaccoStatus']] # whatever the tobacco status is for this entry
-            input_list = sent["Sentence"].lower().rstrip(",.!?:;").split()
-            some_bigrams = list(get_bigrams(input_list))
-
-            for pair in some_bigrams:
-                vector[pair[0] + "_" + pair[1]] = True
-            for x in input_list:
-                vector[x] = True
-
-            labels.append(label)
-            feature_vecs.append(vector)
-    return feature_vecs, labels
 
 
 def get_labels(sents, subs_type):

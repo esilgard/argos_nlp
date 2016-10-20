@@ -137,6 +137,15 @@ def get_sentences_with_subsinfo_from_patients(patients):
     return sentences
 
 
+def get_sentences_from_patients(patients):
+    sentences = list()
+    for patient in patients:
+        for document in patient.doc_list:
+            for sent_obj in document.sent_list:
+                sentences.append(sent_obj)
+    return sentences
+
+
 def sent2features(sent):
     return [word2features(sent, i) for i in range(len(sent))]
 

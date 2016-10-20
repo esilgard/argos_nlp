@@ -25,7 +25,6 @@ def main():
     #patients = Shelver.unshelve_patients()
 
     # Attribute Extraction
-    #AttributeExtractionTraining.train(patients)
     Training_CRFSuite.train(patients)
 
     # Event Filling
