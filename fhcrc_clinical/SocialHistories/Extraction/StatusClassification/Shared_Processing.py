@@ -45,18 +45,19 @@ def get_unigrams(sent):
     for i in range(0, len(unigrams), 1):
         replacement = None
         # 1 or 2 numbers in a row (or more) is a NUM
-        if re.match("[0-9]{1,2}", unigrams[i])is not None\
+        if re.match("[0-9]{1,3}(-[0-9]{1,3})*$", unigrams[i])is not None\
                 or re.match("one|two|three|four|five|six|seven|eight|nine|ten", unigrams[i]) is not None \
                 or re.match("[0-9]*\.[0-9]+", unigrams[i]) is not None:
             replacement = "NUM"
         # 1 or 2 numbers in a row directly attached to sequence of letters is an AMOUNT
-        if re.match("[0-9]{1,2}[A-Za-z]+", unigrams[i]) is not None:
+        if re.match("[0-9]{1,2}(/[0-9])*[A-Za-z]+", unigrams[i]) is not None:
             replacement = "AMOUNT"
         # 4 numbers in a row (1998) or common date formats (12/12/95, 4/2016, 1-3-1988) are DATEs
         if re.match("[0-9]{4}", unigrams[i]) is not None \
-                or re.match("[0-9]+-[0-9]+-[0-9]+", unigrams[i]) is not None \
-                or re.match("[0-9]+/[0-9]+/[0-9]+", unigrams[i]) is not None \
-                or re.match("[0-9]+/[0-9]+", unigrams[i]) is not None:
+                or re.match("[0-9]+-[0-9]+-[0-9]+$", unigrams[i]) is not None \
+                or re.match("[0-9]+/[0-9]+/[0-9]+$", unigrams[i]) is not None \
+                or re.match("[0-9]+/[0-9]+$", unigrams[i]) is not None \
+                or re.match("[0-9]{2,4}(')*s", sent[i]) is not None:  # 1980's 80s 80's etc
             replacement = "DATE"
         if replacement is not None:
             unigrams[i] = replacement

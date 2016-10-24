@@ -2,7 +2,8 @@ import nltk
 import pycrfsuite
 
 from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Attribute
-from fhcrc_clinical.SocialHistories.Extraction.AttributeExtraction.Processing_CRFSuite import sent2features, tokenize_sentences
+from fhcrc_clinical.SocialHistories.Extraction.AttributeExtraction.Processing_CRFSuite import sent2features, tokenize_sentences, \
+    standardize_tokens
 from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import ATTRIB_EXTRACTION_DIR_HOME, entity_types
 from fhcrc_clinical.SocialHistories.SystemUtilities.Parameter_Configuration import SENTENCE_TOK_PATTERN
 
@@ -35,12 +36,14 @@ def test(test_sents, model_name, type):
         tagged_sents.append(tagged_sent)
         # Recover spans
         tokenized_text, spans = recover_spans(sent_obj.text)
+        # Standardize dates, nums, amounts
+        #tokenized_text = standardize_tokens(tokenized_text)
         # Predict type sequence
         predictions = tagger.tag(sent2features(tagged_sent))
         probability = tagger.probability(predictions)
 
         classified_text = zip(tokenized_text,predictions)
-        #print classified_text
+
         # Expand tuple to have span as well as probability
         final_class_and_span = list()
         for idx, tup in enumerate(classified_text):

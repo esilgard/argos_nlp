@@ -353,9 +353,7 @@ def build_patients_from_tsv(tsv_in):
 
 def build_patients_from_csv_parse(patient_dict):
     patients = list()
-    # print "WL DEBUG0.00001" + str(patient_dict)
     for patient_id, docs in patient_dict.iteritems():
-        # print "WL DEBUG1: " + str(docs)
         patient_documents, patient_caisis_id = get_patient_docs(docs)
         patient_obj = Patient(patient_caisis_id)
         patient_obj.doc_list = patient_documents
@@ -366,28 +364,55 @@ def build_patients_from_csv_parse(patient_dict):
 def get_patient_docs(docs):
     documents = list()
     patient_caisis_id = None
-    # print "WL DEBUG2: " + str(docs)
     for doc_id, fields in docs.iteritems():
         patient_caisis_id = doc_id.split('_')[0]
         sentence_objs, doc_text = get_sentences_from_field_tuples(fields, doc_id)
+        sentence_objs = rejoin_sent_objs_on_leading_punctuation(sentence_objs)
         document_obj = Document(doc_id, doc_text)
         document_obj.sent_list = sentence_objs
         documents.append(document_obj)
     return documents, patient_caisis_id
 
 
+def rejoin_sent_objs_on_leading_punctuation(sent_objs):
+    new_sent_objs = []
+    skip=False
+    for i in range(len(sent_objs)):
+        if skip:
+            skip=False
+        else:
+            sent = sent_objs[i]
+            if sent.text.rstrip().endswith(('?', ':', ';', '-')) or sent.text.istitle():
+                if i + 1 < len(sent_objs):
+                    new_text = sent_objs[i].text + " " + sent_objs[i+1].text
+                    new_begin_span = sent_objs[i].span_in_doc_start
+                    new_end_span = sent_objs[i+1].span_in_doc_end
+                    #id_num, text, span_in_doc_start, span_in_doc_end
+                    new_sent_obj = Sentence(sent.id,new_text, new_begin_span,new_end_span)
+                    new_sent_objs.append(new_sent_obj)
+                    skip=True
+                else:
+                    new_sent_objs.append(sent)
+            else:
+                new_sent_objs.append(sent)
+    return new_sent_objs
+    
 def get_sentences_from_field_tuples(fields, doc_id):
     full_text = ""
     event_date = ""
     sentences = list()
-    for tuple, line in fields.iteritems():
-        if tuple[1] == "FullText":
+
+    sorted_keys = sorted(fields.iteritems(), key=lambda x: x[0][2])
+
+    for tup in sorted_keys:
+        line=tup[1]
+        if tup[0][1] == "FullText":
             full_text = line
-        elif tuple[1] == "EventDate":
+        elif tup[0][1] == "EventDate":
             event_date = line
         else:
             # Assume the line is a sentence
-            text_start_idx = tuple[2]
+            text_start_idx = tup[0][2]
             text_end_idx = len(line) + text_start_idx
 
             # Going off of the nlp engine's sentence segmentation is no good
