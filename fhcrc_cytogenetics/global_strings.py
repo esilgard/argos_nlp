@@ -1,6 +1,7 @@
 ## global strings for output dictionaries ##
 NAME = "name"
 TABLE = "table"
+FIELD = "field"
 TABLES = "tables"
 VALUE = "value"
 FIELDS = "fields"
@@ -41,4 +42,4 @@ UNKNOWN = "Unknown"
 SPEC_DATE = "spec_date"
 OFFSET = "Offset"
 PARSE_ERR = "PARSING ERROR"
-
+DATE = "ReceivedDate"

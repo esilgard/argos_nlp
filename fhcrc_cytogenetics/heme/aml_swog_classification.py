@@ -61,4 +61,4 @@ def get(mutation_dictionary, abnormality_set, offsets, cell_list):
         mutation_dictionary[gb.WARNING] = 1
     if  mutation_dictionary[gb.WARNING] == 1:
         swog_dictionary[gb.VALUE] = gb.UNKNOWN
-    return mutation_dictionary
+    return swog_dictionary

@@ -19,7 +19,6 @@ import parser
 import iscn_parser
 import iscn_string_cleaner
 import os
-import re
 import sys
 import global_strings as gb
 __version__ = 'process_cytogenetics1.0'
@@ -154,12 +153,14 @@ def main(arguments):
                 pass
             else:
                 ## walk through ISCN section in order in case the karyotype on multiple lines
-                ## this means all cytogenetics algorithms will only be based on ISCN string
+                ## this means all cytogenetics algorithms will only be based on ISCN string                 
+                karyo_offset = None
                 for sections in sorted(cytogenetics_d[mrn][acc], key=lambda x: x[2]):
                     section_header = sections[1]
                     beginning_offset = sections[2]
                     if 'ISCN' in section_header:
-                        karyo_offset = beginning_offset
+                        ## this maintains the original offset if the karyotype string crosses over lines
+                        if not karyo_offset: karyo_offset = beginning_offset
                         for line, text in sorted(cytogenetics_d[mrn][acc][sections].items(), \
                         key=lambda x: x[0]):
                             cyto_string += text
@@ -167,21 +168,23 @@ def main(arguments):
                 if cyto_string:
                     field_value_dictionary = {}
                     field_value_dictionary[gb.REPORT] = acc
-                    field_value_dictionary[gb.MRN] = mrn                   
-
+                    field_value_dictionary[gb.MRN] = mrn
                     str_cleaner_return_dictionary, karyotype_string, karyo_offset = \
                     iscn_string_cleaner.get(cyto_string, karyo_offset)
                     ## if string cleaner doesn't find description of karyotype, then parse string
                     if not str_cleaner_return_dictionary:
                         return_fields, return_errors, return_type = iscn_parser.get\
                        (karyotype_string, karyo_offset)
-                        try:
-                            
+                        try:                            
                             return_fields, return_errors, return_type = get_fields\
                             (disease_group, disease_group_data_d, return_fields, \
-                            karyotype_string, karyo_offset)
-                           
-                            #field_value_output.append(field_value_dictionary)
+                            karyotype_string, karyo_offset)  
+                            date = cytogenetics_d[mrn][acc][(-1, 'Date', 0, None)]
+                            if date[0]:
+                                return_fields.append({gb.FIELD:gb.DATE, gb.VALUE:date[0], \
+                                gb.CONFIDENCE:.9, gb.VERSION:__version__, \
+                                gb.STARTSTOPS:[{gb.START:date[1], gb.STOP:date[2]}], \
+                                gb.TABLE:gb.CYTOGENETICS})
                         except IOError:
                             return (field_value_output, [{gb.ERR_TYPE:'Exception', gb.ERR_STR:\
                             'FATAL ERROR in process.get() - \
@@ -197,7 +200,7 @@ def main(arguments):
 
                             return (field_value_output, [{gb.ERR_TYPE:'Exception', gb.ERR_STR:\
                             'FATAL ERROR in process.get(). Unknown number of reports completed.' + \
-                            str(sys.exc_info(1))}], list)
+                            concatenated_error_string}], list)
                     else:                        
                         ## string cleaner extracted a text based classification
                         field_value_dictionary[gb.TABLES] = []                        

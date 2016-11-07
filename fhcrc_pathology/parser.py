@@ -63,7 +63,7 @@ def parse(obx_file):
 
                     if gb.FILLER_ORDER_NO in line:
                         pass  # ignore duplicate header lines
-                    elif  text == 'NULL':
+                    elif  text == 'NULL' or text == 'None':
                         # maintain readability of text by keeping 'NULL' lines
                         path_d[mrn] = path_d.get(mrn, {})
                         path_d[mrn][acc] = path_d[mrn].get(acc, {})
@@ -102,7 +102,7 @@ def parse(obx_file):
                             section = section_header.group(1).strip()
                             section_order += 1
                             specimen = ''
-                        specimen_header = re.match(r'[\s\"]{,4}([,A-Z\- and&]+?)[\s]*(FS)?((-[A-Z])[\s]*FS)?[\s]*[)].*', text)
+                        specimen_header = re.match(r'[\s\"]{,4}([,A-Z\- and&]+?)[\s]*(TPFS)*?((-[A-Z])[\s]*TPFS)*?[\s]*[)].*', text)
                         if specimen_header:
                             specimen = '' ## reset specimen if there is a new specimen header match
                             specimen_match = specimen_header.group(1).replace(' ', '')
@@ -110,8 +110,13 @@ def parse(obx_file):
                             if specimen_header.group(4) and '-' in specimen_header.group(4):
                                 specimen_match = specimen_match + specimen_header.group(4)
                             for each in  specimen_dictionary.keys():
-                                if each and re.search('[' + specimen_match + ']', each):
-                                    specimen += each
+                                try:
+                                    specimen_match = specimen_match.replace('TP','').replace('FS','')
+                                    if each and re.search('[' + specimen_match + ']', each):
+                                        specimen += each
+                                except:
+                                    # right now this will exclude some interoperative consultation character/specimen spans
+                                    print acc, specimen_match
 
                         path_d[mrn][acc][(section_order, section, chars_onset, specimen)] = \
                             path_d[mrn][acc].get((section_order, section, chars_onset, specimen), {})

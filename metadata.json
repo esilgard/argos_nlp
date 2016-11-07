@@ -286,8 +286,27 @@
 						}
 					]
 				},
-				{
-				"field":"PathDate",
+				{"field":"PathSignedDate",
+				"datatype":"date",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[]
+						}
+					]
+				}, 
+				{"field":"PathCollectedDate",
+				"datatype":"date",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[]
+						}
+					]
+				},
+				{"field":"PathReceivedDate",
 				"datatype":"date",
 				"closedClass":"False",
 				"diseaseProperties":
@@ -819,7 +838,7 @@
 			{"table":"Cytogenetics",
 			"fields":[
 				{
-				"field":"Date",
+				"field":"ReceivedDate",
 				"datatype":"date",
 				"closedClass":"False",
 				"diseaseProperties":
@@ -859,7 +878,7 @@
 						}
 					]
 				},
-				{"field":"normal",
+				{"field":"Normal",
 				"datatype":"integer",
 				"closedClass":"False",
 				"diseaseProperties":
@@ -1149,7 +1168,7 @@
 						}
 					]
 				},
-				{"field":"del(-5)",
+				{"field":"-5",
 				"datatype":"integer",
 				"closedClass":"False",
 				"diseaseProperties":
@@ -1159,7 +1178,7 @@
 						}
 					]
 				},
-				{"field":"del(-7)",
+				{"field":"-7",
 				"datatype":"integer",
 				"closedClass":"False",
 				"diseaseProperties":
@@ -1169,7 +1188,7 @@
 						}
 					]
 				},
-				{"field":"del(+6)",
+				{"field":"+6",
 				"datatype":"integer",
 				"closedClass":"False",
 				"diseaseProperties":

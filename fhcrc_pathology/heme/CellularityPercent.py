@@ -15,9 +15,14 @@ class CellularityPercent(OneFieldPerReport):
         super(CellularityPercent, self).__init__()
         self.field_name = 'CellularityPercent'
         self.table = gb.PATHOLOGY_TABLE
-        self.specimen_confidence = 0.85
-        self.unlabled_specimen_confidence = 0.7
+        self.confidence = 0.85
+        self.less_good_confidence = 0.7
         ## relevant sections of the report ##
-        self.regex = r'Cellularity:[ ]+[\w\d ]*([1-9][\d]?([ \-]+[\d]{1,2})?)%'
+        self.good_section = r'BONE MARROW BIOPSY'
+        self.less_good_section = r'MARROW DIFFERENTIAL|PARTICLE PREP'
+        self.regex = r'[cC]ellularity:[\w\d\t,. ]*?[ ]+([\<\>\~ ]*[\d]+([ \-to]+[0-9]+)?)[ ]*%|([\<\>\~ ]*[\d]+([ \-to]+[0-9]+)?)[ ]*%[\w ]{,15}(total|sampled) cellularity'
         self.value_type = 'match'
         self.match_style = 'all'
+        
+        
+        

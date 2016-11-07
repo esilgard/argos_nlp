@@ -9,12 +9,12 @@ from OneFieldPerReport import OneFieldPerReport
 import global_strings as gb
 
 class ClinicalHistory(OneFieldPerReport):
-    ''' find the signed date in the pathology report '''
+    ''' find relevant clinical history '''
     __version__ = 'ClinicalHistory1.0'
     def __init__(self):
         super(ClinicalHistory, self).__init__()
         self.field_name = 'ClinicalHistory'
-        self.regex = r'(history of |hx of |clinical indication ).{,30}'
+        self.regex = r'(history of|hx of|clinical indication).{1,30}'
         self.confidence = 1
         self.match_style = 'all'
         self.table = gb.PATHOLOGY_TABLE

@@ -17,9 +17,12 @@ class CellularityType(OneFieldPerReport):
         self.field_name = 'CellularityType'
         self.table = gb.PATHOLOGY_TABLE
         self.specimen_confidence = 0.85
-        self.unlabled_specimen_confidence = 0.7
+        self.less_good_confidence = 0.7
         ## reference lists & dictionaries ##
         self.file_name_string = 'cellularity'
         self.regex = r'(.)'
         self.value_type = 'match'
         self.match_style = 'all'
+        
+        self.good_section = r'BONE MARROW BIOPSY'
+        self.less_good_section = r'MARROW DIFFERENTIAL|PARTICLE PREP'

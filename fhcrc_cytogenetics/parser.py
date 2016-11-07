@@ -65,7 +65,7 @@ def parse(obx_file):
 
                     if gb.FILLER_ORDER_NO in line:
                         pass # ignore duplicate header lines
-                    elif text == 'NULL':
+                    elif text == 'NULL' or text == 'None':
                         # maintain readability of fully constituted text by keeping empty 'NULL' lines
                         cytogenetics_dictionary[mrn] = cytogenetics_dictionary.get(mrn, {})
                         cytogenetics_dictionary[mrn][acc] = cytogenetics_dictionary[mrn].get(acc, {})
@@ -82,7 +82,7 @@ def parse(obx_file):
                             # create a specimen source dictionary for each labeled specimen
                             #(in the same format as the regular pathology section dictionary
                             # catch NULL or empty string specimenSources
-                            if not headers.get(gb.SPECIMEN_SOURCE) or \
+                            if not line[headers.get(gb.SPECIMEN_SOURCE)] or \
                                line[headers.get(gb.SPECIMEN_SOURCE)] == 'NULL':
                                 specimen_dictionary = {}
                             else:
@@ -126,10 +126,10 @@ def parse(obx_file):
                             received_date = re.match(r'.*RECEIVED:[ ]+([A-Z][a-z]+)[ ]+([\d]+)[ ]+([\d]{4}).*', text)
                             if received_date:
                                 cytogenetics_dictionary[mrn][acc][(-1, 'Date', 0, None)] = \
-                                make_datetime.get((received_date.group(3), received_date.group(1), \
-                                received_date.group(2)), '%Y,%b,%d')
+                                (make_datetime.get((received_date.group(3), received_date.group(1), \
+                                received_date.group(2)), '%Y,%b,%d'), received_date.start(1)+chars_onset, received_date.end(3)+chars_onset)
                             else:
-                                cytogenetics_dictionary[mrn][acc][(-1, 'Date', 0, None)] = 'NA'
+                                cytogenetics_dictionary[mrn][acc][(-1, 'Date', 0, None)] = (None, 0, 0)
                         chars_onset += len(text) + 1
                 return cytogenetics_dictionary, dict
 

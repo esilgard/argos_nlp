@@ -208,5 +208,5 @@ class OneFieldPerSpecimen(object):
             self.return_d_list.append(overall_finding_d)
             if self.has_secondary_data_element == True:
                 self.add_secondary_data_elements(overall_finding_d, d[(-1, 'FullText', 0, None)])
-        
+        if self.overall_field_name == 'CellularityPercent': print return_d_list
         return (self.return_d_list, list)

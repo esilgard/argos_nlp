@@ -4,7 +4,7 @@
 #
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
-import re
+
 import global_strings as gb
 import aml_swog_classification
 
@@ -121,8 +121,8 @@ def get(cell_list, karyotype_string, karyo_offset):
                                 elif z == 'add':
                                     for each in ['1']:
                                         if zz[0] == each and 'q' in zz[1]:
-                                            mm_mutations['del(' + each + 'q)'] += cell_count
-                                            mm_offsets['del(' + each + 'q)'].append((variation_start, variation_end))   
+                                            mutations['del(' + each + 'q)'] += cell_count
+                                            mutations['del(' + each + 'q)'].append((variation_start, variation_end))   
                                                                   
                                 ## any mutation involving 17p, 21q, 20q, 11q, 9q, 3q  - we want to capture things like t(3;3) but NOT -13
                                 ## also must make sure the 'q' is on the '11' arm - do not want to capture things like t(11;22)(p4;q20)
@@ -155,18 +155,17 @@ def get(cell_list, karyotype_string, karyo_offset):
             mutations[gb.WARNING] = 1            
             x[gb.WARNING] = 1      
            
-    mutations[gb.TRIS] = len(abnormality_set)    
+    mutations[gb.MUTS] = len(abnormality_set)    
     mutations[gb.MONOS] = len(monosomy_set)
     mutations[gb.TRIS] = len(trisomy_set)
        
     for each_variation in mutations:
-        confidence = 1.0
+        confidence = 0.95
         if mutations[gb.WARNING] == 1:
             confidence = .6
         return_dictionary_list.append({gb.FIELD:each_variation, gb.VALUE:mutations[each_variation], \
-                                       gb.CONFIDENCE:1.0, gb.VERSION:__version__, \
+                                       gb.CONFIDENCE:confidence, gb.VERSION:__version__, \
                                        gb.STARTSTOPS:[{gb.START:a[0], gb.STOP:a[1]} \
                                        for a in offsets[each_variation]], gb.TABLE:gb.CYTOGENETICS})
-
     return_dictionary_list.append(aml_swog_classification.get(mutations, abnormality_set, offsets, cell_list))
     return return_dictionary_list, return_errors

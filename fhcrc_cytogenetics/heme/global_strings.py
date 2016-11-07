@@ -28,5 +28,6 @@ MONOS = "DistinctMonosomies"
 TRIS = "DistinctTrisomies"
 UNKNOWN = "Unknown"
 CELL_COUNT = "CellCount"
-NORMAL = "normal"
+NORMAL = "Normal"
+DATE = "ReceivedDate"
 

@@ -1,1 +1,1 @@
-lung;pulmonary;pulmonic;lung primary;lungs;nsclc;sclc;bronchial;endobronchial;hilar;perihilar
+lung;pulmonary;pulmonic;lung primary;lungs;nsclc;sclc;bronchial;endobronchial;hilar;perihilar;axillary
