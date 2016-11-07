@@ -34,11 +34,12 @@ class OneFieldPerReport(object):
         string_list = []
         standardizations = {}
         for line in open(PATH + reference_file_name_string + '.txt', 'r').readlines():
-            strings = line.split(';')
-            for each in strings:
-                each = each.strip().lower()
-                standardizations[each] = strings[0].strip()
-                string_list.append(each)
+            if len(line)>1:
+                strings = line.split(';')
+                for each in strings:
+                    each = each.strip().lower()
+                    standardizations[each] = strings[0].strip()
+                    string_list.append(each)
         string_list = sorted(string_list, key=lambda x: len(x), reverse=True)
         return string_list, standardizations
     

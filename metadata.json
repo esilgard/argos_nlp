@@ -52,9 +52,6 @@
 						{"diseaseGroup":["heme"],
 						"values":["AML","CML","MM","MDS","CCL","Lymphoma","Leukemia"]
 						},
-						{"diseaseGroup":["male_cancers"],
-						"values":["Adenocarcinoma"]
-						},
 						{"diseaseGroup":["other"],
 						"values":[]
 						},
@@ -98,9 +95,6 @@
 						{"diseaseGroup":["heme"],
 						"values":["AML","CML","MM","MDS","CCL","Lymphoma","Leukemia"]
 						},
-						{"diseaseGroup":["male_cancers"],
-						"values":["Adenocarcinoma"]
-						},
 						{"diseaseGroup":["other"],
 						"values":[]
 						},
@@ -130,7 +124,7 @@
 						"values":["Cholecystectomy","Pancreaticoduodenectomy","Omentectomy","Hemicolectomy","Segmental Resection","Appendectomy","Polypectomy"]
 						},
 						{"diseaseGroup":["GU"],
-						"values":["Prostatectomy","Radical Prostatectomy","Cystectomy"]
+						"values":["Prostatectomy","Radical Prostatectomy","Cystectomy","Orchiectomy"]
 						},
 						{"diseaseGroup":["gyn"],
 						"values":["Hysterectomy","Salpingo-Oopherectomy","Radical Hysterectomy","Externeration"]
@@ -143,9 +137,6 @@
 						},
 						{"diseaseGroup":["lung"],
 						"values":["Alveolectomy","Bronchoscopy","Thoracentesis","Cystoscopy","Endoscopy","Laminectomy","Foraminotomy","Facetectomy;facetomies","Fusion","Ligation","Lobectomy","Lymphadenectomy","Lysis Carotid Artery","Mediastinoscopy","Paracentesis","Pericardiocentesis","Pneumonectomy","Thoracentesis","Thoracoscopy","Thoracostomy","Thoracotomy","Pleurectomy"]
-						},
-						{"diseaseGroup":["male_cancers"],
-						"values":["Orchiectomy"]
 						},
 						{"diseaseGroup":["other"],
 						"values":[]
@@ -229,7 +220,7 @@
 						"values":["Gallbladder","Stomach","Rectum","Colon","Colorectal","Sigmoid Colon","Pancreas","Omentum","Ileum","Transverse Colon","Ascending Colon","Descending Colon","Cecum","Antrum","Rectosigmoid Colon","Appendix","Esophagus","Intestine","Duodenum","Bowel"]
 						},
 						{"diseaseGroup":["GU"],
-						"values":["Bladder","Prostate"]
+						"values":["Bladder","Prostate","Penis","Testicle"]
 						},
 						{"diseaseGroup":["gyn"],
 						"values":["Cervix","Uterus","Ovary","Vagina","Vulva","Fallopian","Pelvis","Edometrium"]
@@ -242,9 +233,6 @@
 						},
 						{"diseaseGroup":["lung"],
 						"values":["Upper Lobe","Mediastinum","Hilar","Interlobular","Lower Lobe","Middle Lobe","Middle/Lower Lobe","Bronchus","Pleura","Retroperitoneum","Upper/Middle Lobe","Lymph Node","Chest Wall"]
-						},
-						{"diseaseGroup":["male_cancers"],
-						"values":["Penis","Testicle"]
 						},
 						{"diseaseGroup":["other"],
 						"values":[]
@@ -386,7 +374,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["brain","breast","head_neck","heme","lung","GU","GI","sarcoma","gyn","other","skin","male_cancers"]
+						"values":["brain","breast","head_neck","heme","lung","GU","GI","sarcoma","gyn","other","skin"]
 						}
 					]
 				}
@@ -400,7 +388,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","male_cancers","other","head_neck"]
+						"values":["brain","breast","GI","GU","gyn","heme","lung","sarcoma", "skin","other","head_neck"]
 						}
 					]
 				}
@@ -426,7 +414,7 @@
 						"values":["Cholecystectomy","Pancreaticoduodenectomy","Omentectomy","Hemicolectomy","Segmental Resection","Appendectomy","Polypectomy"]
 						},
 						{"diseaseGroup":["GU"],
-						"values":["Prostatectomy","Radical Prostatectomy","Cystectomy"]
+						"values":["Prostatectomy","Radical Prostatectomy","Cystectomy","Orchiectomy"]
 						},
 						{"diseaseGroup":["gyn"],
 						"values":["Hysterectomy","Salpingo-Oopherectomy","Radical Hysterectomy","Externeration"]
@@ -439,9 +427,6 @@
 						},
 						{"diseaseGroup":["lung"],
 						"values":["Alveolectomy","Bronchoscopy","Thoracentesis","Cystoscopy","Endoscopy","Laminectomy","Foraminotomy","Facetectomy;facetomies","Fusion","Ligation","Lobectomy","Lymphadenectomy","Lysis Carotid Artery","Mediastinoscopy","Paracentesis","Pericardiocentesis","Pneumonectomy","Thoracentesis","Thoracoscopy","Thoracostomy","Thoracotomy","Pleurectomy"]
-						},
-						{"diseaseGroup":["male_cancers"],
-						"values":["Orchiectomy"]
 						},
 						{"diseaseGroup":["other"],
 						"values":[]
@@ -472,7 +457,7 @@
 						"values":["Gallbladder","Stomach","Rectum","Colon","Colorectal","Sigmoid Colon","Pancreas","Omentum","Ileum","Transverse Colon","Ascending Colon","Descending Colon","Cecum","Antrum","Rectosigmoid Colon","Appendix","Esophagus","Intestine","Duodenum","Bowel"]
 						},
 						{"diseaseGroup":["GU"],
-						"values":["Bladder","Prostate"]
+						"values":["Bladder","Prostate","Penis","Testicle"]
 						},
 						{"diseaseGroup":["gyn"],
 						"values":["Cervix","Uterus","Ovary","Vagina","Vulva","Fallopian","Pelvis","Edometrium"]
@@ -485,9 +470,6 @@
 						},
 						{"diseaseGroup":["lung"],
 						"values":["Upper Lobe","Mediastinum","Hilar","Interlobular","Lower Lobe","Middle Lobe","Middle/Lower Lobe","Bronchus","Pleura","Retroperitoneum","Upper/Middle Lobe","Lymph Node","Chest Wall"]
-						},
-						{"diseaseGroup":["male_cancers"],
-						"values":["Penis","Testicle"]
 						},
 						{"diseaseGroup":["other"],
 						"values":[]
@@ -618,9 +600,6 @@
 						{"diseaseGroup":["heme"],
 						"values":["AML","CML","MM","MDS","CCL","Lymphoma","Leukemia"]
 						},
-						{"diseaseGroup":["male_cancers"],
-						"values":["Adenocarcinoma"]
-						},
 						{"diseaseGroup":["other"],
 						"values":[]
 						},
@@ -727,9 +706,6 @@
 						},
 						{"diseaseGroup":["heme"],
 						"values":["AML","CML","MM","MDS","CCL","Lymphoma","Leukemia"]
-						},
-						{"diseaseGroup":["male_cancers"],
-						"values":["Adenocarcinoma"]
 						},
 						{"diseaseGroup":["other"],
 						"values":[]
@@ -1232,7 +1208,7 @@
 				"diseaseProperties":
 					[
 						{"diseaseGroup":["*"],
-						"values":["brain","breast","head_neck","heme","lung","GU","GI","sarcoma","gyn","other","skin","male_cancers"]
+						"values":["brain","breast","head_neck","heme","lung","GU","GI","sarcoma","gyn","other","skin"]
 						}
 					]
 				},

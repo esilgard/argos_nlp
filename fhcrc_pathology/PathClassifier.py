@@ -13,8 +13,8 @@ PATH = os.path.dirname(os.path.realpath(__file__)) + os.path.sep
 RESOURCES = {'behavior.txt': .1, 'node_sites.txt': .2, 'other_findings.txt': .2, \
              'procedures.txt': .2, 'sites.txt': .1, 'subsite.txt': .2, \
              'histologies.txt': .9, 'keywords.txt': .7}
-DZ_GROUPS = ['brain', 'breast', 'GI', 'GU', 'gyn', 'heme', 'lung', 'sarcoma', \
-             'skin', 'male_cancers', 'other', 'head_neck']
+DZ_GROUPS = ['brain', 'breast', 'GI', 'GU', 'gyn', 'heme', 'lung', \
+             'sarcoma', 'skin', 'other', 'head_neck']
 KEYWORD_D = {}
 
 

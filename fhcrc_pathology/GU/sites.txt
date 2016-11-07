@@ -1,2 +1,5 @@
 Prostate;prostatic
 Bladder
+Testicle;testicles;testicular;testis
+Penis;penile
+Kidney;renal
