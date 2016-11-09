@@ -4,6 +4,8 @@ import os
 import re
 import nltk
 from fhcrc_clinical.SocialHistories.DataLoading import ServerQuery
+from fhcrc_clinical.SocialHistories.DataLoading import Wills_Server_Query
+from fhcrc_clinical.SocialHistories.DataLoading.Wills_Server_Query import get_document_text
 from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Document, Event, Patient, Sentence
 from fhcrc_clinical.SocialHistories.SystemUtilities import Configuration
 from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
@@ -21,38 +23,44 @@ def main(environment, tsv_in=""):
 
 
     if environment == "Train":
-        print "Loading data annotations from labkey server ..."
-        annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
-
         print ("Loading split info ...")
         split_set = load_split_info(environment)
-
-        print ("Loading labkey patients ...")
+        #annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
+        annotation_metadata = Wills_Server_Query.get_labkey_training_data()
         labkey_training_patients = load_labkey_patients(annotation_metadata, split_set)
-
-        # Temporary split of training data into test/train
-        tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_training_patients) # Necessary because we only have labeled training data at the moment
-        print("\tLoaded " + str(len(tmp_train_set)) + " train patients (thats " + str(len(tmp_test_set)) + " saved for testing)")
-        return tmp_train_set
+        print("Training on " + str(len(labkey_training_patients)) + " patients")
+        print("\tThat's " + str(get_num_documents(labkey_training_patients)) + " documents")
+        # # Temporary split of training data into test/train
+        # tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_training_patients) # Necessary because we only have labeled training data at the moment
+        #print("\tLoaded " + str(len(tmp_train_set)) + " train patients (thats " + str(len(tmp_test_set)) + " saved for testing)")
+        return labkey_training_patients
 
     elif environment == "Test":
         print "Loading data annotations from labkey server ..."
-        annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
-
-        split_set = load_split_info("Train") # TODO: split should not be explicitly stated like this. It only is ATM b/c Labkey has no annotated testing data
-
+        split_set = load_split_info(environment)
+        #annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
+        annotation_metadata = Wills_Server_Query.get_labkey_test_data()
         labkey_testing_patients = load_labkey_patients(annotation_metadata, split_set)
-        # Temporary split of training data into test/train
-        tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_testing_patients) # Necessary because we only have labeled training data at the moment
-        print("\tLoaded " + str(len(tmp_test_set)) + " test patients (thats " + str(len(tmp_train_set)) + " saved for training)")
+        print("Testing on " + str(len(labkey_testing_patients)) + " patients")
+        print("\tThat's "+ str(get_num_documents(labkey_testing_patients)) + " documents")
+        # # Temporary split of training data into test/train
+        # tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_testing_patients) # Necessary because we only have labeled training data at the moment
+        #print("\tLoaded " + str(len(tmp_test_set)) + " test patients (thats " + str(len(tmp_train_set)) + " saved for training)")
         # for pat in tmp_test_set:
         #     print "\t" + str(pat.id)
-        return tmp_test_set
+        return labkey_testing_patients
 
     elif environment == "execute":
         print "Loading data from provided tsv file: " + tsv_in
         patients = build_patients_from_tsv(tsv_in)
         return patients
+
+def get_num_documents(patients):
+    count =0
+    for pat in patients:
+        for doc in pat.doc_list:
+            count+=1
+    return count
 
 
 def get_temporary_train_and_test_divisions(patients):
@@ -88,9 +96,10 @@ def load_split_info(environment):
 def load_labkey_patients(test_anns, split_set):
     # Load full data note repo from which TRAIN or TEST will pick and return a subset of docs
     print "\tLoading full data note repo ..."
-    noteID_text_dict = load_data_repo(os.path.join(Configuration.DATA_DIR, "output"), split_set)
+    #noteID_text_dict = load_data_repo(os.path.join(Configuration.DATA_DIR, "output"), split_set)
+    noteID_text_dict = get_document_text(test_anns)
     print ("\tBuilding Patients from Labkey data ...")
-    labkey_patients = build_patients_from_labkey(test_anns, noteID_text_dict, split_set)
+    labkey_patients = build_patients_from_labkey(test_anns, noteID_text_dict)
     return labkey_patients
 
 
@@ -296,7 +305,7 @@ def load_data_repo(NOTE_OUTPUT_DIR, doc_ids):
     return id_text_dict
 
 
-def get_labkey_documents(annId_patient_dict, docID_text_dict, split_set):
+def get_labkey_documents(annId_patient_dict, docID_text_dict):
     annotater_ids = sorted(annId_patient_dict.keys())
     labkey_documents = list()
     for annotater_id in annotater_ids:
@@ -305,7 +314,7 @@ def get_labkey_documents(annId_patient_dict, docID_text_dict, split_set):
         for pat_id in pat_ids:
             docId_events = patient_dict[pat_id]  # {patientId : {eventType : EventObject}}
             for docId, event_dict in docId_events.iteritems():
-                if docId in split_set:
+                if docId in docID_text_dict:
                     doc_obj = Document(docId, docID_text_dict[docId])
                     # populate the docObj's event list
                     for type, event in event_dict.iteritems():
@@ -337,9 +346,9 @@ def get_labkey_patients(labkey_documents):
     return patients_list
 
 
-def build_patients_from_labkey(annId_patient_dict, docID_text_dict, split_set):
+def build_patients_from_labkey(annId_patient_dict, docID_text_dict):
     print("Building Labkey documents ...")
-    labkey_documents = get_labkey_documents(annId_patient_dict, docID_text_dict, split_set)
+    labkey_documents = get_labkey_documents(annId_patient_dict, docID_text_dict)
     print("Building Labkey patients ...")
     labkey_patients = get_labkey_patients(labkey_documents)
     return labkey_patients
