@@ -1,8 +1,7 @@
 import pyodbc
 import platform
 
-from fhcrc_clinical.SocialHistories.DataLoading.DataLoadingGlobals import TEST_JOB_IDS, TRAIN_JOB_IDS, entity_types, \
-    SERVER
+from fhcrc_clinical.SocialHistories.DataLoading.DataLoadingGlobals import TEST_JOB_IDS, TRAIN_JOB_IDS, entity_types
 from fhcrc_clinical.SocialHistories.DataModeling.DataModels import DocumentEvent, AnnotatedAttribute, Span
 
 
