@@ -1,85 +1,29 @@
-import csv
 import os
-
 import re
 import nltk
-from fhcrc_clinical.SocialHistories.DataLoading import ServerQuery
-from fhcrc_clinical.SocialHistories.DataLoading import Wills_Server_Query
-from fhcrc_clinical.SocialHistories.DataLoading.Wills_Server_Query import get_document_text
+import sys
 from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Document, Event, Patient, Sentence
 from fhcrc_clinical.SocialHistories.SystemUtilities import Configuration
-from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
 from fhcrc_clinical.SocialHistories.Extraction.KeywordSearch import KeywordSearch
 from os import listdir
 from os.path import isfile, join
-import sys
-
 from fhcrc_clinical.parser import csv_parse
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 
-def main(environment, tsv_in=""):
-    reload(sys)
-    sys.setdefaultencoding('utf8')
+def main(tsv_in=""):
+    print "Loading data from provided tsv file: " + tsv_in
+    patients = build_patients_from_tsv(tsv_in)
+    return patients
 
-
-    if environment == "Train":
-        print ("Loading split info ...")
-        split_set = load_split_info(environment)
-        #annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
-        annotation_metadata = Wills_Server_Query.get_labkey_training_data()
-        labkey_training_patients = load_labkey_patients(annotation_metadata, split_set)
-        print("Training on " + str(len(labkey_training_patients)) + " patients")
-        print("\tThat's " + str(get_num_documents(labkey_training_patients)) + " documents")
-        # # Temporary split of training data into test/train
-        # tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_training_patients) # Necessary because we only have labeled training data at the moment
-        #print("\tLoaded " + str(len(tmp_train_set)) + " train patients (thats " + str(len(tmp_test_set)) + " saved for testing)")
-        return labkey_training_patients
-
-    elif environment == "Test":
-        print "Loading data annotations from labkey server ..."
-        split_set = load_split_info(environment)
-        #annotation_metadata = ServerQuery.get_annotations_from_server()  # testing: stub data only
-        annotation_metadata = Wills_Server_Query.get_labkey_test_data()
-        labkey_testing_patients = load_labkey_patients(annotation_metadata, split_set)
-        print("Testing on " + str(len(labkey_testing_patients)) + " patients")
-        print("\tThat's "+ str(get_num_documents(labkey_testing_patients)) + " documents")
-        # # Temporary split of training data into test/train
-        # tmp_train_set, tmp_test_set = get_temporary_train_and_test_divisions(labkey_testing_patients) # Necessary because we only have labeled training data at the moment
-        #print("\tLoaded " + str(len(tmp_test_set)) + " test patients (thats " + str(len(tmp_train_set)) + " saved for training)")
-        # for pat in tmp_test_set:
-        #     print "\t" + str(pat.id)
-        return labkey_testing_patients
-
-    elif environment == "execute":
-        print "Loading data from provided tsv file: " + tsv_in
-        patients = build_patients_from_tsv(tsv_in)
-        return patients
 
 def get_num_documents(patients):
-    count =0
+    count = 0
     for pat in patients:
         for doc in pat.doc_list:
-            count+=1
+            count += 1
     return count
-
-
-def get_temporary_train_and_test_divisions(patients):
-    sorted_list = sorted(patients)
-    doc_count = len(sorted_list)
-    end_test_span = doc_count / 5  # the first 1/5 of the sorted data is the test_set
-    test_span = (0, end_test_span)
-
-    test_set = set()
-    train_set = set()
-
-    count = 0
-    for doc in sorted_list:
-        if count >= test_span[0] and count <= test_span[1]:
-            test_set.add(doc)
-        else:
-            train_set.add(doc)
-        count += 1
-    return train_set, test_set
 
 
 def load_split_info(environment):
@@ -91,16 +35,6 @@ def load_split_info(environment):
         with open(Configuration.DATA_DIR + "notes_train_def.txt", "rb") as file:
             lines = file.read().splitlines()
     return set(lines)
-
-
-def load_labkey_patients(test_anns, split_set):
-    # Load full data note repo from which TRAIN or TEST will pick and return a subset of docs
-    print "\tLoading full data note repo ..."
-    #noteID_text_dict = load_data_repo(os.path.join(Configuration.DATA_DIR, "output"), split_set)
-    noteID_text_dict = get_document_text(test_anns)
-    print ("\tBuilding Patients from Labkey data ...")
-    labkey_patients = build_patients_from_labkey(test_anns, noteID_text_dict)
-    return labkey_patients
 
 
 def get_doc_sentences(doc):
@@ -123,11 +57,12 @@ def split_doc_text(text):
     sentences = nltk.tokenize.PunktSentenceTokenizer().sentences_from_text(text.encode("utf8"))
     spans = list(nltk.tokenize.PunktSentenceTokenizer().span_tokenize(text.encode("utf8")))
 
-    #sentences, spans = split_by_double_newline(sentences, spans)
+    # sentences, spans = split_by_double_newline(sentences, spans)
     sentences, spans = split_by_single_newlines(sentences, spans)
     sentences, spans = rejoin_sents_on_leading_punctuation(sentences, spans)
 
     return sentences, spans
+
 
 def rejoin_sents_on_leading_punctuation(sentences, spans):
     # if a sentence ends in punctuation that implies related info in next sentence, append the next sentence to it, combine spans
@@ -143,7 +78,7 @@ def rejoin_sents_on_leading_punctuation(sentences, spans):
 
 def split_by_single_newlines(sentences, spans):
     final_sentences = []
-    final_spans=[]
+    final_spans = []
     for i in range(len(sentences)):
         sent = sentences[i]
         sents = sent.split('\n')
@@ -151,6 +86,7 @@ def split_by_single_newlines(sentences, spans):
         final_spans.extend(span_split)
         final_sentences.extend(sents)
     return final_sentences, final_spans
+
 
 def get_spans_of_split_sent(sent_list, span):
     spans = []
@@ -161,6 +97,7 @@ def get_spans_of_split_sent(sent_list, span):
         count_end += 1
         count_begin = count_end
     return spans
+
 
 def split_by_double_newline(sentences, spans):
     """ Take the sentences split by NLTK and further split them by double newline chars """
@@ -223,7 +160,7 @@ def add_current_sent_and_span(doc_begin_index, doc_end_index, nltk_sent_begin_in
         split_spans.append((end_span_begin, end_span_end))
 
 
-def assign_goldLabels_to_sents(sents, doc):
+def assign_gold_labels_to_sents(sents, doc):
     doc_gold_events = doc.gold_events
     for gold_event in doc_gold_events:
         if len(gold_event.status_spans) > 0:  # ie if it has a span and is not just a 'dummy' event
@@ -323,35 +260,9 @@ def get_labkey_documents(annId_patient_dict, docID_text_dict):
                     doc_obj.sent_list = get_doc_sentences(doc_obj)
                     labkey_documents.append(doc_obj)
                     # Match spans to sentence level
-                    assign_goldLabels_to_sents(doc_obj.sent_list, doc_obj)
+                    assign_gold_labels_to_sents(doc_obj.sent_list, doc_obj)
 
     return labkey_documents
-
-
-def get_labkey_patients(labkey_documents):
-    patients_dict = dict()
-    patients_list = list()
-    for doc in labkey_documents:
-        patId = doc.id.split("_")[0]
-        if patId not in patients_dict:
-            patients_dict[patId] = list()
-            patients_dict[patId].append(doc)
-        else:
-            patients_dict[patId].append(doc)
-
-    for pid, doclist in patients_dict.iteritems():
-        patient = Patient(pid)
-        patient.doc_list = doclist
-        patients_list.append(patient)
-    return patients_list
-
-
-def build_patients_from_labkey(annId_patient_dict, docID_text_dict):
-    print("Building Labkey documents ...")
-    labkey_documents = get_labkey_documents(annId_patient_dict, docID_text_dict)
-    print("Building Labkey patients ...")
-    labkey_patients = get_labkey_patients(labkey_documents)
-    return labkey_patients
 
 
 def build_patients_from_tsv(tsv_in):
@@ -385,27 +296,28 @@ def get_patient_docs(docs):
 
 def rejoin_sent_objs_on_leading_punctuation(sent_objs):
     new_sent_objs = []
-    skip=False
+    skip = False
     for i in range(len(sent_objs)):
         if skip:
-            skip=False
+            skip = False
         else:
             sent = sent_objs[i]
             if sent.text.rstrip().endswith(('?', ':', ';', '-')) or sent.text.istitle():
                 if i + 1 < len(sent_objs):
-                    new_text = sent_objs[i].text + " " + sent_objs[i+1].text
+                    new_text = sent_objs[i].text + " " + sent_objs[i + 1].text
                     new_begin_span = sent_objs[i].span_in_doc_start
-                    new_end_span = sent_objs[i+1].span_in_doc_end
-                    #id_num, text, span_in_doc_start, span_in_doc_end
-                    new_sent_obj = Sentence(sent.id,new_text, new_begin_span,new_end_span)
+                    new_end_span = sent_objs[i + 1].span_in_doc_end
+                    # id_num, text, span_in_doc_start, span_in_doc_end
+                    new_sent_obj = Sentence(sent.id, new_text, new_begin_span, new_end_span)
                     new_sent_objs.append(new_sent_obj)
-                    skip=True
+                    skip = True
                 else:
                     new_sent_objs.append(sent)
             else:
                 new_sent_objs.append(sent)
     return new_sent_objs
-    
+
+
 def get_sentences_from_field_tuples(fields, doc_id):
     full_text = ""
     event_date = ""
@@ -414,7 +326,7 @@ def get_sentences_from_field_tuples(fields, doc_id):
     sorted_keys = sorted(fields.iteritems(), key=lambda x: x[0][2])
 
     for tup in sorted_keys:
-        line=tup[1]
+        line = tup[1]
         if tup[0][1] == "FullText":
             full_text = line
         elif tup[0][1] == "EventDate":
@@ -424,14 +336,14 @@ def get_sentences_from_field_tuples(fields, doc_id):
             text_start_idx = tup[0][2]
             text_end_idx = len(line) + text_start_idx
 
-            # Going off of the nlp engine's sentence segmentation is no good
-            # split "lines" down into better sentences here, realign spans
+            # Going off of the nlp engine's sentence segmentation is no good--
+            # split long "sentence" (paragraphs) down into better sentences here, realign spans
             better_sentences, spans = split_doc_text(line)
             realigned_spans = list()
             for span in spans:
-                realigned_spans.append((text_start_idx+span[0], text_start_idx+span[1]))
+                realigned_spans.append((text_start_idx + span[0], text_start_idx + span[1]))
 
-            for i in range(0,len(better_sentences), 1):
+            for i in range(0, len(better_sentences), 1):
                 text_start_idx = realigned_spans[i][0]
                 text_end_idx = realigned_spans[i][1]
                 sentence = Sentence(doc_id, better_sentences[i], text_start_idx, text_end_idx)

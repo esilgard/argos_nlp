@@ -4,6 +4,7 @@ from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Event
 from Processing import *
 from fhcrc_clinical.SocialHistories.Extraction import Classification
 
+
 # Add sentence-level predicted events in Patient object
 def detect_sentence_events(patients):
     # store all sentences which have events. This is used as input to StatusClassification
