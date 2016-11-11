@@ -1,0 +1,10 @@
+Lobular Carcinoma In Situ;lcis
+Atypical Ductal Hyperplasia;adh
+Atypical Lobular Hyperplasia;alh
+Papilloma;papillary lesion
+Radial Scar
+Complex Sclerosing Lesion
+Flat Epithelial Atypia;FEA
+Phyllodes
+Atypical Apocrine Metaplasia
+Atypia
