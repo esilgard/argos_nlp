@@ -129,7 +129,7 @@ class OneFieldPerReport(object):
                                 ## hacky string normalization for Pathologist
                                 self.return_d[gb.VALUE] = match.group(1).replace('  ', ' ')
                             else:
-                                self.return_d[gb.VALUE] = self.value_type.get(True)[0]
+                                self.return_d[gb.VALUE] = self.value_type.get(True)[0]                                
                                 self.return_d[gb.CONFIDENCE] = ('%.2f' % self.value_type.get(True)[1])
                             self.return_d[gb.STARTSTOPS].append\
                                             ({gb.START: match.start(1), gb.STOP:match.end(1)})
@@ -144,16 +144,18 @@ class OneFieldPerReport(object):
                             if not isinstance(self.value_type, dict):
                                 if not self.file_name_string:
                                     ## hacky string normalization for PathStageSystem (although cellularityPercent also ends up here)
-                                    field_set.add(each_match.group(1).replace(',', ''))
+                                    #if self.field_name == 'CellularityPercent': print each_match.span;print each_match.string
+                                    field_set.add(each_match.group(1).replace(',', ''))             
                             else:
                                 field_set.add(self.value_type.get(True)[0])
                                 self.return_d[gb.CONFIDENCE] = ('%.2f' % self.value_type.get(True)[1])
                             self.return_d[gb.STARTSTOPS].append({gb.START:each_match.start(1), gb.STOP: each_match.end(1)})
-                        self.return_d[gb.VALUE] = ';'.join(sorted(field_set))
+                        self.return_d[gb.VALUE] = ';'.join(sorted(field_set))                        
                 ## no match && value_type && dictionary -> value is based on lack of evidence (reviews)
-                if isinstance(self.value_type, dict) and self.return_d[gb.VALUE] is None:
+                if isinstance(self.value_type, dict) and self.return_d[gb.VALUE] is None:                  
                     self.return_d[gb.VALUE] = self.value_type.get(False)[0]
                     self.return_d[gb.CONFIDENCE] = ('%.2f' % self.value_type.get(False)[1])
+
             return ([self.return_d], list)
         except RuntimeError:
             return ([{gb.ERR_TYPE: 'Warning', gb.ERR_STR: 'ERROR in %s module.' \

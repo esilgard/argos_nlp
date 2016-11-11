@@ -20,9 +20,9 @@ class CellularityType(OneFieldPerReport):
         self.less_good_confidence = 0.7
         ## reference lists & dictionaries ##
         self.file_name_string = 'cellularity'
-        self.regex = r'(.)'
+        self.regex = r'(bone marrow biopsy|marrow differential|particle prep|bone marrow aspirate).{,200}'
         self.value_type = 'match'
         self.match_style = 'all'
         
         self.good_section = r'BONE MARROW BIOPSY'
-        self.less_good_section = r'MARROW DIFFERENTIAL|PARTICLE PREP'
+        self.less_good_section = r'MARROW DIFFERENTIAL|PARTICLE PREP|BONE MARROW ASPIRATE'
