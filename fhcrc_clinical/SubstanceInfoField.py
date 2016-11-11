@@ -52,6 +52,9 @@ class SubstanceField:
         # Field value
         self.return_d[VALUE] = attribute_obj.text
 
+        # Field probability (confidence)
+        self.return_d['confidence'] = attribute_obj.probability
+
         # Field spans
         for span in attribute_obj.all_value_spans:
             self.return_d[STARTSTOPS].append({START: span.start, STOP: span.stop})
@@ -59,6 +62,9 @@ class SubstanceField:
     def fill_status(self, event):
         # Field value
         self.return_d[VALUE] = event.status
+
+        # field probability (confidence)
+        self.return_d['confidence'] = event.confidence
 
         # Field spans
         for span in event.status_spans:

@@ -28,6 +28,13 @@ class KeywordHit:
         self.span_start = span_start
         self.span_end = span_end
 
+def search_keywords_in_sentence(text):
+    for substance in KEYWORD_SUBSTANCES:
+        regex = get_regex_from_file(substance)
+        has_hit = find_keyword_hits_sentence(text, regex, substance)
+        if has_hit:
+            return True
+    return False
 
 def search_keywords(patients):
     docs_with_hits = set()
@@ -42,7 +49,7 @@ def search_keywords(patients):
 
 
 def get_regex_from_file(substance):
-    filename = os.path.dirname(__file__) + r"\\" + substance + KEYWORD_FILE_SUFFIX
+    filename = os.path.dirname(__file__) + os.sep + substance + KEYWORD_FILE_SUFFIX
     with open(filename, "r") as regex_file:
         regex_lines = regex_file.readlines()
         regexes = [r[:-1] for r in regex_lines]     # remove "\n" at end of each regex line
@@ -51,6 +58,13 @@ def get_regex_from_file(substance):
     regex = r"((" + ")|(".join(regexes) + "))"
     return regex
 
+
+def find_keyword_hits_sentence(text, regex, substance):
+    matches = re.findall(regex, text, re.IGNORECASE) #finditer
+    if len(matches) > 0:
+        return True
+    else:
+        return False
 
 def find_keyword_hits(patients, regex, substance):
     docs_with_hits = []

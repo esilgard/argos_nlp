@@ -86,6 +86,10 @@ class Event:
         self.substance_type = substance
         self.status = ""
         self.attributes = {}    # {attrib_name: [Attribute object]}
+        self.confidence=0.0
+
+    def set_confidence(self, conf_val):
+        self.confidence = conf_val
 
 
 class DocumentEvent(Event):
@@ -101,11 +105,12 @@ class PatientEvent(Event):
 
 
 class Attribute:
-    def __init__(self, attribute_type, span_start, span_end, text):
+    def __init__(self, attribute_type, span_start, span_end, text, probability=.0):
         self.type = attribute_type
         self.span_start = span_start
         self.span_end = span_end
         self.text = text
+        self.probability= probability
 
 
 class AnnotatedAttribute:
@@ -116,11 +121,11 @@ class AnnotatedAttribute:
 
 
 class DocumentAttribute(Attribute):
-    def __init__(self, attribute_type, span_start, span_end, text, all_attributes_for_field):
-        Attribute.__init__(self, attribute_type, span_start, span_end, text)
+    def __init__(self, attribute_type, span_start, span_end, text, all_attributes_for_field, probability=0.0):
+        Attribute.__init__(self, attribute_type, span_start, span_end, text, probability=0.0)
         self.all_attributes = all_attributes_for_field    # list of all Attribute objects found at the sentence level
         self.all_value_spans = []   # list of Span objects -- all values found for this field
-
+        self.probability = probability
         # find all values' spans
         spans = [Span(attrib.span_start, attrib.span_end) for attrib in all_attributes_for_field]
         self.all_value_spans = spans

@@ -1,51 +1,29 @@
-import csv
 import os
-
 import re
 import nltk
-from fhcrc_clinical.SocialHistories.DataLoading import ServerQuery
+import sys
 from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Document, Event, Patient, Sentence
 from fhcrc_clinical.SocialHistories.SystemUtilities import Configuration
-from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
 from fhcrc_clinical.SocialHistories.Extraction.KeywordSearch import KeywordSearch
 from os import listdir
 from os.path import isfile, join
-import sys
-
 from fhcrc_clinical.parser import csv_parse
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 
-def main(environment, tsv_in=""):
-    reload(sys)
-    sys.setdefaultencoding('utf8')
-
-    # Options for "Test" and "Train" data loading pipelines used to live here but have been removed.
-    # The Argos-based NLP engine never needs to do anything but access the execution pipeline
-    # with pre-trained models, so that is what remains below.
-
-    if environment == "execute":
-        print "Loading data from provided tsv file: " + tsv_in
-        patients = build_patients_from_tsv(tsv_in)
-        return patients
+def main(tsv_in=""):
+    print "Loading data from provided tsv file: " + tsv_in
+    patients = build_patients_from_tsv(tsv_in)
+    return patients
 
 
-def get_temporary_train_and_test_divisions(patients):
-    sorted_list = sorted(patients)
-    doc_count = len(sorted_list)
-    end_test_span = doc_count / 4  # the first 1/4 of the sorted data is the test_set
-    test_span = (0, end_test_span)
-
-    test_set = set()
-    train_set = set()
-
+def get_num_documents(patients):
     count = 0
-    for doc in sorted_list:
-        if count >= test_span[0] and count <= test_span[1]:
-            test_set.add(doc)
-        else:
-            train_set.add(doc)
-        count += 1
-    return train_set, test_set
+    for pat in patients:
+        for doc in pat.doc_list:
+            count += 1
+    return count
 
 
 def load_split_info(environment):
@@ -57,14 +35,6 @@ def load_split_info(environment):
         with open(Configuration.DATA_DIR + "notes_train_def.txt", "rb") as file:
             lines = file.read().splitlines()
     return set(lines)
-
-
-def load_labkey_patients(test_anns, split_set):
-    # Load full data note repo from which TRAIN or TEST will pic and return a subset of docs
-    noteID_text_dict = load_data_repo(os.path.join(Configuration.DATA_DIR, "output"))
-
-    labkey_patients = build_patients_from_labkey(test_anns, noteID_text_dict, split_set)
-    return labkey_patients
 
 
 def get_doc_sentences(doc):
@@ -86,8 +56,47 @@ def split_doc_text(text):
     text = re.sub("\r", "", text)  # Carriage Returns are EVIL !!!!!
     sentences = nltk.tokenize.PunktSentenceTokenizer().sentences_from_text(text.encode("utf8"))
     spans = list(nltk.tokenize.PunktSentenceTokenizer().span_tokenize(text.encode("utf8")))
-    sentences, spans = split_by_double_newline(sentences, spans)
+
+    # sentences, spans = split_by_double_newline(sentences, spans)
+    sentences, spans = split_by_single_newlines(sentences, spans)
+    sentences, spans = rejoin_sents_on_leading_punctuation(sentences, spans)
+
     return sentences, spans
+
+
+def rejoin_sents_on_leading_punctuation(sentences, spans):
+    # if a sentence ends in punctuation that implies related info in next sentence, append the next sentence to it, combine spans
+    for i in range(len(sentences)):
+        sent = sentences[i]
+        if sent.rstrip().endswith(('?', ':', ';', '-')) or sent.istitle():
+            if i + 1 < len(sentences):
+                sentences[i] += " " + sentences[i + 1]
+                spans[i] = (spans[i][0], spans[i + 1][1])
+                sentences[i + 1] = " "
+    return sentences, spans
+
+
+def split_by_single_newlines(sentences, spans):
+    final_sentences = []
+    final_spans = []
+    for i in range(len(sentences)):
+        sent = sentences[i]
+        sents = sent.split('\n')
+        span_split = get_spans_of_split_sent(sents, spans[i])
+        final_spans.extend(span_split)
+        final_sentences.extend(sents)
+    return final_sentences, final_spans
+
+
+def get_spans_of_split_sent(sent_list, span):
+    spans = []
+    count_begin = span[0]
+    for sent in sent_list:
+        count_end = count_begin + len(sent)
+        spans.append((count_begin, count_end))
+        count_end += 1
+        count_begin = count_end
+    return spans
 
 
 def split_by_double_newline(sentences, spans):
@@ -151,7 +160,7 @@ def add_current_sent_and_span(doc_begin_index, doc_end_index, nltk_sent_begin_in
         split_spans.append((end_span_begin, end_span_end))
 
 
-def assign_goldLabels_to_sents(sents, doc):
+def assign_gold_labels_to_sents(sents, doc):
     doc_gold_events = doc.gold_events
     for gold_event in doc_gold_events:
         if len(gold_event.status_spans) > 0:  # ie if it has a span and is not just a 'dummy' event
@@ -223,16 +232,17 @@ def load_patient_labels(patient_gold_labels_path):
     return pid_label
 
 
-def load_data_repo(NOTE_OUTPUT_DIR):
+def load_data_repo(NOTE_OUTPUT_DIR, doc_ids):
     id_text_dict = dict()
     all_notes = [f for f in listdir(NOTE_OUTPUT_DIR) if isfile(join(NOTE_OUTPUT_DIR, f))]
     for note in all_notes:
-        with open(os.path.join(NOTE_OUTPUT_DIR, note), "rb") as f:
-            id_text_dict[note] = f.read()
+        if note in doc_ids:
+            with open(os.path.join(NOTE_OUTPUT_DIR, note), "rb") as f:
+                id_text_dict[note] = f.read()
     return id_text_dict
 
 
-def get_labkey_documents(annId_patient_dict, docID_text_dict, split_set):
+def get_labkey_documents(annId_patient_dict, docID_text_dict):
     annotater_ids = sorted(annId_patient_dict.keys())
     labkey_documents = list()
     for annotater_id in annotater_ids:
@@ -241,7 +251,7 @@ def get_labkey_documents(annId_patient_dict, docID_text_dict, split_set):
         for pat_id in pat_ids:
             docId_events = patient_dict[pat_id]  # {patientId : {eventType : EventObject}}
             for docId, event_dict in docId_events.iteritems():
-                if docId in split_set:
+                if docId in docID_text_dict:
                     doc_obj = Document(docId, docID_text_dict[docId])
                     # populate the docObj's event list
                     for type, event in event_dict.iteritems():
@@ -250,33 +260,9 @@ def get_labkey_documents(annId_patient_dict, docID_text_dict, split_set):
                     doc_obj.sent_list = get_doc_sentences(doc_obj)
                     labkey_documents.append(doc_obj)
                     # Match spans to sentence level
-                    assign_goldLabels_to_sents(doc_obj.sent_list, doc_obj)
+                    assign_gold_labels_to_sents(doc_obj.sent_list, doc_obj)
 
     return labkey_documents
-
-
-def get_labkey_patients(labkey_documents):
-    patients_dict = dict()
-    patients_list = list()
-    for doc in labkey_documents:
-        patId = doc.id.split("_")[0]
-        if patId not in patients_dict:
-            patients_dict[patId] = list()
-            patients_dict[patId].append(doc)
-        else:
-            patients_dict[patId].append(doc)
-
-    for pid, doclist in patients_dict.iteritems():
-        patient = Patient(pid)
-        patient.doc_list = doclist
-        patients_list.append(patient)
-    return patients_list
-
-
-def build_patients_from_labkey(annId_patient_dict, docID_text_dict, split_set):
-    labkey_documents = get_labkey_documents(annId_patient_dict, docID_text_dict, split_set)
-    labkey_patients = get_labkey_patients(labkey_documents)
-    return labkey_patients
 
 
 def build_patients_from_tsv(tsv_in):
@@ -287,9 +273,7 @@ def build_patients_from_tsv(tsv_in):
 
 def build_patients_from_csv_parse(patient_dict):
     patients = list()
-    # print "WL DEBUG0.00001" + str(patient_dict)
     for patient_id, docs in patient_dict.iteritems():
-        # print "WL DEBUG1: " + str(docs)
         patient_documents, patient_caisis_id = get_patient_docs(docs)
         patient_obj = Patient(patient_caisis_id)
         patient_obj.doc_list = patient_documents
@@ -300,38 +284,66 @@ def build_patients_from_csv_parse(patient_dict):
 def get_patient_docs(docs):
     documents = list()
     patient_caisis_id = None
-    # print "WL DEBUG2: " + str(docs)
     for doc_id, fields in docs.iteritems():
         patient_caisis_id = doc_id.split('_')[0]
         sentence_objs, doc_text = get_sentences_from_field_tuples(fields, doc_id)
+        sentence_objs = rejoin_sent_objs_on_leading_punctuation(sentence_objs)
         document_obj = Document(doc_id, doc_text)
         document_obj.sent_list = sentence_objs
         documents.append(document_obj)
     return documents, patient_caisis_id
 
 
+def rejoin_sent_objs_on_leading_punctuation(sent_objs):
+    new_sent_objs = []
+    skip = False
+    for i in range(len(sent_objs)):
+        if skip:
+            skip = False
+        else:
+            sent = sent_objs[i]
+            if sent.text.rstrip().endswith(('?', ':', ';', '-')) or sent.text.istitle():
+                if i + 1 < len(sent_objs):
+                    new_text = sent_objs[i].text + " " + sent_objs[i + 1].text
+                    new_begin_span = sent_objs[i].span_in_doc_start
+                    new_end_span = sent_objs[i + 1].span_in_doc_end
+                    # id_num, text, span_in_doc_start, span_in_doc_end
+                    new_sent_obj = Sentence(sent.id, new_text, new_begin_span, new_end_span)
+                    new_sent_objs.append(new_sent_obj)
+                    skip = True
+                else:
+                    new_sent_objs.append(sent)
+            else:
+                new_sent_objs.append(sent)
+    return new_sent_objs
+
+
 def get_sentences_from_field_tuples(fields, doc_id):
     full_text = ""
     event_date = ""
     sentences = list()
-    for tuple, line in fields.iteritems():
-        if tuple[1] == "FullText":
+
+    sorted_keys = sorted(fields.iteritems(), key=lambda x: x[0][2])
+
+    for tup in sorted_keys:
+        line = tup[1]
+        if tup[0][1] == "FullText":
             full_text = line
-        elif tuple[1] == "EventDate":
+        elif tup[0][1] == "EventDate":
             event_date = line
         else:
             # Assume the line is a sentence
-            text_start_idx = tuple[2]
+            text_start_idx = tup[0][2]
             text_end_idx = len(line) + text_start_idx
 
-            # Going off of the nlp engine's sentence segmentation is no good
-            # split "lines" down into better sentences here, realign spans
+            # Going off of the nlp engine's sentence segmentation is no good--
+            # split long "sentence" (paragraphs) down into better sentences here, realign spans
             better_sentences, spans = split_doc_text(line)
             realigned_spans = list()
             for span in spans:
-                realigned_spans.append((text_start_idx+span[0], text_start_idx+span[1]))
+                realigned_spans.append((text_start_idx + span[0], text_start_idx + span[1]))
 
-            for i in range(0,len(better_sentences), 1):
+            for i in range(0, len(better_sentences), 1):
                 text_start_idx = realigned_spans[i][0]
                 text_end_idx = realigned_spans[i][1]
                 sentence = Sentence(doc_id, better_sentences[i], text_start_idx, text_end_idx)

@@ -11,7 +11,6 @@ def link_attributes_to_substances(patients):
     for patient in patients:
         for doc in patient.doc_list:
             previous_sent = None
-
             for sent in doc.sent_list:
                 # Find all values for all fields for all substances
                 attributes_per_substance = find_attributes_per_substance(classifier, feature_map, sent, previous_sent)
@@ -100,8 +99,9 @@ def attributes_to_doc_level(doc):
 
     # Add doc attribs to doc object
     for event in doc.predicted_events:
-        for attrib_name, attrib_obj in doc_attribs_per_substance[event.substance_type].items():
-            event.attributes[attrib_name] = attrib_obj
+        if event.status is not "non":
+            for attrib_name, attrib_obj in doc_attribs_per_substance[event.substance_type].items():
+                event.attributes[attrib_name] = attrib_obj
 
 
 def create_document_attribute(all_values_for_field, span_in_doc_start):
@@ -110,7 +110,7 @@ def create_document_attribute(all_values_for_field, span_in_doc_start):
 
     # Create document level attribute object
     document_attribute = DocumentAttribute(selected_value.type, selected_value.span_start, selected_value.span_end,
-                                           selected_value.text, all_values_for_field)
+                                           selected_value.text, all_values_for_field, selected_value.probability)
 
     return document_attribute
 

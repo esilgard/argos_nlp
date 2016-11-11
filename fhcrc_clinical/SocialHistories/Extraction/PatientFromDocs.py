@@ -34,13 +34,19 @@ def get_patient_status(patient):
     for pred_event in patient.predicted_events:
         chronological_docs = sort_docs_chronologically(patient.doc_list)
         pred_event.status = get_patient_subst_status(chronological_docs, pred_event.substance_type)
-
+        tmp=0
 
 def sort_docs_chronologically(doc_list):
     sorted_docs = []
-    # TODO -- sort_docs_chronologically to find patient status
-    return doc_list
+    for doc in doc_list:
+        position_number = parse_id_for_pos_num(doc.id)
+        sorted_docs.append((position_number,doc))
+    sorted_docs.sort(key=lambda x: x[0], reverse=True)
+    return [x[1] for x in sorted_docs]
 
+def parse_id_for_pos_num(num_str):
+    parts = num_str.split('_')
+    return int(parts[1])
 
 def get_patient_subst_status(docs, substance):
     """ Recursively descend through chronologically sorted docs to determine patient level status by reasoning
@@ -58,7 +64,7 @@ def get_patient_subst_status(docs, substance):
 
 def current_doc_status(docs, substance):
     doc_status = UNKNOWN
-    for event in docs[0].gold_events:
+    for event in docs[0].predicted_events:
         if event.substance_type == substance:
             doc_status = event.status
     return doc_status

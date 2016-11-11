@@ -22,6 +22,7 @@ class EvaluationData:
 
     def output(self, filename):
         out_file = open(filename, "w")
+        substance = filename.split('_')[1]
 
         out_file.write("Precision: " + str(self.precision) + "\n")
         out_file.write("Recall: " + str(self.recall) + "\n\n")

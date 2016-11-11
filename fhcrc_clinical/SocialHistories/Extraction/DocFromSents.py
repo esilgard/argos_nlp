@@ -40,11 +40,19 @@ def get_doc_level_status(doc):
         substance = doc_event.substance_type
 
         sentence_level_statuses = get_sent_level_statuses_for_doc(doc, substance)
-        doc_status, spans = doc_level_status(sentence_level_statuses)
+        doc_status, spans, confidence = doc_level_status(sentence_level_statuses)
 
         doc_event.status = doc_status
         doc_event.status_spans = spans
-        # spans get set here
+        doc_event.confidence = confidence
+
+
+    # Remove events who's predicted status is unknown
+    new_predicted_events = list()
+    for doc_event in doc.predicted_events:
+        if doc_event.status != UNKNOWN:
+            new_predicted_events.append(doc_event)
+    doc.predicted_events = new_predicted_events
 
 
 def get_sent_level_statuses_for_doc(doc, substance):
@@ -56,7 +64,7 @@ def get_sent_level_statuses_for_doc(doc, substance):
             if event.substance_type == substance:
                 if event.status not in sentence_level_statuses:
                     sentence_level_statuses[event.status] = list()
-                sentence_level_statuses[event.status].append((sent.span_in_doc_start, sent.span_in_doc_end))
+                sentence_level_statuses[event.status].append((sent.span_in_doc_start, sent.span_in_doc_end, event.confidence))
 
     return sentence_level_statuses
 
@@ -64,15 +72,23 @@ def get_sent_level_statuses_for_doc(doc, substance):
 def doc_level_status(sentence_level_statuses):
     doc_status = UNKNOWN
     spans = []
+    confidences = []
+    max_confidence_for_this_status = .0
 
     # Go through precedence-ordered list of statuses and take the first one found
     for status in STATUS_HIERARCHY:
         if status in sentence_level_statuses:
             doc_status = status
             spans = convert_tupleSpans_to_SpanObjs(sentence_level_statuses[status])
+            confidences = extract_confidence_numbers(sentence_level_statuses[status])[0]
+            max_confidence_for_this_status = max(confidences)
             break
 
-    return doc_status, spans
+    return doc_status, spans, max_confidence_for_this_status
+
+
+def extract_confidence_numbers(list_of_tuple_spans):
+    return [x[2] for x in list_of_tuple_spans]
 
 
 def sentence_events_to_doc_level(doc):
@@ -91,7 +107,8 @@ def sentence_events_to_doc_level(doc):
         offcial_attrib_start = attrib_list[0].span_start
         official_attrib_end = attrib_list[0].span_end
         official_attrib_text = attrib_list[0].text
-        doc_attrib = DocumentAttribute(official_attrib_type, offcial_attrib_start, official_attrib_end, official_attrib_text, attrib_list)
+        official_attrib_probability = attrib_list[0].probability
+        doc_attrib = DocumentAttribute(official_attrib_type, offcial_attrib_start, official_attrib_end, official_attrib_text, attrib_list, official_attrib_probability)
 
         doc.all_attributes[attrib_field_key] = doc_attrib
 

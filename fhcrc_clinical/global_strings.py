@@ -1,4 +1,4 @@
-'''author@esilgard'''
+##''author@esilgard'''
 ## global strings for output dictionaries ##
 ERRS = "errors"
 REPORTS = "reports"
