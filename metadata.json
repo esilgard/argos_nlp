@@ -35,7 +35,7 @@
 						"values":["Anaplastic Astrocytoma","Anaplastic Ependymoma","Anaplastic Ganglioglioma","Anaplastic Meningioma","Anaplastic Oligoastrocytoma","Anaplastic Oligodendroglioma","Astroblastoma","Astrocytoma","Atypical Meningioma","Central Neurocytoma","Chondrosarcoma","Chordoid Meningioma","Chordoma","Craniopharyngioma","Dysembryoplastic Neuroepithelial Tumor (DNET)","Ependymoma","Esthesioneuroblastoma","Ganglioglioma","Glioblastoma","Glioma","Gliosarcoma","Hemangioblastoma","Hemangiopericytoma","Meningioma","Medulloblastoma","Neurofibroma","Neuroblastoma","Oligoastrocytoma","Oligodendroglioma","Papillary Glioneuronal Tumor","Pilocytic Astrocytoma","Pituitary Adenoma","Pleomorphic Xanthoastrocytoma","Primitive Neuroectodermal Tumor (PNET)","Schwannoma","Small Cell Glioblastoma","Subependymoma","Undifferentiated Neuroepithelial Tumor"]
 						},
 						{"diseaseGroup":["breast"],
-						"values":["Adenocarcinoma","Ductal Carcinoma","Lobular Carcinoma"]
+						"values":["Adenocarcinoma","Ductal Carcinoma","Invasive Lobular Carcinoma"]
 						},
 						{"diseaseGroup":["GI"],
 						"values":["Adenocarcinoma","Squamous Cell Carcinoma"]
@@ -78,7 +78,7 @@
 						"values":["Anaplastic Astrocytoma","Anaplastic Ependymoma","Anaplastic Ganglioglioma","Anaplastic Meningioma","Anaplastic Oligoastrocytoma","Anaplastic Oligodendroglioma","Astroblastoma","Astrocytoma","Atypical Meningioma","Central Neurocytoma","Chondrosarcoma","Chordoid Meningioma","Chordoma","Craniopharyngioma","Dysembryoplastic Neuroepithelial Tumor (DNET)","Ependymoma","Esthesioneuroblastoma","Ganglioglioma","Glioblastoma","Glioma","Gliosarcoma","Hemangioblastoma","Hemangiopericytoma","Meningioma","Medulloblastoma","Neurofibroma","Neuroblastoma","Oligoastrocytoma","Oligodendroglioma","Papillary Glioneuronal Tumor","Pilocytic Astrocytoma","Pituitary Adenoma","Pleomorphic Xanthoastrocytoma","Primitive Neuroectodermal Tumor (PNET)","Schwannoma","Small Cell Glioblastoma","Subependymoma","Undifferentiated Neuroepithelial Tumor"]
 						},
 						{"diseaseGroup":["breast"],
-						"values":["Adenocarcinoma","Ductal Carcinoma","Lobular Carcinoma"]
+						"values":["Adenocarcinoma","Ductal Carcinoma","Invasive Lobular Carcinoma"]
 						},
 						{"diseaseGroup":["GI"],
 						"values":["Adenocarcinoma","Squamous Cell Carcinoma"]
@@ -176,6 +176,9 @@
 					[
 						{"diseaseGroup":["*"],
 						"values":["Adenoma", "Ascites", "Atypical Cells", "Cyst", "Dysplasia", "Fibroma", "Fibrosis", "Granuloma", "Hyperplasia", "Inflammation", "Lipoma", "Metaplasia", "Mucinous", "Necrosis", "Polyp", "Treatment Effect"]
+						},
+						{"diseaseGroup":["breast"],
+						"values":["Atypia", "Lobular Carcinoma In Situ", "Atypical Ductal Hyperplasia", "Atypical Lobular Hyperplasia", "Papilloma", "Radial Scar", "Complex Sclerosing Lesion", "Flat Epithelial Atypia", "Phyllodes", "Atypical Apocrine Metaplasia"]
 						},
 						{"diseaseGroup":["sarcoma"],
 						"values":["Arterio-Venous Malformation", "Benign Vascular Proliferation", "Chondroma", "Chordoma", "Enchondroma", "Epidermoid Cyst", "Fibroma of Tendon Sheath", "Follicular Hyperplasia", "Giant Cell Granuloma", "Giant Cell Tumor Bone", "Hemangioma", "Hibernoma", "Leiomyoma", "Lipoma", "Myofibroblastoma", "Myolipoma", "Myxoma", "Neurofibroma", "Osteochondroma", "Perineruioma", "Schwannoma", "Solitary Fibrous Tumor"]
