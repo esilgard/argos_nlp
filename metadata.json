@@ -877,6 +877,26 @@
 						}
 					]
 				},
+                        {"field":"Hyperploidy",
+				"datatype":"boolean",
+				"closedClass":"True",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[true, false]
+						}
+					]
+				},
+                        {"field":"Hypoploidy",
+				"datatype":"boolean",
+				"closedClass":"True",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["*"],
+						"values":[true, false]
+						}
+					]
+				},
 				{"field":"Warning",
 				"datatype":"integer",
 				"closedClass":"False",

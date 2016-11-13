@@ -30,4 +30,5 @@ UNKNOWN = "Unknown"
 CELL_COUNT = "CellCount"
 NORMAL = "Normal"
 DATE = "ReceivedDate"
-
+HYPER = "Hyperploidy"
+HYPO = "Hypoploidy"

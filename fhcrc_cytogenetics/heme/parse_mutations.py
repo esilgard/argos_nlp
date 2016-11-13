@@ -24,12 +24,13 @@ def get(cell_list, karyotype_string, karyo_offset):
                             gb.STOP:karyo_offset + len(karyotype_string)}], gb.TABLE:gb.CYTOGENETICS}]
     ## a dictionary of mutation types and their cell counts
     mutations=dict.fromkeys(['inv(16)', 't(16;16)', 'del(16q)', 't(8;21)', 't(15;17)',
-                                      't(8;21)', gb.NORMAL, '+8', '+6', '-Y', 'del(12p)', '-7',
-                                      '-5', '3q', '9q', '11q', '17p', '20q', '21q', 'del(7q)',
-                                      'del(5q)', 'del(9q)', 't(16;20)', 't(14;16)', 't(11;14)',
-                                      't(4;14)', 'del(17p)', 'del(1p)', 'add(1q)', 't(6;9)',
-                                      't(9;22)','del(13p)', 'del(13q)', '-13',
-                                     gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING], 0)
+                             't(8;21)', gb.NORMAL, '+8', '+6', '-Y', 'del(12p)', '-7',
+                              '-5', '3q', '9q', '11q', '17p', '20q', '21q', 'del(7q)',
+                              'del(5q)', 'del(9q)', 't(16;20)', 't(14;16)', 't(11;14)',
+                              't(4;14)', 'del(17p)', 'del(1p)', 'add(1q)', 't(6;9)',
+                              't(9;22)','del(13p)', 'del(13q)', '-13',
+                               gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING,
+                               gb.HYPER, gb.HYPO], 0)
     
     ## a dictionary of mutation types and their offsets - which will be stored as a list of tuples (start,stop)
     offsets = {}
@@ -41,27 +42,41 @@ def get(cell_list, karyotype_string, karyo_offset):
     monosomy_set = set([])
     trisomy_set = set([])
 ##################################################################################################################################
-
+    mutations[gb.HYPER] = False
+    mutations[gb.HYPO] = False
+    
     ## start by counting cells with each type of pertinent aberration      
-    for x in cell_list:        
+    for x in cell_list:         
         if x[gb.WARNING]:
             mutations[gb.WARNING] = 1
         try:
             cell_count = int(x[gb.CELL_COUNT])            
             cell_offset = x['Offset']
             ## minimum number of cells needed to verify a clone (either 2 or 3)
-            clone_minimum = 2            
-            if int(x['ChromosomeNumber'][:2]) < 46:clone_minimum = 3
+            clone_minimum = 2      
+            chromosome_number = int(x['ChromosomeNumber'][:2])
+            if chromosome_number < 46:
+                clone_minimum = 3    
+            
+            if chromosome_number < 45 and cell_count >= clone_minimum: 
+                offsets[gb.HYPO].append((cell_offset,cell_offset+2))
+                mutations[gb.HYPO] = True
+            if chromosome_number > 47 and cell_count >= clone_minimum:
+                 offsets[gb.HYPO].append((cell_offset,cell_offset+2))
+                 mutations[gb.HYPER] = True
+                 
+            
             if x[gb.ABNORMALITIES]:
                 for y in x[gb.ABNORMALITIES]:
                     try:                        
                         for z, zz in y.items():                            
                             variation_string = z + '(' + zz[0] + ')' + zz[1]
-                            if cell_count >= clone_minimum:
+                            if cell_count >= clone_minimum:                                
                                 if z == '-' or z == '+':
                                     variation_string = z + zz[0] + zz[1]                            
                                 variation_start = cell_offset + (karyotype_string[cell_offset-karyo_offset:].find(variation_string))
-                                variation_end = variation_start + len(variation_string)                            
+                                variation_end = variation_start + len(variation_string)  
+                                offsets[gb.MUTS].append((variation_start,variation_end))
                                 ## all trisomies
                                 if z == '+':
                                     if cell_count >= 2:                             
@@ -158,7 +173,6 @@ def get(cell_list, karyotype_string, karyo_offset):
     mutations[gb.MUTS] = len(abnormality_set)    
     mutations[gb.MONOS] = len(monosomy_set)
     mutations[gb.TRIS] = len(trisomy_set)
-       
     for each_variation in mutations:
         confidence = 0.95
         if mutations[gb.WARNING] == 1:
