@@ -28,7 +28,8 @@ def get(cell_list, karyotype_string, karyo_offset):
                                       '-5', '3q', '9q', '11q', '17p', '20q', '21q', 'del(7q)',
                                       'del(5q)', 'del(9q)', 't(16;20)', 't(14;16)', 't(11;14)',
                                       't(4;14)', 'del(17p)', 'del(1p)', 'add(1q)', 't(6;9)',
-                                      't(9;22)', gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING], 0)
+                                      't(9;22)','del(13p)', 'del(13q)', '-13',
+                                     gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING], 0)
     
     ## a dictionary of mutation types and their offsets - which will be stored as a list of tuples (start,stop)
     offsets = {}
@@ -79,11 +80,10 @@ def get(cell_list, karyotype_string, karyo_offset):
                                         abnormality_set.add(variation_string) 
                                         offsets[gb.MONOS].append((variation_start, variation_end))
                                        
-                                        for each in ['Y', '7', '5']:
-                                            if zz[0] == each:
+                                        for each in ['Y', '7', '5', '13']:
+                                            if zz[0] == each:                                                
                                                 mutations['-'+each] += cell_count
                                                 offsets['-'+each].append((variation_start, variation_end))
-
                                 ## all other abnormalities do not have a cell count minimum
                                 else:
                                     abnormality_set.add(variation_string) 
@@ -109,14 +109,14 @@ def get(cell_list, karyotype_string, karyo_offset):
                                             
                                 ## del of p or q arms (also subsegmental deletetions)
                                 elif z == 'del':
-                                    for each in ['5','7']:
+                                    for each in ['5','7','13']:
                                         if zz[0] == each and 'q' in zz[1]:
                                             mutations['del(' + each + 'q)'] += cell_count
                                             offsets['del(' + each + 'q)'].append((variation_start, variation_end))
-                                    for each in ['1','17','12']:
+                                    for each in ['1','17','12','13']:
                                         if zz[0] == each and 'p' in zz[1]:
                                             mutations['del(' + each + 'p)'] += cell_count
-                                            offsets['del(' + each + 'q)'].append((variation_start, variation_end))
+                                            offsets['del(' + each + 'p)'].append((variation_start, variation_end))
                                 ## additions in p or q arms
                                 elif z == 'add':
                                     for each in ['1']:

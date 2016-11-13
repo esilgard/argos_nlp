@@ -917,6 +917,36 @@
 						}
 					]
 				},
+                        {"field":"-13",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+                        {"field":"del(13p)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
+                        {"field":"del(13q)",
+				"datatype":"integer",
+				"closedClass":"False",
+				"diseaseProperties":
+					[
+						{"diseaseGroup":["heme"],
+						"values":[]
+						}
+					]
+				},
 				{"field":"t(16;20)",
 				"datatype":"integer",
 				"closedClass":"False",
