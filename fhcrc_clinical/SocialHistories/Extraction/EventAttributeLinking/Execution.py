@@ -1,8 +1,9 @@
 from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import *
 import Processing
 from fhcrc_clinical.SocialHistories.Extraction import Classification
-from fhcrc_clinical.SocialHistories.DataModeling.DataModels import DocumentAttribute
+from fhcrc_clinical.SocialHistories.DataModeling.DataModels import DocumentAttribute, Sentence
 from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
+from operator import attrgetter
 
 
 def link_attributes_to_substances(patients):
@@ -10,14 +11,15 @@ def link_attributes_to_substances(patients):
 
     for patient in patients:
         for doc in patient.doc_list:
-            previous_sent = None
+            previous_sent = Sentence(None, None, None, None)
             for sent in doc.sent_list:
-                # Find all values for all fields for all substances
-                attributes_per_substance = find_attributes_per_substance(classifier, feature_map, sent, previous_sent)
-
-                # Put the appropriate values into doc objects
-                put_attributes_in_sent_events(sent, attributes_per_substance)
-
+                if dict_contains_any_values(sent.get_keyword_hits()) \
+                        or dict_contains_any_values(previous_sent.get_keyword_hits()):
+                    # Find all values for all fields for all substances
+                    attributes_per_substance = find_attributes_per_substance(classifier, feature_map, sent, previous_sent)
+                    # Put the appropriate values into doc objects
+                    put_attributes_in_sent_events(sent, previous_sent, attributes_per_substance)
+                # Keep track of previous sentence
                 previous_sent = sent
 
 
@@ -32,21 +34,16 @@ def load_event_filling_classifier():
 def find_attributes_per_substance(classifier, feature_map, sent, previous_sent):
     """ Get all attributes assigned to each substance -- {substance: field: [Attributes]} """
     attribs_found_per_substance = {subst: {} for subst in SUBSTANCE_TYPES}
-
     # Get features
     attrib_feature_sets, attributes = Processing.features(sent, previous_sent)
-
     # Get classifications
     for attrib, features in zip(attributes, attrib_feature_sets):
-
         # If there is only one substance for the type of attribute, just assign to that substance
         if attrib.type in KNOWN_SUBSTANCE_ATTRIBS:
             add_attrib_with_known_substance(attribs_found_per_substance, attrib)
-
         # Else, use machine learning classifier
         else:
             add_attrib_using_classifier(classifier, feature_map, features, attribs_found_per_substance, attrib)
-
     return attribs_found_per_substance
 
 
@@ -63,18 +60,15 @@ def add_attrib_with_known_substance(attribs_found_per_substance, attrib):
 def add_attrib_using_classifier(classifier, feature_map, features, attribs_found_per_substance, attrib):
     """ For an attribute that can be different substances, using ML classifier """
     classifications = Classification.classify_instance(classifier, feature_map, features)
-
     # Assign attribute to substance identified
     classified_substance = classifications[0]
     if classified_substance in SUBSTANCE_TYPES:
-
         if attrib.type not in attribs_found_per_substance[classified_substance]:
             attribs_found_per_substance[classified_substance][attrib.type] = []
-
         attribs_found_per_substance[classified_substance][attrib.type].append(attrib)
 
 
-def put_attributes_in_sent_events(sent, attribs_per_substance):
+def put_attributes_in_sent_events(sent, previous_sent, attribs_per_substance):
     """ For each event in sent, event.attributes is set to {attribute_name: [Attribute]}.
      @type: attribs_per_substance = {substance: field: [Attribute]}"""
     sent.attributes_per_substance = attribs_per_substance
@@ -89,7 +83,6 @@ def put_attributes_in_sent_events(sent, attribs_per_substance):
 def attributes_to_doc_level(doc):
     """@type: doc = Document"""
     doc_attribs_per_substance = {subst: {} for subst in SUBSTANCE_TYPES}
-
     # Create a document attribute object from sentence attributes
     for sent in doc.sent_list:
         for event in sent.predicted_events:
@@ -121,7 +114,14 @@ def select_doc_value_from_all_values(all_attributes, span_in_doc_start):
     for attrib in all_attributes:
         attrib.span_start += span_in_doc_start
         attrib.span_end += span_in_doc_start
-
-    # TODO -- better selection criteria: prefer by precision then prefer by amount
-    selected_value = all_attributes[0]
+    # Selected attribute is the one which is the most confident prediction. The first if it is a tie.
+    selected_value = max(all_attributes, key=attrgetter('probability'))
     return selected_value, all_attributes
+
+
+def dict_contains_any_values(dictionary):
+    ''' Takes a dictionary, iterates through keys to see if any of them contain something '''
+    for key, value in dictionary.items():
+       if bool(value) == True:
+           return True
+    return False

@@ -1,7 +1,6 @@
 from SubstanceInfoField import SubstanceField
 from fhcrc_clinical.SocialHistories.DataLoading.DataLoadingGlobals import *
-from fhcrc_clinical.KeywordSearch.KeywordGlobals import *
-
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import ALCOHOL, AMOUNT
 
 class AlcoholAmount(SubstanceField):
     __version__ = 'SubstanceInfo1.0'

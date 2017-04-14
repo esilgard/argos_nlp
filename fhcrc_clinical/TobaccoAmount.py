@@ -1,6 +1,6 @@
 from SubstanceInfoField import SubstanceField
 from fhcrc_clinical.SocialHistories.DataLoading.DataLoadingGlobals import *
-from fhcrc_clinical.KeywordSearch.KeywordGlobals import *
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import AMOUNT
 
 
 class TobaccoAmount(SubstanceField):
@@ -10,5 +10,5 @@ class TobaccoAmount(SubstanceField):
         SubstanceField.__init__(self)
         self.field_name = 'TobaccoAmount'
         self.table = SOC_HISTORIES
-        self.substance = TOBACCO
+        self.substance = "Tobacco"
         self.field = AMOUNT

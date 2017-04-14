@@ -8,15 +8,13 @@ def get_doc_level_info(patients):
         for doc in patient.doc_list:
             # make doc events
             find_doc_events(doc)
-
             # doc status
             get_doc_level_status(doc)
-
             # roll sentence-level events to doc level
             sentence_events_to_doc_level(doc)
-
             # attributes
             EventFilling.attributes_to_doc_level(doc)
+
 
 
 def find_doc_events(doc):

@@ -1,5 +1,5 @@
-from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
-from fhcrc_clinical.SocialHistories.DataModeling.DataModels import Event, PatientAttribute
+from SystemUtilities.Globals import *
+from DataModeling.DataModels import Event, PatientAttribute
 
 
 def get_patient_level_info(patients):
@@ -34,9 +34,11 @@ def get_patient_status(patient):
     for pred_event in patient.predicted_events:
         chronological_docs = sort_docs_chronologically(patient.doc_list)
         pred_event.status = get_patient_subst_status(chronological_docs, pred_event.substance_type)
-        tmp=0
+
 
 def sort_docs_chronologically(doc_list):
+    """ The chronological ordering scheme presupposes that the number after the underscore of the document ID relays
+     chronological information """
     sorted_docs = []
     for doc in doc_list:
         position_number = parse_id_for_pos_num(doc.id)
@@ -44,9 +46,13 @@ def sort_docs_chronologically(doc_list):
     sorted_docs.sort(key=lambda x: x[0], reverse=True)
     return [x[1] for x in sorted_docs]
 
+
 def parse_id_for_pos_num(num_str):
+    # The chronological ordering scheme presupposes that the number after the underscore of the document ID relays
+    # chronological information
     parts = num_str.split('_')
     return int(parts[1])
+
 
 def get_patient_subst_status(docs, substance):
     """ Recursively descend through chronologically sorted docs to determine patient level status by reasoning

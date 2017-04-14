@@ -1,8 +1,8 @@
 from Evaluate import *
-from fhcrc_clinical.KeywordSearch.KeywordGlobals import *
+from fhcrc_clinical.SocialHistories.Extraction.EventDetection.Processing import has_overlap
 from fhcrc_clinical.SocialHistories.SystemUtilities.Configuration import DATA_DIR
-from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import UNKNOWN
-
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import UNKNOWN, SUBSTANCE_TYPES
+import os
 
 def evaluate_status_classification(patients):
     """ Evaluate sentence and document level status"""
@@ -20,6 +20,7 @@ def evaluate_status_classification(patients):
 
     # Precision and recall
     calculate_and_output_eval(sentence_eval_data, doc_eval_data, "statusclassf")
+
 
 def evaluate_event_detection(patients):
     """ Evaluate sentence and document level substance status info detection """
@@ -62,6 +63,9 @@ def calculate_and_output_eval(sentence_eval_data, doc_eval_data, eventDetect_or_
 
 
 def evaluate_sentence_status_classification(sent, sentence_eval_data):
+    if len(sent.predicted_events) > 0:
+        print "DEBUG: " + sent.text
+        tmp=0
     gold_subs_status_dict = get_subs_status_dict(sent, "gold")
     predicted_subs_status_dict = get_subs_status_dict(sent, "predicted")
 
@@ -117,13 +121,14 @@ def compare_gold_and_predicted_status(gold_subs_status_dict, predicted_subs_stat
                 if predicted_subs_status_dict[subs_type] != "" and predicted_subs_status_dict[subs_type] != UNKNOWN:
                     eval_data_per_substance[subs_type].tp += 1
             else:
-                eval_data_per_substance[subs_type].fp += 1
-                eval_data_per_substance[subs_type].fp_values.append(text)
+                if predicted_subs_status_dict[subs_type] != "" and predicted_subs_status_dict[subs_type] != UNKNOWN:
+                    eval_data_per_substance[subs_type].fp += 1
+                    eval_data_per_substance[subs_type].fp_values.append(text)
     # find false negatives
     for subs_type in gold_subs_status_dict:
         if subs_type != "Secondhand":
             if gold_subs_status_dict[subs_type] != predicted_subs_status_dict[subs_type]:
-                if predicted_subs_status_dict[subs_type] != "" and predicted_subs_status_dict[subs_type] != UNKNOWN:
+                if predicted_subs_status_dict[subs_type] == "" and predicted_subs_status_dict[subs_type] != UNKNOWN:
                     eval_data_per_substance[subs_type].fn += 1
                     eval_data_per_substance[subs_type].fn_values.append(text)
 

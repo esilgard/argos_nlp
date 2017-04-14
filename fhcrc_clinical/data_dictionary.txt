@@ -11,5 +11,3 @@ TobaccoDuration Class
 TobaccoQuitDate Class
 TobaccoQuitTimeAgo  Class
 TobaccoQuitAge  Class
-SecondhandStatus    Class
-SecondhandAmount    Class

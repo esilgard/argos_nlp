@@ -42,6 +42,9 @@ class Sentence(Data):
         for substance in SUBSTANCE_TYPES:
             self.keyword_hits[substance] = []
 
+    def get_keyword_hits(self):
+        return self.keyword_hits
+
     def get_status_label_and_evidence(self, type):
         for evnt in self.gold_events:
             if evnt.substance_type == type:

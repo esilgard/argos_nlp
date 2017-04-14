@@ -1,9 +1,9 @@
-from DataLoading import ServerQuery, IAA
+from DataLoading import Server_Query, IAA
 
 
 def main():
     # Get filled fields from LabKey
-    annotations = ServerQuery.get_annotations_from_server()
+    annotations = Server_Query.get_annotations_from_server()
 
     print("Make sure DataLoadingGlobals.JOB_IDS has the interannotated batches for IAA")
 

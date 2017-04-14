@@ -1,3 +1,4 @@
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import STATUS
 from fhcrc_clinical.global_strings import *
 from fhcrc_clinical.SocialHistories.DataLoading.DataLoadingGlobals import *
 
@@ -17,27 +18,28 @@ class SubstanceField:
         """ return algorithm version"""
         return self.__version__
 
-    def get(self, dictionary, field, mrn, accession, patients, mrn_caisis_map):
+    def get(self, dictionary, field, mrn, accession, patients):
         """ fill field with value from extraction results """
         try:
-            self.get_field_contents(dictionary, field, mrn, accession, patients, mrn_caisis_map)
+            self.get_field_contents(dictionary, field, mrn, accession, patients)
             return [self.return_d], list
         except RuntimeError:
             return [{ERR_TYPE: 'Warning', ERR_STR: 'ERROR in %s module.' % self.field_name}], Exception
 
-    def get_field_contents(self, dictionary, field, mrn, accession, patients, mrn_caisis_map):
+    def get_field_contents(self, dictionary, field, mrn, accession, patients):
         self.return_d = {NAME: self.field_name, VALUE: None, CONFIDENCE: ('%.2f' % 0.0),
                          KEY: ALL, VERSION: self.get_version(),
                          STARTSTOPS: [], TABLE: self.table}
 
         # Get the appropriate attribute
-        doc, document_found = get_document(patients, mrn, accession, mrn_caisis_map)
+        doc, document_found = get_document(patients, mrn, accession)
 
         if document_found:
             self.add_doc_field_contents_to_dict(doc)
 
     def add_doc_field_contents_to_dict(self, doc):
-        """@type doc: Document"""
+        """@type doc: Document
+        """
         for event in doc.predicted_events:
             if event.substance_type == self.substance:
                 if self.field in event.attributes:
@@ -71,19 +73,18 @@ class SubstanceField:
             self.return_d[STARTSTOPS].append({START: span.start, STOP: span.stop})
 
 
-def get_document(patients, mrn, accession, mrn_caisis_map):
+def get_document(patients, mrn, accession):
     document = None
     found = False
 
-    caisis_id = mrn_caisis_map[mrn]
-
     for patient in patients:
-        if patient.id == caisis_id:
+        if patient.id == mrn:
             for doc in patient.doc_list:
                 if doc.id == accession:
                     document = doc
+                    if document.id == "6153_00018":
+                        pause = 0
                     found = True
                     break
             break
-
     return document, found

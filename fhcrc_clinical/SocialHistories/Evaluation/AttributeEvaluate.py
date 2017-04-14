@@ -7,25 +7,38 @@ from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import *
 
 def evaluate_attributes(patients):
     """Evaluate value, the span of the value, and the spans of all highlighted regions for each attribute"""
+    overlap_eval_totals = dict()
     for attribute_type in ALL_ATTRIBS:
         value_eval_data = {subst: EvaluationData() for subst in SUBSTANCE_TYPES}
         value_span_eval_data = {subst: EvaluationData() for subst in SUBSTANCE_TYPES}
         all_span_eval_data = {subst: EvaluationData() for subst in SUBSTANCE_TYPES}
         all_span_overlap_eval_data = {subst: EvaluationData() for subst in SUBSTANCE_TYPES}
+        all_span_overlap_not_by_subs = EvaluationData()
 
         # Find performance of attribute in each document
         for patient in patients:
             for doc in patient.doc_list:
+                # # DEBUG ###########
+                if attribute_type == QUIT_DATE:
+                    pause = 0
+                    # # DEBUG ###########
                 evaluate_doc_attribute(attribute_type, doc, value_eval_data, value_span_eval_data,
-                                       all_span_eval_data, all_span_overlap_eval_data)
+                                       all_span_eval_data, all_span_overlap_eval_data, all_span_overlap_not_by_subs)
 
         # Output total performance
         evaluate_total_performance(attribute_type, value_eval_data, value_span_eval_data, all_span_eval_data,
-                                   all_span_overlap_eval_data, attribute_type)
+                                   all_span_overlap_eval_data, all_span_overlap_not_by_subs, attribute_type)
+
+        # return precision, recall anf f1 for current attrib type
+        attrib_by_subs_key = attribute_type + "_bySubstance"
+        attrib_wo_subs_key = attribute_type + "_CRFOnly"
+        overlap_eval_totals[attrib_by_subs_key] = all_span_overlap_eval_data
+        overlap_eval_totals[attrib_wo_subs_key] = all_span_overlap_not_by_subs
+    return overlap_eval_totals
 
 
 def evaluate_doc_attribute(attribute_type, doc, value_eval_data, value_span_eval_data, all_span_eval_data,
-                           all_span_overlap_eval_data):
+                           all_span_overlap_eval_data, all_span_overlap_not_by_subs):
     """ For a specific attribute, find the correctness of selected value of attribute """
     gold_values, gold_value_spans, gold_all_spans = get_gold_field_data(attribute_type, doc)
     pred_values, pred_value_spans, pred_all_spans = get_predicted_field_data(attribute_type, doc)
@@ -34,13 +47,14 @@ def evaluate_doc_attribute(attribute_type, doc, value_eval_data, value_span_eval
     collect_doc_value_span_info(value_span_eval_data, gold_value_spans, pred_value_spans, doc)
     collect_doc_all_spans_info(all_span_eval_data, gold_all_spans, pred_all_spans, doc)
     collect_doc_all_spans_overlap_info(all_span_overlap_eval_data, gold_all_spans, pred_all_spans, doc)
+    collect_doc_all_spans_overlap_not_by_subst_info(all_span_overlap_not_by_subs, gold_all_spans, pred_all_spans, doc)
 
 
 def get_gold_field_data(attribute_type, doc):
     """ For a field, find the gold field value, the span of the value, and the spans of all highlighted regions """
-    value = {subst: None for subst in SUBSTANCE_TYPES}       # {subst: value}
+    value = {subst: None for subst in SUBSTANCE_TYPES}  # {subst: value}
     value_span = {subst: None for subst in SUBSTANCE_TYPES}  # {subst: span}
-    all_spans = {subst: [] for subst in SUBSTANCE_TYPES}     # {subst: [all_spans]}
+    all_spans = {subst: [] for subst in SUBSTANCE_TYPES}  # {subst: [all_spans]}
 
     for event in doc.gold_events:
         event_attribute_data(event, attribute_type, value, value_span, all_spans)
@@ -50,9 +64,9 @@ def get_gold_field_data(attribute_type, doc):
 
 def get_predicted_field_data(attribute_type, doc):
     """ For a field, find the gold field value, the span of the value, and the spans of all highlighted regions """
-    value = {subst: None for subst in SUBSTANCE_TYPES}       # {subst: value}
+    value = {subst: None for subst in SUBSTANCE_TYPES}  # {subst: value}
     value_span = {subst: None for subst in SUBSTANCE_TYPES}  # {subst: span}
-    all_spans = {subst: [] for subst in SUBSTANCE_TYPES}     # {subst: [all_spans]}
+    all_spans = {subst: [] for subst in SUBSTANCE_TYPES}  # {subst: [all_spans]}
 
     for event in doc.predicted_events:
         event_attribute_data(event, attribute_type, value, value_span, all_spans)
@@ -154,6 +168,50 @@ def collect_doc_all_spans_overlap_info(all_span_overlap_eval_data, gold_all_span
         find_all_span_overlap_eval_data(all_span_overlap_eval_data, substance, gold_all_spans, pred_all_spans, doc)
 
 
+def collect_doc_all_spans_overlap_not_by_subst_info(all_span_overlap_not_by_subs, gold_all_spans, pred_all_spans, doc):
+    """ Evaluate the detection of CRF classified spans, without discerning between substance types. The CRF models
+    are general case, so should be the evaluation of those models """
+    find_all_span_overlap_not_by_subst_info(all_span_overlap_not_by_subs, gold_all_spans, pred_all_spans, doc)
+    pass
+
+
+def find_all_span_overlap_not_by_subst_info(all_span_overlap_not_by_subs, gold_all_spans, pred_all_spans, doc):
+    # TODO: step through and see why AMOUNT does so poor here
+    pred_all_spans_combined = []
+    for s in pred_all_spans:
+        pred_all_spans_combined.extend(pred_all_spans[s])
+    gold_all_spans_combined = []
+    for s in gold_all_spans:
+        gold_all_spans_combined.extend(gold_all_spans[s])
+
+    for pred_span in pred_all_spans_combined:
+        match_found = False
+        # Check each predicted span for an equivalent in the gold
+        for gold_span in gold_all_spans_combined:
+            if has_overlap(pred_span.start, pred_span.stop, gold_span.start, gold_span.stop):
+                all_span_overlap_not_by_subs.tp += 1
+                match_found = True
+                break
+            # If none found, it's an FP
+            if not match_found:
+                all_span_overlap_not_by_subs.fp += 1
+                all_span_overlap_not_by_subs.fp_values.append(doc.id + " " + doc.text[pred_span.start:pred_span.stop])
+        # Find false neg
+        for gold_span in gold_all_spans_combined:
+            match_found = False
+
+            # Check each gold span for an equivalent in the predicted
+            for pred_span in pred_all_spans_combined:
+                if has_overlap(pred_span.start, pred_span.stop, gold_span.start, gold_span.stop):
+                    match_found = True
+                    break
+
+            # If none found, it's an FN
+            if not match_found:
+                all_span_overlap_not_by_subs.fn += 1
+                all_span_overlap_not_by_subs.fn_values.append(doc.id + " " + doc.text[gold_span.start:gold_span.stop])
+
+
 def find_all_span_overlap_eval_data(all_span_eval_data, substance, gold_all_spans, pred_all_spans, doc):
     # Find true pos, false pos
     for pred_span in pred_all_spans[substance]:
@@ -205,22 +263,27 @@ def find_total_field_performance(eval_data_per_substance, attribute, output_file
 
 
 def evaluate_total_performance(attribute_type, value_eval_data, value_span_eval_data, all_span_eval_data,
-                               all_span_overlap_eval_data, attribute):
+                               all_span_overlap_eval_data, all_span_overlap_NBS, attribute):
     for substance in SUBSTANCE_TYPES:
         # Precision, recall
-        value_eval_data[substance].calculate_precision_recall_f1()
+        # value_eval_data[substance].calculate_precision_recall_f1()
         # value_span_eval_data[substance].calculate_precision_recall_f1()
-        all_span_eval_data[substance].calculate_precision_recall_f1()
+        # all_span_eval_data[substance].calculate_precision_recall_f1()
         all_span_overlap_eval_data[substance].calculate_precision_recall_f1()
 
         # Output eval
-        value_eval_data[substance].output(os.path.join(DATA_DIR, "Evaluation", "AttribValueEval" +"_"+substance + "_" + attribute_type))
-        all_span_eval_data[substance].output(os.path.join(DATA_DIR, r"Evaluation", "AttribAllSpanEval"+"_"+ substance + "_" + attribute_type))
-        all_span_overlap_eval_data[substance].output(os.path.join(DATA_DIR, "Evaluation", "AttribAllSpanOverlapEval"+"_"+ substance +
-                                                     "_" + attribute_type))
+        # value_eval_data[substance].output(os.path.join(DATA_DIR, "Evaluation", "AttribValueEval" +"_"+substance + "_" + attribute_type))
+        # all_span_eval_data[substance].output(os.path.join(DATA_DIR, r"Evaluation", "AttribAllSpanEval"+"_"+ substance + "_" + attribute_type))
+        all_span_overlap_eval_data[substance].output(
+            os.path.join(DATA_DIR, "Evaluation", "AttribAllSpanOverlapEval" + "_" + substance +
+                         "_" + attribute_type))
+
+    # print CRF performance totals not by substance
+    all_span_overlap_NBS.calculate_precision_recall_f1()
+    all_span_overlap_NBS.output(os.path.join(DATA_DIR, "Evaluation", "CRFSpanOverlapEval" + "_" + attribute_type))
 
     # Total across substances
-    find_total_field_performance(value_eval_data, attribute, os.path.join(DATA_DIR, "Evaluation", "AttribValueEval"))
+    # find_total_field_performance(value_eval_data, attribute, os.path.join(DATA_DIR, "Evaluation", "AttribValueEval"))
     # find_total_field_performance(value_span_eval_data, attribute, ATTRIB_VALUE_SPAN_EVAL_FILENAME)
-    find_total_field_performance(all_span_eval_data, attribute, os.path.join(DATA_DIR, "Evaluation", "AttribAllSpanEval"))
-    find_total_field_performance(all_span_overlap_eval_data, attribute, os.path.join(DATA_DIR, "Evaluation", "AttribAllSpanOverlapEval"))
+    # find_total_field_performance(all_span_eval_data, attribute, os.path.join(DATA_DIR, "Evaluation", "AttribAllSpanEval"))
+    # find_total_field_performance(all_span_overlap_eval_data, attribute, os.path.join(DATA_DIR, "Evaluation", "AttribAllSpanOverlapEval"))

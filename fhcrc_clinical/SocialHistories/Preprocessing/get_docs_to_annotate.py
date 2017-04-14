@@ -45,6 +45,9 @@ def is_it_discharge_instructions(doc):
         if p.match(split_text[0]):
             return True
 
+        if "Clinic Type: Lung Cancer Early Detection and Prevention Clinic." in split_text[0]: #smoking cessation docs goodbye
+            return True
+
         if "Discharge Instruction" in split_text[0] or \
                         "Discharge Instruction" in split_text[1] or \
                         "Discharge Instruction" in split_text[2] or \
@@ -105,7 +108,7 @@ def write_docs_needing_annotation_to_csv_batches(documents_needing_annotation, s
                 mrn = metadata_dict[id][0]
                 timestamp = metadata_dict[id][1]
                 batch_writer.writerow([mrn, id, timestamp, document.text])
-    print("tsv batch files ready for annotation written to: " + os.path.join(c.DATA_DIR, "Docs_to_annotate"))
+    print("tsv batch files ready for annotation written to: " + os.path.join(c.DATA_DIR, "Docs_to_annotate_cleaned"))
     pass
 
 

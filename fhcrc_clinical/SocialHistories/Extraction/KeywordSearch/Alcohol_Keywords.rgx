@@ -1,8 +1,8 @@
-(?<!isopropyl )(?<!isopropyl)(?<!iso )(?<!iso)alcohol\w*
+(?<!isopropyl )(?<!isopropyl)(?<!iso )(?<!iso)alcohol\w{0,5}
 ethanol
 (?<=\W)etoh(?=\W)
-(?<=\W)(non-?)?drink\w*
-(?<=\W)drunk\w*
+(?<=\W)(non-?)?drink\w{0,5}
+(?<=\W)drunk\w{0,5}
 (?<=\W)drank
 (glass(es)?|bottles?) ?(\/|each|every|per) ?(day|w(ee)?k|mo(nth)?|y(ea)?r)
 (?<=\W)beers?

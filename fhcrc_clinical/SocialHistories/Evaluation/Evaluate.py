@@ -1,4 +1,4 @@
-from fhcrc_clinical.SocialHistories.Extraction.EventDetection.Processing import *
+import os
 
 
 class EvaluationData:
@@ -20,7 +20,18 @@ class EvaluationData:
 
             self.f1 = 2*(self.precision * self.recall)/(self.precision + self.recall)
 
+
+    def get_precision_recall_f1(self):
+        return self.precision, self.recall, self.f1
+
     def output(self, filename):
+        # PRINT result summary to std out
+        print "==============================="
+        print"==::" +filename.split(os.path.sep)[-1]
+        print("Precision: " + str(self.precision))
+        print("Recall: " + str(self.recall))
+        print("F1: " + str(self.f1))
+
         out_file = open(filename, "w")
         substance = filename.split('_')[1]
 

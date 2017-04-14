@@ -62,6 +62,10 @@ sampleData/
 *feature_mapping.txt
 *models/
 
+#Model directories and models
+DataDir/
+*Models/
+*.gzwl
 
 #ignore back-up files
 *.*~

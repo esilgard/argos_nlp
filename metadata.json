@@ -1175,7 +1175,7 @@
 					]
 				},
 				{"field": "AlcoholQuitDate",
-				"datatype": "date",
+				"datatype": "string",
 				"closedClass": "False",
 				"diseaseProperties":
 					[
@@ -1250,7 +1250,7 @@
 					]
 				},
 				{"field": "TobaccoQuitDate",
-				"datatype": "date",
+				"datatype": "string",
 				"closedClass": "False",
 				"diseaseProperties":
 					[

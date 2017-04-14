@@ -1,7 +1,6 @@
 from SubstanceInfoField import SubstanceField
 from fhcrc_clinical.SocialHistories.DataLoading.DataLoadingGlobals import *
-from fhcrc_clinical.KeywordSearch.KeywordGlobals import *
-
+from fhcrc_clinical.SocialHistories.SystemUtilities.Globals import TOBACCO, QUIT_DATE
 
 class TobaccoQuitDate(SubstanceField):
     __version__ = 'SubstanceInfo1.0'
