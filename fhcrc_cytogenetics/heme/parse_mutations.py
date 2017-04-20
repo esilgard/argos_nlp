@@ -13,27 +13,26 @@ __version__='cytogenetics_mutation_parser1.0'
 def get(cell_list, karyotype_string, karyo_offset):
 
     '''
-        take a parsed list of cells
-        where each element within the cell group has a list of dictionaries of abnormalities
-        as well as a cell count, a chromosome number, a warning flag, a chromosome, and 
-        a cell order (just the order the cell line was listed in the report)        
+        take a parsed list of cells, where each element within the cell group 
+        has a list of dictionaries of abnormalities as well as a cell count, 
+        a chromosome number, a warning flag, a chromosome, and a cell order 
+        (just the order the cell line was listed in the report)        
         return the same list with an appended swog label dictionary
     '''
     return_errors = []
-    return_dictionary_list = [{gb.FIELD:gb.KARYOTYPE_STRING, gb.VALUE:karyotype_string, gb.CONFIDENCE:1.0,
-                            gb.VERSION:__version__, gb.STARTSTOPS:[{gb.START:karyo_offset,
-                            gb.STOP:karyo_offset + len(karyotype_string)}], gb.TABLE:gb.CYTOGENETICS}]
-    ## a dictionary of mutation types and their cell counts
-    mutations=dict.fromkeys(['inv(16)', 't(16;16)', 'del(16q)', 't(8;21)', 't(15;17)',
-                             't(8;21)', gb.NORMAL, '+8', '+6', '-Y', 'del(12p)', '-7',
-                              '-5', '3q', '9q', '11q', '20q', '21q', 'del(7q)', '17p',
-                              'del(5q)', 'del(9q)', 't(16;20)', 't(14;16)', 't(11;14)',
-                              't(4;14)', 'del(17p)', 'del(1p)', 'add(1q)', 't(6;9)',
-                              't(9;22)','del(13p)', 'del(13q)', '-13', '12pCode1',
-                              '12pCode2','12pCode3','12pCode4','12pCode5','12pCode6'
-                              '17pCode1','17pCode2','17pCode3','17Code4','17Code5',
-                              '17pCode6', gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING,
-                               gb.HYPER, gb.HYPO], 0)
+    return_dictionary_list = [{gb.FIELD:gb.KARYOTYPE_STRING, 
+        gb.VALUE:karyotype_string, gb.CONFIDENCE:1.0, gb.VERSION:__version__, 
+        gb.STARTSTOPS:[{gb.START:karyo_offset, gb.STOP:karyo_offset + 
+        len(karyotype_string)}], gb.TABLE:gb.CYTOGENETICS}]
+   
+   ## a dictionary of mutation types and their cell counts
+    mutations=dict.fromkeys(['inv(16)', 't(16;16)', 'del(16q)', 't(8;21)', 
+        't(15;17)', 't(8;21)', gb.NORMAL, '+8', '+6', '-Y', 'del(12p)', '-7',
+        '-5', '3q', '9q', '11q', '20q', '21q', 'del(7q)', '17p', 'del(5q)', 
+        'del(9q)', 't(16;20)', 't(14;16)', 't(11;14)', 't(4;14)', 'del(17p)', 
+        'del(1p)', 'add(1q)', 't(6;9)', 't(9;22)','del(13p)', 'del(13q)', 
+        '-13', 'add(12p)', 'add(17p)', gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING,
+        gb.HYPER, gb.HYPO], 0)
     
     ## a dictionary of mutation types and their offsets - which will be stored as a list of tuples (start,stop)
     offsets = {}
@@ -44,7 +43,7 @@ def get(cell_list, karyotype_string, karyo_offset):
     abnormality_set = set([])
     monosomy_set = set([])
     trisomy_set = set([])
-##################################################################################################################################
+###############################################################################
     mutations[gb.HYPER] = False
     mutations[gb.HYPO] = False
     
@@ -55,17 +54,21 @@ def get(cell_list, karyotype_string, karyo_offset):
         try:
             cell_count = int(x[gb.CELL_COUNT])            
             cell_offset = x['Offset']
+            
+            '''
             ## minimum number of cells needed to verify a clone (either 2 or 3)
+            #### this is faulty logic - we should be counting cells for each mutation - not for the entire karyotype
             clone_minimum = 2      
             chromosome_number = int(x['ChromosomeNumber'][:2])
             if chromosome_number < 46:
-                clone_minimum = 3    
-            
-            if chromosome_number < 45 and cell_count >= clone_minimum: 
+                clone_minimum = 3  
+            '''
+            ## hyperploidy and hypoploidy
+            if chromosome_number < 45: # and cell_count >= clone_minimum: 
                 offsets[gb.HYPO].append((cell_offset,cell_offset+2))
                 mutations[gb.HYPO] = True
-            if chromosome_number > 47 and cell_count >= clone_minimum:
-                 offsets[gb.HYPO].append((cell_offset,cell_offset+2))
+            if chromosome_number > 47: # and cell_count >= clone_minimum:
+                 offsets[gb.HYPER].append((cell_offset,cell_offset+2))
                  mutations[gb.HYPER] = True
                  
             
@@ -74,7 +77,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                     try:                        
                         for z, zz in y.items():                            
                             variation_string = z + '(' + zz[0] + ')' + zz[1]
-                            if cell_count >= clone_minimum:                                
+                            if cell_count >= 2:                                
                                 if z == '-' or z == '+':
                                     variation_string = z + zz[0] + zz[1]                            
                                 variation_start = cell_offset + (karyotype_string[cell_offset-karyo_offset:].find(variation_string))
@@ -93,7 +96,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                                     
                                 ## all monosomies                            
                                 elif z == '-':
-                                    if cell_count >= 3:
+                                    if cell_count >= 3 and cell_count >= 3:
                                         monosomy_set.add(variation_string)
                                         abnormality_set.add(variation_string) 
                                         offsets[gb.MONOS].append((variation_start, variation_end))
@@ -152,10 +155,17 @@ def get(cell_list, karyotype_string, karyo_offset):
                                     for each in ['1']:
                                         if zz[0] == each and 'q' in zz[1]:
                                             mutations['add(' + each + 'q)'] += cell_count
-                                            mutations['add(' + each + 'q)'].append((variation_start, variation_end))   
+                                            mutations['add(' + each + 'q)'].append((variation_start, variation_end))
+                                    for each in ['12','17']:
+                                        if zz[0] == each and 'p' in zz[1]:
+                                            mutations['add(' + each + 'p)'] += cell_count
+                                            mutations['add(' + each + 'p)'].append((variation_start, variation_end)) 
                                                                   
                                 ## any mutation involving 21q, 20q, 11q, 9q, 3q  - we want to capture things like t(3;3) but NOT -13
                                 ## also must make sure the 'q' is on the '11' arm - do not want to capture things like t(11;22)(p4;q20)
+                                '''
+                                come back to this - we should switch to mutually exclusive types of abnormalities - this double captures/counts some
+                                '''
                                 location = zz[0].split(';')
                                 arm = zz[1].split(';')                               
                                     
@@ -164,16 +174,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                                         if each in location:                                       
                                             if 'q' in arm[location.index(each)] or 'i' in z:                                          
                                                 mutations[each+'q'] += cell_count
-                                                offsets[each+'q'].append((variation_start,variation_end))
-                                '''
-                                # changing to more robust 12/17 p detection, with Codes 1-6
-                                if 'p' in zz[1] or 'i' in z:   
-                                    for chrom_num in ['12','17']:
-                                        if chrom_num in location and ((len(arm) > location.index(chrom_num) and 'p' in \
-                                            arm[location.index(chrom_num)]) or 'i' in z):                                           
-                                            mutations[chrom_num + 'p'] += cell_count
-                                            offsets[chrom_num + 'p'].append((variation_start,variation_end))
-                                '''  
+                                                offsets[each+'q'].append((variation_start,variation_end))                    
                                 
                     ## catch any other formatting abnormalities/parsing errors
                     except:
