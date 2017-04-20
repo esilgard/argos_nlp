@@ -11,6 +11,7 @@ import aml_swog_classification
 __version__='cytogenetics_mutation_parser1.0'
 
 def get(cell_list, karyotype_string, karyo_offset):
+
     '''
         take a parsed list of cells
         where each element within the cell group has a list of dictionaries of abnormalities
@@ -28,7 +29,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                               '-5', '3q', '9q', '11q', '17p', '20q', '21q', 'del(7q)',
                               'del(5q)', 'del(9q)', 't(16;20)', 't(14;16)', 't(11;14)',
                               't(4;14)', 'del(17p)', 'del(1p)', 'add(1q)', 't(6;9)',
-                              't(9;22)','del(13p)', 'del(13q)', '-13',
+                              't(9;22)','del(13p)', 'del(13q)', '-13', '12p',
                                gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING,
                                gb.HYPER, gb.HYPO], 0)
     
@@ -151,10 +152,13 @@ def get(cell_list, karyotype_string, karyo_offset):
                                                 mutations[each+'q'] += cell_count
                                                 offsets[each+'q'].append((variation_start,variation_end))
                                 
-                                if 'p' in zz[1] or 'i' in z:                                    
-                                    if '17' in location and ((len(arm) > location.index('17') and 'p' in arm[location.index('17')]) or 'i' in z):                                           
-                                        mutations['17p'] += cell_count
-                                        offsets['17p'].append((variation_start,variation_end))
+                                if 'p' in zz[1] or 'i' in z:   
+                                    for chrom_num in ['12','17']:
+                                        if chrom_num in location and ((len(arm) > location.index(chrom_num) and 'p' in \
+                                            arm[location.index(chrom_num)]) or 'i' in z):                                           
+                                            mutations[chrom_num + 'p'] += cell_count
+                                            offsets[chrom_num + 'p'].append((variation_start,variation_end))
+                                   
 
                     ## catch any other formatting abnormalities/parsing errors
                     except:

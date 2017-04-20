@@ -117,7 +117,7 @@ def main(arguments):
     ## create a list of output field dictionaries ##
     for mrn in cytogenetics_d:
         for acc in cytogenetics_d[mrn]:
-            ## write out cannonical version of text and tsv file
+            ## write out cannonical version of text and tsv file            
             try:
                 with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + \
                 os.path.sep + acc + '.txt', 'wb') as out_text:
@@ -153,8 +153,10 @@ def main(arguments):
                 pass
             else:
                 ## walk through ISCN section in order in case the karyotype on multiple lines
-                ## this means all cytogenetics algorithms will only be based on ISCN string                 
+                ## this means all cytogenetics algorithms will only be based on ISCN string
+                
                 karyo_offset = None
+                
                 for sections in sorted(cytogenetics_d[mrn][acc], key=lambda x: x[2]):
                     section_header = sections[1]
                     beginning_offset = sections[2]
@@ -169,6 +171,7 @@ def main(arguments):
                     field_value_dictionary = {}
                     field_value_dictionary[gb.REPORT] = acc
                     field_value_dictionary[gb.MRN] = mrn
+                    
                     str_cleaner_return_dictionary, karyotype_string, karyo_offset = \
                     iscn_string_cleaner.get(cyto_string, karyo_offset)
                     ## if string cleaner doesn't find description of karyotype, then parse string
@@ -179,12 +182,14 @@ def main(arguments):
                             return_fields, return_errors, return_type = get_fields\
                             (disease_group, disease_group_data_d, return_fields, \
                             karyotype_string, karyo_offset)  
+                            '''                            
                             date = cytogenetics_d[mrn][acc][(-1, 'Date', 0, None)]
                             if date[0]:
                                 return_fields.append({gb.FIELD:gb.DATE, gb.VALUE:date[0], \
                                 gb.CONFIDENCE:.9, gb.VERSION:__version__, \
                                 gb.STARTSTOPS:[{gb.START:date[1], gb.STOP:date[2]}], \
                                 gb.TABLE:gb.CYTOGENETICS})
+                            '''
                         except IOError:
                             return (field_value_output, [{gb.ERR_TYPE:'Exception', gb.ERR_STR:\
                             'FATAL ERROR in process.get() - \

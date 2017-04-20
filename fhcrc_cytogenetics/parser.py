@@ -42,8 +42,10 @@ def parse(obx_file):
         obx = open(obx_file, 'rU').readlines()
         obx = [re.sub(r'[\r\n]', '', a).split('\t') for a in obx]
         header_set = set(obx[0])
+        
         if set(header_set) >= (REQUIRED_HEADER_SET):
             headers = dict((k, v) for v, k in enumerate(obx[0]))
+            
             try:
                 # sort records by MRN, acc, and then setid, ignore null lines
                 obx = sorted([y for y in obx[1:] if (y[headers.get(gb.MRN_CAPS)] != 'NULL' \
@@ -93,7 +95,7 @@ def parse(obx_file):
                                     specimen_dictionary = {'NULL': 'NULL'}
                             cytogenetics_dictionary[mrn][acc][(0, gb.SPECIMEN_SOURCE, 0, None)] = {}
                             cytogenetics_dictionary[mrn][acc][(0, gb.SPECIMEN_SOURCE, 0, None)][0] = specimen_dictionary
-
+                        
                         # match general section header patterns
                         # (this section header matching is purposely broader than the pathology parser
                         section_header = re.match(r'[\*\" ]*([A-Za-z ]+)[\*:]+', text)
@@ -130,7 +132,9 @@ def parse(obx_file):
                                 received_date.group(2)), '%Y,%b,%d'), received_date.start(1)+chars_onset, received_date.end(3)+chars_onset)
                             else:
                                 cytogenetics_dictionary[mrn][acc][(-1, 'Date', 0, None)] = (None, 0, 0)
+                                
                         chars_onset += len(text) + 1
+                
                 return cytogenetics_dictionary, dict
 
             except RuntimeError:

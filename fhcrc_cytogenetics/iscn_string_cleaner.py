@@ -34,9 +34,9 @@ def get(original_text, karyo_offset):
         return [{gb.NAME:gb.SWOG, gb.TABLE:gb.CYTOGENETICS, gb.VALUE:swog, gb.CONFIDENCE:.95,
                  gb.STARTSTOPS:[{gb.START:text.find(interpretation_str), \
                  gb.STOP:text.find(interpretation_str) + len(interpretation.group(1))}], \
-                 gb.VERSION:__version__}, {gb.NAME:gb.KARYOTYPE_STRING, gb.VALUE:text, \
+                 gb.VERSION:__version__, gb.NAME:gb.KARYOTYPE_STRING, gb.VALUE:text, \
                  gb.CONFIDENCE:.95, gb.VERSION:__version__, gb.STARTSTOPS:[{gb.START:0}, \
-                {gb.STOP:len(text)}]}], text
+                 {gb.STOP:len(text)}]}], text, karyo_offset
 
     ## cut off nuclear FISH results that may have different formatting and vocabulary
     ## (currently regular fish is dealt with differently - this could probably change
@@ -66,7 +66,7 @@ def get(original_text, karyo_offset):
         return [{gb.NAME:gb.SWOG, gb.TABLE:gb.CYTOGENETICS, gb.VALUE:gb.UNKNOWN, \
         gb.CONFIDENCE:0.0, gb.STARTSTOPS:[], gb.VERSION:__version__}, \
         {gb.NAME:gb.KARYOTYPE_STRING, gb.VALUE:original_text, gb.CONFIDENCE:0.0, \
-        gb.VERSION:__version__, gb.STARTSTOPS:[{gb.START:0}, {gb.STOP:len(original_text)}]}], text
+        gb.VERSION:__version__, gb.STARTSTOPS:[{gb.START:0}, {gb.STOP:len(original_text)}]}], text, karyo_offset
 
     else:
         return None, karyotype_string, karyo_offset

@@ -37,11 +37,15 @@ def get(karyotype_string, karyo_offset):
             cell_description = each_cell_type.split(',')
             try:
                 d[gb.CHROMOSOME_NUM] = cell_description[0].strip()
-                if re.search(r'[\d]n', cell_description[1]):
-                    d[gb.CHROMOSOME_NUM] += cell_description[1]
-                    cell_description = cell_description[1:]
-                d[gb.CHROMOSOME] = cell_description[1].strip()
-                d[gb.WARNING] = None
+                try:
+                    if re.search(r'[\d]n', cell_description[1]):
+                        d[gb.CHROMOSOME_NUM] += cell_description[1]
+                        cell_description = cell_description[1:]
+                    d[gb.CHROMOSOME] = cell_description[1].strip()
+                    d[gb.WARNING] = None
+                except:
+                    # catches error when there are no sex chromosomes
+                    d[gb.WARNING] = 1
             except ValueError:
                 ## catches error when there is no chromosome type number and type
                 d[gb.WARNING] = 1
