@@ -26,11 +26,13 @@ def get(cell_list, karyotype_string, karyo_offset):
     ## a dictionary of mutation types and their cell counts
     mutations=dict.fromkeys(['inv(16)', 't(16;16)', 'del(16q)', 't(8;21)', 't(15;17)',
                              't(8;21)', gb.NORMAL, '+8', '+6', '-Y', 'del(12p)', '-7',
-                              '-5', '3q', '9q', '11q', '17p', '20q', '21q', 'del(7q)',
+                              '-5', '3q', '9q', '11q', '20q', '21q', 'del(7q)', '17p',
                               'del(5q)', 'del(9q)', 't(16;20)', 't(14;16)', 't(11;14)',
                               't(4;14)', 'del(17p)', 'del(1p)', 'add(1q)', 't(6;9)',
-                              't(9;22)','del(13p)', 'del(13q)', '-13', '12p',
-                               gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING,
+                              't(9;22)','del(13p)', 'del(13q)', '-13', '12pCode1',
+                              '12pCode2','12pCode3','12pCode4','12pCode5','12pCode6'
+                              '17pCode1','17pCode2','17pCode3','17Code4','17Code5',
+                              '17pCode6', gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING,
                                gb.HYPER, gb.HYPO], 0)
     
     ## a dictionary of mutation types and their offsets - which will be stored as a list of tuples (start,stop)
@@ -123,24 +125,36 @@ def get(cell_list, karyotype_string, karyo_offset):
                                             mutations[each] += cell_count
                                             offsets[each].append((variation_start, variation_end))                                  
                                             
-                                ## del of p or q arms (also subsegmental deletetions)
+                                ## explicit del of p or q arms (also subsegmental deletetions)
                                 elif z == 'del':
-                                    for each in ['5','7','13']:
+                                    for each in ['5','7','13']:                                    
                                         if zz[0] == each and 'q' in zz[1]:
                                             mutations['del(' + each + 'q)'] += cell_count
-                                            offsets['del(' + each + 'q)'].append((variation_start, variation_end))
+                                            offsets['del(' + each + 'q)'].append((variation_start, variation_end))                                        
                                     for each in ['1','17','12','13']:
                                         if zz[0] == each and 'p' in zz[1]:
                                             mutations['del(' + each + 'p)'] += cell_count
                                             offsets['del(' + each + 'p)'].append((variation_start, variation_end))
-                                ## additions in p or q arms
+                               
+                               ## implicit del of p or q arms from isochromes
+                                elif z == 'i':                                    
+                                    for each in ['5','7','13']:                                    
+                                        if zz[0] == each and 'p10' in zz[1]:
+                                            mutations['del(' + each + 'q)'] += cell_count
+                                            offsets['del(' + each + 'q)'].append((variation_start, variation_end))                                        
+                                    for each in ['1','17','12','13']:
+                                        if zz[0] == each and 'q10' in zz[1]:                                           
+                                            mutations['del(' + each + 'p)'] += cell_count
+                                            offsets['del(' + each + 'p)'].append((variation_start, variation_end))
+                                            
+                                ## additions in p arms
                                 elif z == 'add':
                                     for each in ['1']:
                                         if zz[0] == each and 'q' in zz[1]:
-                                            mutations['del(' + each + 'q)'] += cell_count
-                                            mutations['del(' + each + 'q)'].append((variation_start, variation_end))   
+                                            mutations['add(' + each + 'q)'] += cell_count
+                                            mutations['add(' + each + 'q)'].append((variation_start, variation_end))   
                                                                   
-                                ## any mutation involving 17p, 21q, 20q, 11q, 9q, 3q  - we want to capture things like t(3;3) but NOT -13
+                                ## any mutation involving 21q, 20q, 11q, 9q, 3q  - we want to capture things like t(3;3) but NOT -13
                                 ## also must make sure the 'q' is on the '11' arm - do not want to capture things like t(11;22)(p4;q20)
                                 location = zz[0].split(';')
                                 arm = zz[1].split(';')                               
@@ -151,15 +165,16 @@ def get(cell_list, karyotype_string, karyo_offset):
                                             if 'q' in arm[location.index(each)] or 'i' in z:                                          
                                                 mutations[each+'q'] += cell_count
                                                 offsets[each+'q'].append((variation_start,variation_end))
-                                
+                                '''
+                                # changing to more robust 12/17 p detection, with Codes 1-6
                                 if 'p' in zz[1] or 'i' in z:   
                                     for chrom_num in ['12','17']:
                                         if chrom_num in location and ((len(arm) > location.index(chrom_num) and 'p' in \
                                             arm[location.index(chrom_num)]) or 'i' in z):                                           
                                             mutations[chrom_num + 'p'] += cell_count
                                             offsets[chrom_num + 'p'].append((variation_start,variation_end))
-                                   
-
+                                '''  
+                                
                     ## catch any other formatting abnormalities/parsing errors
                     except:
                         mutations[gb.WARNING] = 1

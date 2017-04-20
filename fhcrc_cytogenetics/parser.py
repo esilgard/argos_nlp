@@ -123,7 +123,8 @@ def parse(obx_file):
                         [(section_order, section, chars_onset, specimen)][index] = text
                         cytogenetics_dictionary[mrn][acc][(-1, 'FullText', 0, None)] = \
                         cytogenetics_dictionary[mrn][acc].get((-1, 'FullText', 0, None), '') + text + '\n'
-
+                        
+                        # do we want received date? or collected?
                         if 'RECEIVED' in text and 'CASE' in text:
                             received_date = re.match(r'.*RECEIVED:[ ]+([A-Z][a-z]+)[ ]+([\d]+)[ ]+([\d]{4}).*', text)
                             if received_date:
