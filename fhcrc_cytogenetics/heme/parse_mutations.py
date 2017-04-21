@@ -32,9 +32,9 @@ def get(cell_list, karyotype_string, karyo_offset):
         'del(9q)', 't(16;20)', 't(14;16)', 't(11;14)', 't(4;14)', 'del(17p)', 
         'del(1p)', 'add(1q)', 't(6;9)', 't(9;22)','del(13p)', 'del(13q)', 
         '-13', '-12','-17', 'add(12p)', 'add(17p)', 'inv(12p)', 'inv(17p)', 
-        'dup(12p)', 'dup(17p)', 'trp(12p)', 'trp(17p)', 
-        gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING,
-        gb.HYPER, gb.HYPO], 0)
+        'dup(12p)', 'dup(17p)', 'trp(12p)', 'trp(17p)', 'translocation(12p)',
+        'translocation(17p)', gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING, 
+        gb.MONO_TYPE, gb.CMPX_TYPE, gb.HYPER, gb.HYPO], 0)
     
     ## a dictionary of mutation types and their offsets - which will be stored as a list of tuples (start,stop)
     offsets = {}
@@ -82,7 +82,8 @@ def get(cell_list, karyotype_string, karyo_offset):
                             if cell_count >= 2:                                
                                 if z == '-' or z == '+':
                                     variation_string = z + zz[0] + zz[1]                            
-                                variation_start = cell_offset + (karyotype_string[cell_offset-karyo_offset:].find(variation_string))
+                                variation_start = cell_offset + \
+                                (karyotype_string[cell_offset-karyo_offset:].find(variation_string))
                                 variation_end = variation_start + len(variation_string)  
                                 offsets[gb.MUTS].append((variation_start,variation_end))
                                 ## all trisomies
@@ -127,8 +128,31 @@ def get(cell_list, karyotype_string, karyo_offset):
                                                  't(4;14)', 't(11;14)', 't(14;16)', 't(16;20)']:
                                         if zz[0] == each[2:-1]:
                                             mutations[each] += cell_count
-                                            offsets[each].append((variation_start, variation_end))                                  
-                                            
+                                            offsets[each].append((variation_start, variation_end)) 
+                                    for each in ['12','17']:
+                                        chr_list = zz[0].split(';')
+                                        if each in chr_list:
+                                            location = chr_list.index(each)
+                                            if 'p' in zz[1].split(';')[location]:
+                                                mutations['translocation(' + each + 'p)'] += cell_count
+                                                offsets['translocation(' + each + 'p)'].append((variation_start, variation_end))
+                                ## dic variations for 12pand 17p   
+                                elif z == 'dic':
+                                    for each in ['12','17']:
+                                        chr_list = zz[0].split(';')
+                                        if each in chr_list:
+                                            location = chr_list.index(each)
+                                            if 'p' in zz[1].split(';')[location]:
+                                                mutations['translocation(' + each + 'p)'] += cell_count
+                                                offsets['translocation(' + each + 'p)'].append((variation_start, variation_end))
+                                ## der 12 and 17 derivations
+                                                ## dic variations for 12pand 17p   
+                                if z == 'der':
+                                    for each in ['12','17']:
+                                        chr_list = zz[0].split(';')
+                                        if each in chr_list:
+                                            mutations['translocation(' + each + 'p)'] += cell_count
+                                            offsets['translocation(' + each + 'p)'].append((variation_start, variation_end))
                                 ## explicit del of p or q arms (also subsegmental deletetions)
                                 elif z == 'del':
                                     for each in ['5','7','13']:                                    
@@ -162,9 +186,10 @@ def get(cell_list, karyotype_string, karyo_offset):
                                             mutations['add(' + each + 'p)'] += cell_count
                                             mutations['add(' + each + 'p)'].append((variation_start, variation_end)) 
                                 ## duplicataes, triplicates, and inversions in p arms of 12 and 17
-                                elif z in ['dup','trp','inv']:                                   
+                                elif z in ['dup','trp','inv','ins']:  
                                     for each in ['12','17']:
                                         if zz[0] == each and 'p' in zz[1]:
+                                            if z == 'ins': z = 'translocation'
                                             mutations[z + '(' + each + 'p)'] += cell_count
                                             mutations[z + '(' + each + 'p)'].append((variation_start, variation_end)) 
                                
