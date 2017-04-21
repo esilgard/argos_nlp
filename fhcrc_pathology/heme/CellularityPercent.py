@@ -19,9 +19,8 @@ class CellularityPercent(OneFieldPerReport):
         self.less_good_confidence = 0.7
         ## relevant sections of the report ##
         self.good_section = r'BONE MARROW BIOPSY'
-        self.less_good_section = r'MARROW DIFFERENTIAL|PARTICLE PREP'
-        self.regex = r'[Cc]ellular[\w\d\t,.: ]*?[ ]+([\<\>\~ ]*[\d]+([ \-to]+[0-9]+)?)[ ]*%|\
-                    ([\<\>\~ ]*[\d]+([ \-to]+[0-9]+)?)[ ]*%[\w ]{,15}(total|sampled)? cellular'
+        self.less_good_section = r'BONE MARROW ASPIRATE|MARROW DIFFERENTIAL|PARTICLE PREP|COMMENT|FLOW'
+        self.regex = r'[Cc]ellular[\w\d\t,\(.: ]{,25}[ ]+([\<\>\~ ]*[\d]+([ \-to]+[0-9]+)?)[ ]*%|([\d]+([ \-to]+[0-9]+)?)[ ]*%[\w\d\t,\).: ]{,25}(total|sampled) cellular'
         self.value_type = 'match'
         self.match_style = 'all'
         

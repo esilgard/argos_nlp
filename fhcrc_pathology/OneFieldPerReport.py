@@ -57,24 +57,26 @@ class OneFieldPerReport(object):
             return_d = {gb.NAME: self.field_name, gb.VALUE: None, gb.CONFIDENCE: ('%.2f' % 0.0), \
                                  gb.KEY: gb.ALL, gb.VERSION: self.get_version(),\
                                  gb.STARTSTOPS: [], gb.TABLE: self.table}
-            for section in dictionary:
+           
+            for section in dictionary:                
                 if re.search(self.good_section, section[1]):
-                    for index, text in dictionary[section].items():
-                        m = re.match(self.regex, text, re.DOTALL)
-                        if m:
+                    for index, text in dictionary[section].items():                        
+                        m = re.match(r'.*?' + self.regex + '.*', text, re.DOTALL)
+                        if m:                          
                             return_d[gb.VALUE] = m.group(1)
                             return_d[gb.CONFIDENCE] = ('%.2f' % self.confidence)                       
                             return_d[gb.STARTSTOPS].append({gb.START: m.start(1), gb.STOP:m.end(1)})                    
                             return return_d
-            for section in dictionary:
-                if re.search(self.less_good_section, section[1]):
-                    for index, text in dictionary[section].items():
-                        m = re.match(self.regex, text, re.DOTALL)
-                        if m:
-                            return_d[gb.VALUE] = m.group(1)
-                            return_d[gb.CONFIDENCE] = ('%.2f' % self.less_good_confidence)                       
-                            return_d[gb.STARTSTOPS].append({gb.START: m.start(1), gb.STOP:m.end(1)})                    
-                            return return_d
+            if not return_d[gb.VALUE]:
+                for section in dictionary:                    
+                    if re.search(self.less_good_section, section[1]):
+                        for index, text in dictionary[section].items():                            
+                            m = re.match(r'.*?' + self.regex + '.*', text, re.DOTALL)                            
+                            if m:                                
+                                return_d[gb.VALUE] = m.group(1)
+                                return_d[gb.CONFIDENCE] = ('%.2f' % self.less_good_confidence)                       
+                                return_d[gb.STARTSTOPS].append({gb.START: m.start(1), gb.STOP:m.end(1)})                    
+                                return return_d
             return return_d                   
         
         
@@ -142,9 +144,8 @@ class OneFieldPerReport(object):
                                 field_set.add(self.dz_specific_standardizations[each_match.group(3)])
                             ## just put match value in field_set
                             if not isinstance(self.value_type, dict):
-                                if not self.file_name_string:
+                                if self.field_name == 'PathStageSystem':
                                     ## hacky string normalization for PathStageSystem (although cellularityPercent also ends up here)
-                                    #if self.field_name == 'CellularityPercent': print each_match.span;print each_match.string
                                     field_set.add(each_match.group(1).replace(',', ''))             
                             else:
                                 field_set.add(self.value_type.get(True)[0])
