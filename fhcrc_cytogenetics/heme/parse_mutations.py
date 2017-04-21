@@ -6,12 +6,11 @@
 #
 
 import global_strings as gb
-import aml_swog_classification
+import aml_swog_classification, re
 
 __version__='cytogenetics_mutation_parser1.0'
 
 def get(cell_list, karyotype_string, karyo_offset):
-
     '''
         take a parsed list of cells, where each element within the cell group 
         has a list of dictionaries of abnormalities as well as a cell count, 
@@ -44,6 +43,8 @@ def get(cell_list, karyotype_string, karyo_offset):
     # used to track unique mutations
     abnormality_set = set([])
     monosomy_set = set([])
+    autosomal_monosomy_set = set([])
+    other_structural_abnormalities_set = set([])
     trisomy_set = set([])
 ###############################################################################
     mutations[gb.HYPER] = False
@@ -99,8 +100,13 @@ def get(cell_list, karyotype_string, karyo_offset):
                                     
                                 ## all monosomies                            
                                 elif z == '-' and cell_count >= 3:
+                                    ## should change this to track all offsets of all variations
                                     monosomy_set.add(variation_string)
-                                    abnormality_set.add(variation_string) 
+                                    # track only autosomal monosomies for 
+                                    # monosomal karyotype classification
+                                    if zz[0] not in ['X','Y']:
+                                        autosomal_monosomy_set.add(variation_string)
+                                    abnormality_set.add(variation_string)                                    
                                     offsets[gb.MONOS].append((variation_start, variation_end))
                                    
                                     for each in ['Y', '7', '5', '12', '13', '17']:
@@ -110,6 +116,10 @@ def get(cell_list, karyotype_string, karyo_offset):
                                 ## all other abnormalities do not have a cell count minimum
                                 else:
                                     abnormality_set.add(variation_string) 
+                                    # track other structural abnormalities for 
+                                    # monosomal karyotype classificaiton
+                                    if z not in ['r','mar','add']:
+                                        other_structural_abnormalities_set.add(variation_string)                                        
                                 ## all chromosome 16 abnormalities
                                 if '16' in zz[0]:                                                 
                                     if (z == 'inv'):
@@ -230,9 +240,22 @@ def get(cell_list, karyotype_string, karyo_offset):
         confidence = 0.95
         if mutations[gb.WARNING] == 1:
             confidence = .6
-        return_dictionary_list.append({gb.FIELD:each_variation, gb.VALUE:mutations[each_variation], \
-                                       gb.CONFIDENCE:confidence, gb.VERSION:__version__, \
-                                       gb.STARTSTOPS:[{gb.START:a[0], gb.STOP:a[1]} \
-                                       for a in offsets[each_variation]], gb.TABLE:gb.CYTOGENETICS})
+        return_dictionary_list.append({gb.FIELD:each_variation, \
+            gb.VALUE:mutations[each_variation], gb.CONFIDENCE:confidence, \
+            gb.VERSION:__version__, gb.STARTSTOPS:[{gb.START:a[0], gb.STOP:a[1]} \
+            for a in offsets[each_variation]], gb.TABLE:gb.CYTOGENETICS})
+    ## complex and monosomal karyotype classifications
+    ## need to add in char offset tracking
+    if len(abnormality_set) > 2:
+        return_dictionary_list.append({gb.FIELD:gb.CMPX_TYPE, \
+        gb.VALUE: 1, gb.CONFIDENCE:confidence, \
+        gb.VERSION:__version__, gb.STARTSTOPS:[], gb.TABLE:gb.CYTOGENETICS})
+    if len(autosomal_monosomy_set) > 1 or (len(autosomal_monosomy_set) == 1 and \
+        len(other_structural_abnormalities_set)) > 0:
+        return_dictionary_list.append({gb.FIELD:gb.MONO_TYPE, \
+        gb.VALUE: 1, gb.CONFIDENCE:confidence, \
+        gb.VERSION:__version__, gb.STARTSTOPS:[], gb.TABLE:gb.CYTOGENETICS})
+        
+            
     return_dictionary_list.append(aml_swog_classification.get(mutations, abnormality_set, offsets, cell_list))
     return return_dictionary_list, return_errors
