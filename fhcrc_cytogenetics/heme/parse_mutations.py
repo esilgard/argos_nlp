@@ -32,6 +32,7 @@ def get(cell_list, karyotype_string, karyo_offset):
         'del(9q)', 't(16;20)', 't(14;16)', 't(11;14)', 't(4;14)', 'del(17p)', 
         'del(1p)', 'add(1q)', 't(6;9)', 't(9;22)','del(13p)', 'del(13q)', 
         '-13', '-12','-17', 'add(12p)', 'add(17p)', 'inv(12p)', 'inv(17p)', 
+        'dup(12p)', 'dup(17p)', 'trp(12p)', 'trp(17p)', 
         gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING,
         gb.HYPER, gb.HYPO], 0)
     
@@ -149,13 +150,8 @@ def get(cell_list, karyotype_string, karyo_offset):
                                         if zz[0] == each and 'q10' in zz[1]:                                           
                                             mutations['del(' + each + 'p)'] += cell_count
                                             offsets['del(' + each + 'p)'].append((variation_start, variation_end))
-                                ## inversions
-                                elif z == 'inv':
-                                    for each in ['12','17']:                                    
-                                        if zz[0] == each and 'p' in zz[1]:
-                                            mutations['inv(' + each + 'p)'] += cell_count
-                                            offsets['inv(' + each + 'p)'].append((variation_start, variation_end))             
-                                ## additions in p arms
+                                             
+                                ## additions in p and q arms
                                 elif z == 'add':
                                     for each in ['1']:
                                         if zz[0] == each and 'q' in zz[1]:
@@ -165,6 +161,13 @@ def get(cell_list, karyotype_string, karyo_offset):
                                         if zz[0] == each and 'p' in zz[1]:
                                             mutations['add(' + each + 'p)'] += cell_count
                                             mutations['add(' + each + 'p)'].append((variation_start, variation_end)) 
+                                ## duplicataes, triplicates, and inversions in p arms of 12 and 17
+                                elif z in ['dup','trp','inv']:                                   
+                                    for each in ['12','17']:
+                                        if zz[0] == each and 'p' in zz[1]:
+                                            mutations[z + '(' + each + 'p)'] += cell_count
+                                            mutations[z + '(' + each + 'p)'].append((variation_start, variation_end)) 
+                               
                                                                   
                                 ## any mutation involving 21q, 20q, 11q, 9q, 3q  - we want to capture things like t(3;3) but NOT -13
                                 ## also must make sure the 'q' is on the '11' arm - do not want to capture things like t(11;22)(p4;q20)
