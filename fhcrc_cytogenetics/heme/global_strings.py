@@ -1,5 +1,5 @@
 ## global strings for output dictionaries - heme specific ##
-FIELD = "field"
+NAME = "name"
 TABLE = "table"
 VALUE = "value"
 FIELDS = "fields"

@@ -14,7 +14,7 @@ def get(mutation_dictionary, abnormality_set, offsets, cell_list):
     Assign SWOG risk categories for AML based on important mutations
     '''
     
-    swog_dictionary = {gb.FIELD:gb.SWOG, gb.TABLE:gb.CYTOGENETICS,
+    swog_dictionary = {gb.NAME:gb.SWOG, gb.TABLE:gb.CYTOGENETICS,
                        gb.VALUE:gb.UNKNOWN,gb.CONFIDENCE:1.0,
                        gb.STARTSTOPS:[], gb.VERSION:__version__}
     ## not all swog risk categories return a list of character offsets, since some classifications rely on the ABSENCE of some given evidence

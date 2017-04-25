@@ -6,7 +6,7 @@
 #
 
 import global_strings as gb
-import aml_swog_classification, re
+import aml_swog_classification
 
 __version__='cytogenetics_mutation_parser1.0'
 
@@ -19,7 +19,7 @@ def get(cell_list, karyotype_string, karyo_offset):
         return the same list with an appended swog label dictionary
     '''
     return_errors = []
-    return_dictionary_list = [{gb.FIELD:gb.KARYOTYPE_STRING, 
+    return_dictionary_list = [{gb.NAME:gb.KARYOTYPE_STRING, 
         gb.VALUE:karyotype_string, gb.CONFIDENCE:1.0, gb.VERSION:__version__, 
         gb.STARTSTOPS:[{gb.START:karyo_offset, gb.STOP:karyo_offset + 
         len(karyotype_string)}], gb.TABLE:gb.CYTOGENETICS}]
@@ -32,8 +32,7 @@ def get(cell_list, karyotype_string, karyo_offset):
         'del(1p)', 'add(1q)', 't(6;9)', 't(9;22)','del(13p)', 'del(13q)', 
         '-13', '-12','-17', 'add(12p)', 'add(17p)', 'inv(12p)', 'inv(17p)', 
         'dup(12p)', 'dup(17p)', 'trp(12p)', 'trp(17p)', 'translocation(12p)',
-        'translocation(17p)', gb.MONOS, gb.MUTS, gb.TRIS, gb.WARNING, 
-        gb.MONO_TYPE, gb.CMPX_TYPE, gb.HYPER, gb.HYPO], 0)
+        'translocation(17p)', gb.MONOS, gb.MUTS, gb.TRIS], 0)
     
     ## a dictionary of mutation types and their offsets - which will be stored as a list of tuples (start,stop)
     offsets = {}
@@ -46,14 +45,17 @@ def get(cell_list, karyotype_string, karyo_offset):
     autosomal_monosomy_set = set([])
     other_structural_abnormalities_set = set([])
     trisomy_set = set([])
-###############################################################################
-    mutations[gb.HYPER] = False
-    mutations[gb.HYPO] = False
+    ###########################################################################
+    mutations[gb.HYPER] = False; offsets[gb.HYPER] = []
+    mutations[gb.HYPO] = False; offsets[gb.HYPO] = []
+    mutations[gb.MONO_TYPE] = False; offsets[gb.MONO_TYPE] = []
+    mutations[gb.CMPX_TYPE] = False; offsets[gb.CMPX_TYPE] = []
+    mutations[gb.WARNING] = False; offsets[gb.WARNING] = []
     
     ## start by counting cells with each type of pertinent aberration      
     for x in cell_list:         
         if x[gb.WARNING]:
-            mutations[gb.WARNING] = 1
+            mutations[gb.WARNING] = True
         try:
             cell_count = int(x[gb.CELL_COUNT])            
             cell_offset = x['Offset']
@@ -156,7 +158,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                                                 mutations['translocation(' + each + 'p)'] += cell_count
                                                 offsets['translocation(' + each + 'p)'].append((variation_start, variation_end))
                                 ## der 12 and 17 derivations
-                                                ## dic variations for 12pand 17p   
+                                ## dic variations for 12pand 17p   
                                 if z == 'der':
                                     for each in ['12','17']:
                                         chr_list = zz[0].split(';')
@@ -221,8 +223,8 @@ def get(cell_list, karyotype_string, karyo_offset):
                                 
                     ## catch any other formatting abnormalities/parsing errors
                     except:
-                        mutations[gb.WARNING] = 1
-                        x[gb.WARNING] = 1                   
+                        mutations[gb.WARNING] = True
+                        x[gb.WARNING] = True                  
             ## there are no abnormalities - add up the "normal" cells
             else:              
                 mutations[gb.NORMAL] += cell_count
@@ -230,32 +232,29 @@ def get(cell_list, karyotype_string, karyo_offset):
                 offsets[gb.NORMAL].append((cell_offset,cell_offset + 2))
          ## catch trouble with cell counts etc       
         except:
-            mutations[gb.WARNING] = 1            
-            x[gb.WARNING] = 1      
+            mutations[gb.WARNING] = True            
+            x[gb.WARNING] = True      
            
     mutations[gb.MUTS] = len(abnormality_set)    
     mutations[gb.MONOS] = len(monosomy_set)
     mutations[gb.TRIS] = len(trisomy_set)
-    for each_variation in mutations:
-        confidence = 0.95
-        if mutations[gb.WARNING] == 1:
-            confidence = .6
-        return_dictionary_list.append({gb.FIELD:each_variation, \
-            gb.VALUE:mutations[each_variation], gb.CONFIDENCE:confidence, \
-            gb.VERSION:__version__, gb.STARTSTOPS:[{gb.START:a[0], gb.STOP:a[1]} \
-            for a in offsets[each_variation]], gb.TABLE:gb.CYTOGENETICS})
     ## complex and monosomal karyotype classifications
     ## need to add in char offset tracking
     if len(abnormality_set) > 2:
-        return_dictionary_list.append({gb.FIELD:gb.CMPX_TYPE, \
-        gb.VALUE: 1, gb.CONFIDENCE:confidence, \
-        gb.VERSION:__version__, gb.STARTSTOPS:[], gb.TABLE:gb.CYTOGENETICS})
+        mutations[gb.CMPX_TYPE] = True
     if len(autosomal_monosomy_set) > 1 or (len(autosomal_monosomy_set) == 1 and \
         len(other_structural_abnormalities_set)) > 0:
-        return_dictionary_list.append({gb.FIELD:gb.MONO_TYPE, \
-        gb.VALUE: 1, gb.CONFIDENCE:confidence, \
-        gb.VERSION:__version__, gb.STARTSTOPS:[], gb.TABLE:gb.CYTOGENETICS})
-        
-            
+        mutations[gb.MONO_TYPE] = True
+    #append all abnormality info to return_list
+    for each_variation in mutations:
+        confidence = 0.95
+        if mutations[gb.WARNING] == True:
+            confidence = .6
+        return_dictionary_list.append({gb.NAME:each_variation, \
+            gb.VALUE:mutations[each_variation], gb.CONFIDENCE:confidence, \
+            gb.VERSION:__version__, gb.STARTSTOPS:[{gb.START:a[0], gb.STOP:a[1]} \
+            for a in offsets[each_variation]], gb.TABLE:gb.CYTOGENETICS})
+    
+   
     return_dictionary_list.append(aml_swog_classification.get(mutations, abnormality_set, offsets, cell_list))
     return return_dictionary_list, return_errors
