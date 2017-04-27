@@ -7,10 +7,12 @@
 
 import global_strings as gb
 import aml_swog_classification
+import eln_classification
 
 __version__='cytogenetics_mutation_parser1.0'
 
 def get(cell_list, karyotype_string, karyo_offset):
+
     '''
         take a parsed list of cells, where each element within the cell group 
         has a list of dictionaries of abnormalities as well as a cell count, 
@@ -42,7 +44,6 @@ def get(cell_list, karyotype_string, karyo_offset):
     # used to track unique mutations
     abnormality_set = set([])
     monosomy_set = set([])
-    autosomal_monosomy_set = set([])
     other_structural_abnormalities_set = set([])
     trisomy_set = set([])
     ###########################################################################
@@ -55,64 +56,60 @@ def get(cell_list, karyotype_string, karyo_offset):
     ## start by counting cells with each type of pertinent aberration      
     for x in cell_list:         
         if x[gb.WARNING]:
-            mutations[gb.WARNING] = True
+            mutations[gb.WARNING] = True            
         try:
-            cell_count = int(x[gb.CELL_COUNT])            
+            cell_count = x[gb.CELL_COUNT]           
             cell_offset = x['Offset']
+            ## NOTE - this only gets the lower limit of cells in cases of "43-47"
             chromosome_number = int(x['ChromosomeNumber'][:2])
-            '''
-            ## minimum number of cells needed to verify a clone (either 2 or 3)
-            #### this is faulty logic - we should be counting cells for each mutation - not for the entire karyotype
-            clone_minimum = 2      
-            
-            if chromosome_number < 46:
-                clone_minimum = 3  
-            '''
-            ## hyperploidy and hypoploidy
+            ## hyperploidy and hypoploidy - ASK MIN ABOUT THIS LOGIC
             if chromosome_number < 45: # and cell_count >= clone_minimum: 
                 offsets[gb.HYPO].append((cell_offset,cell_offset+2))
                 mutations[gb.HYPO] = True
             if chromosome_number > 47: # and cell_count >= clone_minimum:
-                 offsets[gb.HYPER].append((cell_offset,cell_offset+2))
-                 mutations[gb.HYPER] = True
+                offsets[gb.HYPER].append((cell_offset,cell_offset+2))
+                mutations[gb.HYPER] = True
                  
-            
+            # If not
             if x[gb.ABNORMALITIES]:
+               
                 for y in x[gb.ABNORMALITIES]:
-                    try:                        
+                    try:  
                         for z, zz in y.items():                            
-                            variation_string = z + '(' + zz[0] + ')' + zz[1]
+                            variation_string = z + zz[0] + zz[1]
+                            stripped_chr = zz[0].strip('(').strip(')')
                             if cell_count >= 2:                                
-                                if z == '-' or z == '+':
-                                    variation_string = z + zz[0] + zz[1]                            
+                                #if z == '-' or z == '+':
+                                #    variation_string = z + zz[0] + zz[1]                            
                                 variation_start = cell_offset + \
                                 (karyotype_string[cell_offset-karyo_offset:].find(variation_string))
                                 variation_end = variation_start + len(variation_string)  
                                 offsets[gb.MUTS].append((variation_start,variation_end))
                                 ## all trisomies
-                                if z == '+':
-                                    if cell_count >= 2:                             
-                                        abnormality_set.add(variation_string) 
-                                        trisomy_set.add(variation_string)
+                                if z == '+':                                                             
+                                    abnormality_set.add(variation_string) 
+                                    try:
+                                        # only add in "full" trisomies
+                                        int(stripped_chr)
                                         offsets[gb.TRIS].append((variation_start,variation_end))
-                                        for each in ['8', '6']:
-                                            if zz[0] == each:
-                                                mutations['+' + each] += cell_count
-                                                offsets['+' + each].append((variation_start, variation_end))
-                                    
+                                        trisomy_set.add(variation_string)
+                                    except:
+                                        pass                                    
+                                    for each in ['8', '6']:
+                                        if stripped_chr == each:
+                                            mutations['+' + each] += cell_count
+                                            offsets['+' + each].append((variation_start, variation_end))                                    
                                 ## all monosomies                            
-                                elif z == '-' and cell_count >= 3:
-                                    ## should change this to track all offsets of all variations
-                                    monosomy_set.add(variation_string)
+                                elif z == '-' and cell_count >= 3:                                    
                                     # track only autosomal monosomies for 
                                     # monosomal karyotype classification
-                                    if zz[0] not in ['X','Y']:
-                                        autosomal_monosomy_set.add(variation_string)
+                                    if stripped_chr not in ['X','Y']:
+                                        monosomy_set.add(variation_string)
                                     abnormality_set.add(variation_string)                                    
                                     offsets[gb.MONOS].append((variation_start, variation_end))
                                    
                                     for each in ['Y', '7', '5', '12', '13', '17']:
-                                        if zz[0] == each:                                                
+                                        if stripped_chr == each:                                                
                                             mutations['-'+each] += cell_count
                                             offsets['-'+each].append((variation_start, variation_end))
                                 ## all other abnormalities do not have a cell count minimum
@@ -123,7 +120,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                                     if z not in ['r','mar','add']:
                                         other_structural_abnormalities_set.add(variation_string)                                        
                                 ## all chromosome 16 abnormalities
-                                if '16' in zz[0]:                                                 
+                                if '16' in stripped_chr:                                                 
                                     if (z == 'inv'):
                                         mutations['inv(16)'] += cell_count
                                         offsets['inv(16)'].append((variation_start, variation_end))
@@ -138,80 +135,89 @@ def get(cell_list, karyotype_string, karyo_offset):
                                 if z == 't':
                                     for each in ['t(15;17)', 't(6;9)', 't(9;22)', 't(8;21)',
                                                  't(4;14)', 't(11;14)', 't(14;16)', 't(16;20)']:
-                                        if zz[0] == each[2:-1]:
+                                        if stripped_chr == each[2:-1]:
                                             mutations[each] += cell_count
                                             offsets[each].append((variation_start, variation_end)) 
                                     for each in ['12','17']:
-                                        chr_list = zz[0].split(';')
+                                        chr_list = stripped_chr.split(';')
                                         if each in chr_list:
                                             location = chr_list.index(each)
                                             if 'p' in zz[1].split(';')[location]:
                                                 mutations['translocation(' + each + 'p)'] += cell_count
                                                 offsets['translocation(' + each + 'p)'].append((variation_start, variation_end))
-                                ## dic variations for 12pand 17p   
-                                elif z == 'dic':
+                                ## dic variations for 12p and 17p   
+                                elif 'dic' in z:
                                     for each in ['12','17']:
-                                        chr_list = zz[0].split(';')
+                                        chr_list = stripped_chr.split(';')
                                         if each in chr_list:
                                             location = chr_list.index(each)
                                             if 'p' in zz[1].split(';')[location]:
                                                 mutations['translocation(' + each + 'p)'] += cell_count
                                                 offsets['translocation(' + each + 'p)'].append((variation_start, variation_end))
                                 ## der 12 and 17 derivations
-                                ## dic variations for 12pand 17p   
-                                if z == 'der':
+                                elif 'der' in z:
                                     for each in ['12','17']:
-                                        chr_list = zz[0].split(';')
-                                        if each in chr_list:
-                                            mutations['translocation(' + each + 'p)'] += cell_count
-                                            offsets['translocation(' + each + 'p)'].append((variation_start, variation_end))
+                                        chr_list = stripped_chr.split(';')                                        
+                                        # if the der involves another abnormality type
+                                        # this won't necessarily split two chromosomes cleanly 
+                                        # e.g.  ['12)t(12','15']
+                                        for chr_part in chr_list:
+                                            if each in chr_part:
+                                                location = chr_list.index(chr_part)
+                                                # a derivitive from q10 on will mean a full loss of the p arm
+                                                if 'q10' in zz[1].split(';')[location]:
+                                                    mutations['del(' + each + 'p)'] += cell_count
+                                                    offsets['del(' + each + 'p)'].append((variation_start, variation_end))
+                                                else:
+                                                    mutations['translocation(' + each + 'p)'] += cell_count
+                                                    offsets['translocation(' + each + 'p)'].append((variation_start, variation_end))
                                 ## explicit del of p or q arms (also subsegmental deletetions)
-                                elif z == 'del':
+                                elif 'del' in 'z':
                                     for each in ['5','7','13']:                                    
-                                        if zz[0] == each and 'q' in zz[1]:
+                                        if stripped_chr == each and 'q' in zz[1]:
                                             mutations['del(' + each + 'q)'] += cell_count
                                             offsets['del(' + each + 'q)'].append((variation_start, variation_end))                                        
                                     for each in ['1','17','12','13']:
-                                        if zz[0] == each and 'p' in zz[1]:
+                                        if stripped_chr == each and 'p' in zz[1]:
                                             mutations['del(' + each + 'p)'] += cell_count
                                             offsets['del(' + each + 'p)'].append((variation_start, variation_end))
                                
                                 ## implicit del of p or q arms from isochromes
-                                elif z == 'i':                                    
+                                elif z == 'i' or z == '?i':                                    
                                     for each in ['5','7','13']:                                    
-                                        if zz[0] == each and 'p10' in zz[1]:
+                                        if stripped_chr == each and 'p10' in zz[1]:
                                             mutations['del(' + each + 'q)'] += cell_count
                                             offsets['del(' + each + 'q)'].append((variation_start, variation_end))                                        
                                     for each in ['1','17','12','13']:
-                                        if zz[0] == each and 'q10' in zz[1]:                                           
+                                        if stripped_chr == each and 'q10' in zz[1]:                                           
                                             mutations['del(' + each + 'p)'] += cell_count
                                             offsets['del(' + each + 'p)'].append((variation_start, variation_end))
                                              
                                 ## additions in p and q arms
-                                elif z == 'add':
+                                elif 'add' in z:
                                     for each in ['1']:
-                                        if zz[0] == each and 'q' in zz[1]:
+                                        if stripped_chr == each and 'q' in zz[1]:
                                             mutations['add(' + each + 'q)'] += cell_count
                                             mutations['add(' + each + 'q)'].append((variation_start, variation_end))
                                     for each in ['12','17']:
-                                        if zz[0] == each and 'p' in zz[1]:
+                                        if stripped_chr == each and 'p' in zz[1]:
                                             mutations['add(' + each + 'p)'] += cell_count
                                             mutations['add(' + each + 'p)'].append((variation_start, variation_end)) 
                                 ## duplicataes, triplicates, and inversions in p arms of 12 and 17
                                 elif z in ['dup','trp','inv','ins']:  
                                     for each in ['12','17']:
-                                        if zz[0] == each and 'p' in zz[1]:
+                                        if stripped_chr == each and 'p' in zz[1]:
                                             if z == 'ins': z = 'translocation'
                                             mutations[z + '(' + each + 'p)'] += cell_count
                                             mutations[z + '(' + each + 'p)'].append((variation_start, variation_end)) 
                                
-                                                                  
+                                ## NOTE _ THIS SHOULD BE CHANGED TO MIN'S ENCODINGS FOR SIMPLICITY and NOT OVERLAPPING TYPES                                 
                                 ## any mutation involving 21q, 20q, 11q, 9q, 3q  - we want to capture things like t(3;3) but NOT -13
                                 ## also must make sure the 'q' is on the '11' arm - do not want to capture things like t(11;22)(p4;q20)
                                 '''
                                 come back to this - we should switch to mutually exclusive types of abnormalities - this double captures/counts some
                                 '''
-                                location = zz[0].split(';')
+                                location = stripped_chr.split(';')
                                 arm = zz[1].split(';')                               
                                     
                                 if 'q' in zz[1] or 'i' in z:
@@ -226,14 +232,19 @@ def get(cell_list, karyotype_string, karyo_offset):
                         mutations[gb.WARNING] = True
                         x[gb.WARNING] = True                  
             ## there are no abnormalities - add up the "normal" cells
-            else:              
+            elif x['Chromosome'] in ['XX','XY']:
                 mutations[gb.NORMAL] += cell_count
                 ## this is a normal XX or XY; string len is always 2
                 offsets[gb.NORMAL].append((cell_offset,cell_offset + 2))
+            else:
+                ## other sec chromosome abnormalities
+                mutations[gb.SEX_CHRM_ABN] += cell_count
+                ## this is a normal XX or XY; string len is always 2
+                offsets[gb.SEX_CHRM_ABN].append((cell_offset,cell_offset + len(x['Chromosome'])))
          ## catch trouble with cell counts etc       
         except:
             mutations[gb.WARNING] = True            
-            x[gb.WARNING] = True      
+            x[gb.WARNING] = True   
            
     mutations[gb.MUTS] = len(abnormality_set)    
     mutations[gb.MONOS] = len(monosomy_set)
@@ -242,7 +253,7 @@ def get(cell_list, karyotype_string, karyo_offset):
     ## need to add in char offset tracking
     if len(abnormality_set) > 2:
         mutations[gb.CMPX_TYPE] = True
-    if len(autosomal_monosomy_set) > 1 or (len(autosomal_monosomy_set) == 1 and \
+    if len(monosomy_set) > 1 or (len(monosomy_set) == 1 and \
         len(other_structural_abnormalities_set)) > 0:
         mutations[gb.MONO_TYPE] = True
     #append all abnormality info to return_list
@@ -254,7 +265,7 @@ def get(cell_list, karyotype_string, karyo_offset):
             gb.VALUE:mutations[each_variation], gb.CONFIDENCE:confidence, \
             gb.VERSION:__version__, gb.STARTSTOPS:[{gb.START:a[0], gb.STOP:a[1]} \
             for a in offsets[each_variation]], gb.TABLE:gb.CYTOGENETICS})
-    
    
     return_dictionary_list.append(aml_swog_classification.get(mutations, abnormality_set, offsets, cell_list))
+    #return_dictionary_list.append(eln_classification.get(mutations, abnormality_set, offsets))
     return return_dictionary_list, return_errors

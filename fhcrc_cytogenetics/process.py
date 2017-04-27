@@ -182,14 +182,6 @@ def main(arguments):
                             return_fields, return_errors, return_type = get_fields\
                             (disease_group, disease_group_data_d, return_fields, \
                             karyotype_string, karyo_offset)  
-                            '''                            
-                            date = cytogenetics_d[mrn][acc][(-1, 'Date', 0, None)]
-                            if date[0]:
-                                return_fields.append({gb.FIELD:gb.DATE, gb.VALUE:date[0], \
-                                gb.CONFIDENCE:.9, gb.VERSION:__version__, \
-                                gb.STARTSTOPS:[{gb.START:date[1], gb.STOP:date[2]}], \
-                                gb.TABLE:gb.CYTOGENETICS})
-                            '''
                         except IOError:
                             return (field_value_output, [{gb.ERR_TYPE:'Exception', gb.ERR_STR:\
                             'FATAL ERROR in process.get() - \
