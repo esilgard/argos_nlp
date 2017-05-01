@@ -26,7 +26,7 @@ def get(karyotype_string, karyo_offset):
         d[gb.ABNORMALITIES] = []
         d[gb.POLY] = False
         d[gb.CELL_ORDER] = cell_type_order
-        cell_count = re.match(r'.*(\[c?p?([\d]+)\]).*', each_cell_type)
+        cell_count = re.match(r'.*(\[c?C?p?P?([\d ]+)\]).*', each_cell_type)
         if cell_count:
             try:
                 # strip off any trailing whitespace or "compositite" and cast as int
@@ -56,11 +56,9 @@ def get(karyotype_string, karyo_offset):
                 except:
                     # catches error when there are no sex chromosomes
                     d[gb.WARNING] = True
-                    
             except ValueError:
                 ## catches error when there is no chromosome type number and type
                 d[gb.WARNING] = True
-                
             ## if the length of the cell_description is greater than 2, there are abnormalities
             if len(cell_description) > 2:
                 d[gb.ABNORMALITIES] = cell_description[2:]
@@ -69,7 +67,7 @@ def get(karyotype_string, karyo_offset):
                     try:
                         d[gb.CHROMOSOME] = return_list[0][gb.CHROMOSOME]
                     except ValueError:
-                        d[gb.WARNING] = 1
+                        d[gb.WARNING] = True
                         d[gb.CHROMOSOME] = 'UNK'
                     d[gb.ABNORMALITIES] += return_list[0][gb.ABNORMALITIES]
 
