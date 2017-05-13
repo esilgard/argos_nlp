@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Apr 24 20:55:51 2017
-
-@author: esilgard
-"""
 
 '''author@esilgard'''
 #
