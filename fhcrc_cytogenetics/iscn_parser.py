@@ -122,9 +122,10 @@ def get(karyotype_string, karyo_offset):
             d[gb.WARNING] = True
         return_list.append(d)
         cell_type_order += 1
-            
+        print d
+        print ''
     return return_list, None, list
 
 
 if __name__ == '__main__':
-    get('', 0)
+    get('44-46,XY,der(3)t(3;7)(q21;q11.2),del(4)(q25),del(5)(q13q33),del(5)(q31q35),add(7)(q11.2),del(8)(p11.2),del(8)(q11.2q22),-9,add(10)(q26),add(11)(q21),add(11)(q23),add(12)(p11.2),-13,del(13)(q12q14),idicder(13)(p?11.2)del(13)(q12q14),del(16)(q22),-17,-20,+r,+2-4mar[cp21]/88,XXYY,+del(4)(q25)x2,del(5)(q31q35)x2,add(7)(q11.2)x2,-9,-9,-12,-12,idic der(13)(p?11.2)del(13)(q12q14)x2,del(16)(q22)x2,-17,-17,-20,-20,+4mar[1]', 0)

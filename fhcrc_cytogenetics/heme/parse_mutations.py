@@ -174,12 +174,11 @@ def get(cell_list, karyotype_string, karyo_offset):
                                                     offsets['translocation(' + each + 'p)'].append((variation_start, variation_end))
                                 ## explicit del of p or q arms (also subsegmental deletetions)
                                 elif 'del' in z:
-                                    print 'DEL', z
                                     for each in ['5','7','13']:                                    
                                         if stripped_chr == each and 'q' in zz[1]:
                                             mutations['del(' + each + 'q)'] += cell_count
                                             offsets['del(' + each + 'q)'].append((variation_start, variation_end))                                        
-                                    for each in ['1','17','12','13']:
+                                    for each in ['1','17','12','13']:                                        
                                         if stripped_chr == each and 'p' in zz[1]:
                                             mutations['del(' + each + 'p)'] += cell_count
                                             offsets['del(' + each + 'p)'].append((variation_start, variation_end))
