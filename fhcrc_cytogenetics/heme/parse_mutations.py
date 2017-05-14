@@ -28,15 +28,18 @@ def get(cell_list, karyotype_string, karyo_offset):
    
     # chromosomes that can be generally coded with the six coding groups:
     # translocation(chr,arm), -chr, add(chr,arm), del(chr,arm), inv(chr,arm),
-    # and dup or trp(chr,arm)
+    # and dup or trp(chr,arm) **ASK MIN ABOUT NAMING CONVENTION FOR GROUPS
     all_chromosomes = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14', \
         '15','16','17','18','19','20','21','22','X','Y']
     coding_chr_group = ['1','2','3','4','5','6','7','8','9','10','11','12', \
-        '17','18','19','20','X','Y']
+        '16','17','18','19','20','X','Y']
+    other_chr_group = ['13','14','15','21','22']
+    arm_list = ['p','q']
     ## a dictionary of mutation types and their cell counts
     abnormalities = {}
     ## a dictionary of mutation types and their offsets - which will be stored as a list of tuples (start,stop)
     offsets = {}
+    
     def add_to_d(abnormality, cell_count, variation_start, variation_end):
         '''
         helper function to put the abnormalities cell counts and the 
@@ -119,110 +122,100 @@ def get(cell_list, karyotype_string, karyo_offset):
                                     # track other structural abnormalities for 
                                     # monosomal karyotype classificaiton
                                     if z not in ['r','mar','add']:
-                                        other_structural_abnormalities_set.add(variation_string)                                        
-                                ## all chromosome 16 abnormalities
-                                #if '16' in stripped_chr:                                                 
-                                    #if (z == 'inv'):
-                                    #    add_to_d('inv(16)', cell_count, variation_start, variation_end)
-                                    #elif (z == 't' and '16;16' in zz[0]):
-                                    #    add_to_d('t(16;16)', cell_count, variation_start, variation_end)
-                                    #elif (z == 'del' and 'q' == zz[1]):
-                                    #    add_to_d('del(16q)', cell_count, variation_start, variation_end)
-                                
-                                ## specific translocations
+                                        other_structural_abnormalities_set.add(variation_string) 
+                                # specific salient translocations
                                 if z == 't':
                                     for each in ['t(15;17)', 't(6;9)', 't(9;22)', 't(8;21)', 't(16;16)'
                                                  't(4;14)', 't(11;14)', 't(14;16)', 't(16;20)', 't(3;3)']:
                                         if stripped_chr == each[2:-1]:
                                             add_to_d(each, cell_count, variation_start, variation_end)
-                                    # general translocations involving p or q arms
-                                    for each in coding_chr_group:
-                                        chr_list = stripped_chr.split(';')
-                                        if each in chr_list:
-                                            location = chr_list.index(each)
-                                            for arm in ['p','q']:
-                                                if arm in zz[1].split(';')[location]:
-                                                    add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
+                                    # general translocations involving p or q arms for encoding group
+                                    # just q arm for the "other" chromosome group
+                                    for arm in arm_list:
+                                        for each in all_chromosomes:
+                                            if each in other_chr_group and arm == 'p':
+                                                pass
+                                            else:
+                                                chr_list = stripped_chr.split(';')
+                                                if each in chr_list:
+                                                    location = chr_list.index(each)
+                                                    for arm in ['p','q']:
+                                                        if arm in zz[1].split(';')[location]:
+                                                            add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
+                                    
                                 # dicentric chromosome
                                 elif 'dic' in z:
-                                    for each in coding_chr_group:
-                                        chr_list = stripped_chr.split(';')                                        
-                                        if each in chr_list:
-                                            location = chr_list.index(each)
-                                            for arm in ['p','q']:
-                                                if arm in zz[1].split(';')[location]:
-                                                    add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
+                                    for arm in arm_list:
+                                        for each in all_chromosomes:
+                                            if each in other_chr_group and arm == 'p':
+                                                pass
+                                            else:
+                                                chr_list = stripped_chr.split(';')                                        
+                                                if each in chr_list:
+                                                    location = chr_list.index(each)                                            
+                                                    if arm in zz[1].split(';')[location]:
+                                                        add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
                                 # derivative chromosomes 
                                 elif 'der' in z:
-                                    print z, zz
-                                    for each in coding_chr_group:
-                                        chr_list = stripped_chr.split(';')                                        
-                                        # if the der involves another abnormality type
-                                        # this won't necessarily split two chromosomes cleanly 
-                                        # e.g.  ['12)t(12','15']
-                                        for chr_part in chr_list:
-                                            if each in chr_part:
-                                                location = chr_list.index(chr_part)
-                                                #print each, chr_list, location, zz[1].split(';')
-                                                # a derivitive from q10 on will mean a full loss of the p arm
-                                                if 'q10' in zz[1].split(';')[location]:
-                                                    add_to_d('del(' + each + 'p)', cell_count, variation_start, variation_end)
-                                                else:
-                                                    for arm in ['p','q']:
-                                                        if arm in  zz[1].split(';')[location]:
-                                                            add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
-                                ## deletion of arms
-                                elif 'del' in z:
-                                    for each in all_chromosomes:  
-                                        for arm in ['p','q']:
-                                            if stripped_chr == each and arm in zz[1]:
-                                                add_to_d('del(' + each + arm + ')', cell_count, variation_start, variation_end)                               
+                                    for arm in arm_list:
+                                        for each in all_chromosomes:
+                                            if each in other_chr_group and arm == 'p':
+                                                pass
+                                            else:
+                                                chr_list = stripped_chr.split(';')                                        
+                                                # if the der involves another abnormality type
+                                                # this won't necessarily split two chromosomes cleanly 
+                                                # e.g.  ['12)t(12','15']
+                                                for chr_part in chr_list:
+                                                    if each in chr_part:
+                                                        location = chr_list.index(chr_part)
+                                                        #print each, chr_list, location, zz[1].split(';')
+                                                        # a derivitive from q10 on will mean a full loss of the p arm
+                                                        other_arm = [a for a in arm_list if a!=arm][0]
+                                                        if arm + '10' in zz[1].split(';')[location]:
+                                                            add_to_d('del(' + each + other_arm + ')', cell_count, variation_start, variation_end)
+                                                        else:
+                                                            if arm in  zz[1].split(';')[location]:
+                                                                add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
+                                    '''
+                                    ## deletion of arms
+                                    elif z 'del' in z:
+                                        for each in all_chromosomes:  
+                                            for arm in arm_list:
+                                                if stripped_chr == each and arm in zz[1]:
+                                                    add_to_d('del(' + each + arm + ')', cell_count, variation_start, variation_end) 
+                                    '''
                                 ## isochromes - implicit deletion of p or q arms
-                                elif z == 'i' or z == '?i':                                    
+                                elif z == 'i' or z == '?i':
                                     for each in all_chromosomes:                                    
                                         if stripped_chr == each and 'p10' in zz[1]:
                                             add_to_d('del(' + each + 'q)', cell_count, variation_start, variation_end)
-                                        #for each in ['1','17','12','13']:
                                         if stripped_chr == each and 'q10' in zz[1]:                                           
                                             add_to_d('del(' + each + 'p)', cell_count, variation_start, variation_end)
-                                             
-                                ## additions in p and q arms
-                                elif 'add' in z:
-                                    for each in all_chromosomes:
-                                        for arm in ['q','p']:
-                                            if stripped_chr == each and arm in zz[1]:       
-                                                add_to_d('add(' + each + arm + ')', cell_count, variation_start, variation_end)
-                                   
+                                    '''
+                                    ## additions in p and q arms
+                                    elif 'add' in z:
+                                        for each in all_chromosomes:
+                                            for arm in arm_list:
+                                                if stripped_chr == each and arm in zz[1]:       
+                                                    add_to_d('add(' + each + arm + ')', cell_count, variation_start, variation_end)
+                                    '''   
                                 ## duplicataes, triplicates, and inversions and insertions
-                                elif z in ['dup','trp','inv','ins']:  
-                                    for each in coding_chr_group:
-                                        for arm in ['q','p']:
-                                            if stripped_chr == each and arm in zz[1]:
-                                                if z == 'ins': z = 'translocation'
-                                                add_to_d(z + '('+ each + arm + ')', cell_count, variation_start, variation_end)
-                               
-                                ## NOTE _ THIS SHOULD BE CHANGED TO MIN'S ENCODINGS FOR SIMPLICITY and NOT OVERLAPPING TYPES                                 
-                                ## any mutation involving 21q, 20q, 11q, 9q, 3q  - we want to capture things like t(3;3) but NOT -13
-                                ## also must make sure the 'q' is on the '11' arm - do not want to capture things like t(11;22)(p4;q20)
-                                '''
-                                come back to this - we should switch to mutually exclusive types of abnormalities - this double captures/counts some
-                                '''
-                                location = stripped_chr.split(';')
-                                arm = zz[1].split(';')                               
-                                    
-                                if 'q' in zz[1] or 'i' in z:
-                                    for each in ['3', '9', '11', '20', '21']:                                    
-                                        if each in location:                                       
-                                            if 'q' in arm[location.index(each)] or 'i' in z:  
-                                                add_to_d(each + 'q', cell_count, variation_start, variation_end)
-                                    
+                                elif z in ['dup','trp','inv','ins','del','add']:  
+                                    for arm in arm_list:
+                                        for each in all_chromosomes:
+                                            if each in other_chr_group and arm == 'p':
+                                                pass
+                                            else:                                        
+                                                if stripped_chr == each and arm in zz[1]:
+                                                    if z == 'ins': z = 'translocation'
+                                                    add_to_d(z + '('+ each + arm + ')', cell_count, variation_start, variation_end)
                                 
                     ## catch any other formatting abnormalities/parsing errors
                     except:
                         abnormalities[gb.WARNING] = True
                         x[gb.WARNING] = True
-                        print 'PARSING ERROR?', karyotype_string
-                        
+                                                
             ## there are no abnormalities - add up the "normal" cells
             elif x['Chromosome'] in ['XX','XY']:
                 add_to_d(gb.NORMAL, cell_count, cell_offset, cell_offset + 2)
