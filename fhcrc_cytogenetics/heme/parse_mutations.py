@@ -8,6 +8,7 @@
 import global_strings as gb
 import aml_swog_classification
 import eln_classification
+import re
 
 __version__='cytogenetics_mutation_parser1.0'
 
@@ -31,8 +32,6 @@ def get(cell_list, karyotype_string, karyo_offset):
     # and dup or trp(chr,arm) **ASK MIN ABOUT NAMING CONVENTION FOR GROUPS
     all_chromosomes = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14', \
         '15','16','17','18','19','20','21','22','X','Y']
-    coding_chr_group = ['1','2','3','4','5','6','7','8','9','10','11','12', \
-        '16','17','18','19','20','X','Y']
     other_chr_group = ['13','14','15','21','22']
     arm_list = ['p','q']
     ## a dictionary of mutation types and their cell counts
@@ -139,9 +138,8 @@ def get(cell_list, karyotype_string, karyo_offset):
                                                 chr_list = stripped_chr.split(';')
                                                 if each in chr_list:
                                                     location = chr_list.index(each)
-                                                    for arm in ['p','q']:
-                                                        if arm in zz[1].split(';')[location]:
-                                                            add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
+                                                    if arm in zz[1].split(';')[location]:
+                                                        add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
                                     
                                 # dicentric chromosome
                                 elif 'dic' in z:
@@ -177,14 +175,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                                                         else:
                                                             if arm in  zz[1].split(';')[location]:
                                                                 add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
-                                    '''
-                                    ## deletion of arms
-                                    elif z 'del' in z:
-                                        for each in all_chromosomes:  
-                                            for arm in arm_list:
-                                                if stripped_chr == each and arm in zz[1]:
-                                                    add_to_d('del(' + each + arm + ')', cell_count, variation_start, variation_end) 
-                                    '''
+
                                 ## isochromes - implicit deletion of p or q arms
                                 elif z == 'i' or z == '?i':
                                     for each in all_chromosomes:                                    
@@ -192,25 +183,20 @@ def get(cell_list, karyotype_string, karyo_offset):
                                             add_to_d('del(' + each + 'q)', cell_count, variation_start, variation_end)
                                         if stripped_chr == each and 'q10' in zz[1]:                                           
                                             add_to_d('del(' + each + 'p)', cell_count, variation_start, variation_end)
-                                    '''
-                                    ## additions in p and q arms
-                                    elif 'add' in z:
-                                        for each in all_chromosomes:
-                                            for arm in arm_list:
-                                                if stripped_chr == each and arm in zz[1]:       
-                                                    add_to_d('add(' + each + arm + ')', cell_count, variation_start, variation_end)
-                                    '''   
-                                ## duplicataes, triplicates, and inversions and insertions
-                                elif z in ['dup','trp','inv','ins','del','add']:  
-                                    for arm in arm_list:
-                                        for each in all_chromosomes:
-                                            if each in other_chr_group and arm == 'p':
-                                                pass
-                                            else:                                        
-                                                if stripped_chr == each and arm in zz[1]:
-                                                    if z == 'ins': z = 'translocation'
-                                                    add_to_d(z + '('+ each + arm + ')', cell_count, variation_start, variation_end)
-                                
+                                else:
+                                    ## re.search allows for variants with '?'
+                                    generic_abn_label = re.match('^.{0,5}(dup|trp|inv|ins|del|add).{0,5}$',z)
+                                    if generic_abn_label:                                        
+                                        label = generic_abn_label.group(1)                                        
+                                        for arm in arm_list:
+                                            for each in all_chromosomes:
+                                                if each in other_chr_group and arm == 'p':
+                                                    pass
+                                                else:                                        
+                                                    if stripped_chr == each and arm in zz[1]:
+                                                        if label == 'ins': label = 'translocation'                                                    
+                                                        add_to_d(label + '('+ each + arm + ')', cell_count, variation_start, variation_end)
+                                    
                     ## catch any other formatting abnormalities/parsing errors
                     except:
                         abnormalities[gb.WARNING] = True

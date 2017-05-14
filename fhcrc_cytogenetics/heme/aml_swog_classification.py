@@ -30,7 +30,8 @@ def get(mutation_dictionary, abnormality_set, offsets, cell_list):
             swog_dictionary[gb.STARTSTOPS] = [{gb.START:a[0], gb.STOP:a[1]} for a in offsets[each]]
     
     # INTERMEDIATE due to NORMAL karyotype will trump miscellaneous    
-    if (len(abnormality_set) == 0 and  mutation_dictionary[gb.WARNING] == 0 and mutation_dictionary[gb.NORMAL] >= 10) :        
+    if (len(abnormality_set) == 0 and  mutation_dictionary.get(gb.WARNING) == 0 \
+        and mutation_dictionary.get(gb.NORMAL) >= 10) :        
         swog_dictionary[gb.VALUE] = gb.INTERMEDIATE
         swog_dictionary[gb.STARTSTOPS] = [{gb.START:a[0], gb.STOP:a[1]} for a in offsets[gb.NORMAL]] 
     
