@@ -31,11 +31,11 @@ def get(cell_list, karyotype_string, karyo_offset):
     # translocation(chr,arm), -chr, add(chr,arm), del(chr,arm), inv(chr,arm),
     # and dup or trp(chr,arm) **ASK MIN ABOUT NAMING CONVENTION FOR GROUPS
     all_chromosomes = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14', \
-        '15','16','17','18','19','20','21','22','X','Y']
+        '16','17','18','19','20','21','22','X','Y']
     other_chr_group = ['13','14','15','21','22']
     arm_list = ['p','q']
-    specific_translocations = ['t(15;17)', 't(6;9)', 't(9;22)', 't(8;21)', 
-        't(16;16)','t(4;14)', 't(11;14)', 't(14;16)', 't(16;20)', 't(3;3)']
+    specific_translocations = ['15;17', '6;9', '14;16', '9;22','8;21', '16;16',
+        '4;14', '11;14', '16;20', '3;3']
     ## a dictionary of mutation types and their cell counts
     abnormalities = {}
     ## a dictionary of mutation types and their offsets - which will be stored as a list of tuples (start,stop)
@@ -123,12 +123,8 @@ def get(cell_list, karyotype_string, karyo_offset):
                                     abnormality_set.add(variation_string)
                                 # specific salient translocations
                                 if z == 't' or 'dic' in z:
-                                    for each in specific_translocations:
-                                        
-                                        if stripped_chr == each[2:-1]:
-                                            #if each in ['t(3;3)','t(16;16)','t(6;9)','()]:
-                                            #    print z, zz
-                                            add_to_d(each, cell_count, variation_start, variation_end)
+                                    if stripped_chr in specific_translocations:
+                                        add_to_d(stripped_chr, cell_count, variation_start, variation_end)\
                                     # general translocations involving p or q arms for encoding group
                                     # just q arm for the "other" chromosome group
                                     for arm in arm_list:
@@ -136,14 +132,14 @@ def get(cell_list, karyotype_string, karyo_offset):
                                             if each in other_chr_group and arm == 'p':
                                                 pass
                                             else:
-                                                if 'dic' in z: print z, zz
+                                                #if 'dic' in z: print z, zz
                                                 chr_list = stripped_chr.split(';')
                                                 if each in chr_list:
                                                     location = chr_list.index(each)
                                                     if arm in zz[1].split(';')[location]:
                                                         add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
                                    
-                                # derivative chromosomes 
+                                # derivative chromosomes (generally more complicated strings)
                                 elif 'der' in z:
                                     for arm in arm_list:
                                         for each in all_chromosomes:
@@ -151,9 +147,8 @@ def get(cell_list, karyotype_string, karyo_offset):
                                                 pass
                                             else:
                                                 chr_list = stripped_chr.split(';')                                        
-                                                # if the der involves another abnormality type
-                                                # this won't necessarily split two chromosomes cleanly 
-                                                # e.g.  ['12)t(12','15']
+                                                # if der involves other abnormality, won't necessarily 
+                                                #split chromosomes cleanly e.g.  ['12)t(12','15']
                                                 for chr_part in chr_list:
                                                     if each in chr_part:
                                                         location = chr_list.index(chr_part)                                                       
@@ -167,24 +162,24 @@ def get(cell_list, karyotype_string, karyo_offset):
 
                                 ## isochromes - implicit deletion of p or q arms
                                 elif z == 'i' or z == '?i':
-                                    for each in all_chromosomes:                                    
-                                        if stripped_chr == each and 'p10' in zz[1]:
+                                    if stripped_chr in all_chromosomes:
+                                        if 'p10' in zz[1]:
                                             add_to_d('del(' + each + 'q)', cell_count, variation_start, variation_end)
-                                        if stripped_chr == each and 'q10' in zz[1]:                                           
+                                        elif 'q10' in zz[1]:  
                                             add_to_d('del(' + each + 'p)', cell_count, variation_start, variation_end)
                                 else:
                                     ## re.search allows for variants with '?'
                                     generic_abn_label = re.match('^.{0,5}(dup|trp|inv|ins|del|add).{0,5}$',z)
-                                    if generic_abn_label:                                        
+                                    if generic_abn_label:
+                    
                                         label = generic_abn_label.group(1)                                        
                                         for arm in arm_list:
-                                            for each in all_chromosomes:
-                                                if each in other_chr_group and arm == 'p':
+                                            if stripped_chr in all_chromosomes and arm in zz[1]:    
+                                                if stripped_chr in other_chr_group and arm == 'p':                                                 
                                                     pass
                                                 else:                                        
-                                                    if stripped_chr == each and arm in zz[1]:
-                                                        if label == 'ins': label = 'translocation'                                                    
-                                                        add_to_d(label + '('+ each + arm + ')', cell_count, variation_start, variation_end)
+                                                    if label == 'ins': label = 'translocation'                                                    
+                                                    add_to_d(label + '('+ stripped_chr + arm + ')', cell_count, variation_start, variation_end)
                                     
                     ## catch any other formatting abnormalities/parsing errors
                     except:
@@ -223,5 +218,5 @@ def get(cell_list, karyotype_string, karyo_offset):
    
     
     return_dictionary_list.append(aml_swog_classification.get(abnormalities, abnormality_set, offsets, cell_list))
-    #return_dictionary_list.append(eln_classification.get(abnormalities, abnormality_set, offsets))
+    return_dictionary_list.append(eln_classification.get(abnormalities, abnormality_set, offsets, karyotype_string, karyo_offset))
     return return_dictionary_list, return_errors

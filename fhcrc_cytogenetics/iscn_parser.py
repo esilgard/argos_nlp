@@ -116,7 +116,7 @@ def get(karyotype_string, karyo_offset):
                             (abnormal_chromosome.group(1), abnormal_chromosome.group(2))}
                         else:                            
                             d[gb.WARNING] = True
-
+        
         ## warning flag for error finding cell count
         else:
             d[gb.WARNING] = True
