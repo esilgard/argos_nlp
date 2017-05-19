@@ -91,6 +91,8 @@ def get(cell_list, karyotype_string, karyo_offset):
                             if cell_count >= 2: 
                                 variation_start = cell_offset + \
                                 (karyotype_string[cell_offset-karyo_offset:].find(variation_string))
+                                # note - this does NOT capture character offsets correctly
+                                # for 'idem', 'sl', references 
                                 variation_end = variation_start + len(variation_string)  
                                 add_to_d(gb.MUTS, None, variation_start, variation_end)
                                 ## all trisomies
@@ -124,7 +126,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                                 # specific salient translocations
                                 if z == 't' or 'dic' in z:
                                     if stripped_chr in specific_translocations:
-                                        add_to_d(stripped_chr, cell_count, variation_start, variation_end)\
+                                        add_to_d('t(' + stripped_chr + ')', cell_count, variation_start, variation_end)\
                                     # general translocations involving p or q arms for encoding group
                                     # just q arm for the "other" chromosome group
                                     for arm in arm_list:

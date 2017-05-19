@@ -7,69 +7,63 @@
 # Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 #
 import global_strings as gb
+import re
 
 __version__='eln_classification1.0'
 
-def get(mutation_dictionary, abnormality_set, offsets, karyotype_string, karyo_offset):
+def get(abnormality_dictionary, abnormality_set, offsets, karyotype_string, karyo_offset):
     '''
     Assign ELN risk categories based on important mutations
     '''
    
     eln_dictionary = {gb.NAME:gb.ELN, gb.TABLE:gb.CYTOGENETICS,
-                       gb.VALUE:gb.UNKNOWN,gb.CONFIDENCE:1.0,
-                       gb.STARTSTOPS:[], gb.VERSION:__version__}
-   
-   
-    # classify FAVORABLE classified abnormalities
-    # if FAVORABLE abnormality found: stop (this trumps all others)
-    if 't(8;21)' in mutation_dictionary:
-        for off in offsets['t(8;21)']:
-            print off, '....', karyotype_string[off[0]-karyo_offset:off[1]-karyo_offset]#(q22;q22.1)
-    #inv(16)(p13.1q22)
-    #t(16;16)(p13.1;q22)  Emily’s program is good with this step
-    #t(15;17)
+                       gb.VALUE:gb.INTERMEDIATE,gb.CONFIDENCE:0.75,
+                       gb.STARTSTOPS:[], gb.VERSION:__version__, 'Rationale' : []}
+    classification_found = False
+    # NOTE *** right now there is not a specific enough check for arm locations
+    # relative to the chromosome location in string (could over capture for 
+    # complex 3-4 chromosome abnormalities)
+    favorable_abns = {'t(8;21)':'q22[\d]?;q22','inv(16p)':'p13[\d]?q22',
+        't(16;16)':'p13[\d]?;q22', 't(15;17)':''}
+    unfavorable_abns = {'t(6;9)':'p23[\d]?;q34','t(9;22)':'q34[\d]?;q11.2',
+        'inv(3)':'q21[\d]?q26', 't(3;3)':'q21[\d]?;q26', '-7':'', '-17':'', '-5':'',
+        'del(5q)':'', 'translocation(17p)':'', 'inv(17p)':'','dup(17p)':'', 
+        'trp(17p)':'', 'del(17p)':'', 'add(17p)':'', 'del(7q)':'', 'add(5q)':'',
+        'translocation(11q)':'q23[\d]?'}
 
+    # if FAVORABLE abnormality found: stop (this trumps all others)
+    for fav_abn in set(favorable_abns.keys()).intersection(set(abnormality_dictionary.keys())):
+        for off in offsets[fav_abn]:
+            if re.search(favorable_abns[fav_abn],karyotype_string[off[0]-karyo_offset:off[1]-karyo_offset]):
+                classification_found = True
+                eln_dictionary[gb.VALUE] = gb.FAVORABLE        
+                eln_dictionary[gb.STARTSTOPS] = [{gb.START:a[0], gb.STOP:a[1]} for a in offsets[fav_abn]]
+                eln_dictionary['Rationale'].append(karyotype_string[off[0]-karyo_offset:off[1]-karyo_offset])
     
     # if not favorable, classify unfavorable abnormalites
-    # !!! need to add in "any 17p"
-    for each in [gb.CMPX_TYPE, gb.MONO_TYPE, '-7','-17','-5','del(5q)']:
-        if each in mutation_dictionary and mutation_dictionary[each] > 1:
-            if offsets[each]:
-                #print each, 'HIT',
-                for off in offsets[each]:
+    if not classification_found:
+        for unfav_abn in set(unfavorable_abns.keys()).intersection(set(abnormality_dictionary.keys())):            
+            for off in offsets[unfav_abn]:
+                abn_str = karyotype_string[off[0]-karyo_offset:off[1]-karyo_offset]
+                # any translocation EXCEPT a 9;11 will count
+                if unfav_abn == 'translocation(11q)' and '9;11' in abn_str:
                     pass
-                    #print off, '....', karyotype_string[off[0]-karyo_offset:off[1]-karyo_offset]
-            else:
-                print each, 'HIT'
-            eln_dictionary[gb.VALUE] = gb.UNFAVORABLE        
-            eln_dictionary[gb.STARTSTOPS] = [{gb.START:a[0], gb.STOP:a[1]} for a in offsets[each]] 
-    ## UNFAVORABLE string search for t(6;9)(p23;q34.1); t(v;11(q23.3) ; 
-    ## t(9;22)(q34.1;q11.2); inv(3)(q21.3;q26.2) ; t(3;3)(q21.3;q26.2)
+                elif re.search(unfavorable_abns[unfav_abn], abn_str): 
+                    classification_found = True
+                    eln_dictionary[gb.VALUE] = gb.UNFAVORABLE        
+                    eln_dictionary[gb.STARTSTOPS] = [{gb.START:a[0], gb.STOP:a[1]} for a in offsets[unfav_abn]]
+                    eln_dictionary['Rationale'].append(karyotype_string[off[0]-karyo_offset:off[1]-karyo_offset])
+                    
+        # UNFAVORABLE for complex and monosomal karyotypes 
+        # (there are not currently offsets associated with these fields)
+        if abnormality_dictionary[gb.CMPX_TYPE] > 0 \
+            or abnormality_dictionary[gb.MONO_TYPE] > 0:
+                eln_dictionary[gb.VALUE] = gb.UNFAVORABLE
+                classification_found = True
+                eln_dictionary['Rationale'].append('Complex Or Monosomal Karyotype')
     
-    # othewise, classify intermediate risk  
-    if 't(9;11)(p21.3;q23.3)' in abnormality_set:
-        eln_dictionary[gb.VALUE] = gb.INTERMEDIATE
-        # REFER TO CELL LIST FOR ABNORMALITIES START STOP? OR PASS STRING
-        #eln_dictionary[gb.STARTSTOPS] = [{gb.START:karyotype_string.find('t(9;11)(p21.3;q23.3)')
-        #, gb.STOP:a[1]} for a in offsets[kar]]
-
-     # not all ELN risk categories return a list of character offsets, 
-    # since some classifications rely on the ABSENCE of some given evidence
-    
-    # any kind of abnormality that is not specifically outlined in ELN criteria -> INTERMEDIATE  
-    if len(abnormality_set) >= 1:
-        eln_dictionary[gb.VALUE] = gb.INTERMEDIATE
-    if len(abnormality_set) == 0:
-        eln_dictionary[gb.VALUE] = gb.INTERMEDIATE
-        eln_dictionary[gb.STARTSTOPS] = [{gb.START:a[0], gb.STOP:a[1]} for a in offsets[gb.NORMAL]]
-    
-    
-    #if the patient had fewer than 10 cells sampled, and no parsing errors encountering a cell count, then they are "INSUFFICIENT"
-    try: 
-        if  sum([int(x[gb.CELL_COUNT]) for x in  cell_list])<10:                      
-            eln_dictionary[gb.VALUE] = gb.INSUFFICIENT
-    except:
-        mutation_dictionary[gb.WARNING] = True
-    if  mutation_dictionary[gb.WARNING] == True:
-        eln_dictionary[gb.VALUE] = gb.UNKNOWN
+    # insufficient cells or all other abnormalities will default to "INTERMEDIATE"
+    if not classification_found:
+        eln_dictionary['Rationale'].append('Insufficient Cells, Normal Karyotype, or Other Abnormalities')
+    #print eln_dictionary[gb.VALUE], '=', eln_dictionary['Rationale']
     return eln_dictionary
