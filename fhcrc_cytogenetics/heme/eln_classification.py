@@ -65,5 +65,5 @@ def get(abnormality_dictionary, abnormality_set, offsets, karyotype_string, kary
     # insufficient cells or all other abnormalities will default to "INTERMEDIATE"
     if not classification_found:
         eln_dictionary['Rationale'].append('Insufficient Cells, Normal Karyotype, or Other Abnormalities')
-    #print eln_dictionary[gb.VALUE], '=', eln_dictionary['Rationale']
+    
     return eln_dictionary

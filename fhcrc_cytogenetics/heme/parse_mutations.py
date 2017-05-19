@@ -55,34 +55,37 @@ def get(cell_list, karyotype_string, karyo_offset):
         offsets[abnormality] = offsets.get(abnormality, [])
         offsets[abnormality].append((variation_start, variation_end)) 
         
-    # used to track unique abnormalities
-    abnormality_set = set([])
-    monosomy_set = set([])
-    other_structural_abnormalities_set = set([])
-    trisomy_set = set([])
+    all_monosomy_set = set([])
+    all_trisomy_set = set([])
+    all_abnormality_set = set([])
     ###########################################################################
-    abnormalities[gb.HYPER] = False; offsets[gb.HYPER] = []
-    abnormalities[gb.HYPO] = False; offsets[gb.HYPO] = []
+    
+    abnormalities[gb.WARNING] = False; offsets[gb.WARNING] = []
+    abnormalities[gb.HYPERDU] = False; offsets[gb.HYPERDU] = []
+    abnormalities[gb.HYPODU] = False; offsets[gb.HYPODU] = []
     abnormalities[gb.MONO_TYPE] = False; offsets[gb.MONO_TYPE] = []
     abnormalities[gb.CMPX_TYPE] = False; offsets[gb.CMPX_TYPE] = []
-    abnormalities[gb.WARNING] = False; offsets[gb.WARNING] = []
-    
     ## start by counting cells with each type of pertinent aberration      
     for x in cell_list:         
         if x[gb.WARNING]:
             abnormalities[gb.WARNING] = True            
         try:
+            # used to track unique abnormalities
+            abnormality_set = set([])
+            monosomy_set = set([])
+            other_structural_abnormalities_set = set([])
+            
             cell_count = x[gb.CELL_COUNT]           
             cell_offset = x['Offset']
             ## NOTE - this only gets the lower limit of cells in cases of "43-47"
             chromosome_number = int(x['ChromosomeNumber'][:2])
             ## hyperploidy and hypoploidy - ASK MIN ABOUT THIS LOGIC
-            if chromosome_number < 45: # and cell_count >= clone_minimum: 
-                add_to_d(gb.HYPO, None, cell_offset, cell_offset+2)
-            if chromosome_number > 47: # and cell_count >= clone_minimum:
-                add_to_d(gb.HYPER, None, cell_offset, cell_offset+2)
-
+            if chromosome_number < 46: # and cell_count >= clone_minimum: 
+                add_to_d(gb.HYPODU, None, cell_offset, cell_offset+2)
+            if chromosome_number > 46: # and cell_count >= clone_minimum:
+                add_to_d(gb.HYPERDU, None, cell_offset, cell_offset+2)
             if x[gb.ABNORMALITIES]:               
+                
                 for y in x[gb.ABNORMALITIES]:
                     try:  
                         for z, zz in y.items():                            
@@ -94,15 +97,16 @@ def get(cell_list, karyotype_string, karyo_offset):
                                 # note - this does NOT capture character offsets correctly
                                 # for 'idem', 'sl', references 
                                 variation_end = variation_start + len(variation_string)  
-                                add_to_d(gb.MUTS, None, variation_start, variation_end)
+                                add_to_d(gb.MUTS, 1, variation_start, variation_end)
                                 ## all trisomies
                                 if z in ['+','-']:
-                                    abnormality_set.add(variation_string) 
+                                    all_abnormality_set.add(variation_string) 
+                                    abnormality_set.add(variation_string)
                                     if z == '+':
                                         try:
                                             # only add in "full" trisomies
                                             int(stripped_chr)
-                                            trisomy_set.add(variation_string)
+                                            all_trisomy_set.add(variation_string)
                                             add_to_d(gb.TRIS, 1, variation_start, variation_end)
                                         except:
                                             pass                                    
@@ -114,15 +118,18 @@ def get(cell_list, karyotype_string, karyo_offset):
                                         # monosomal karyotype classification
                                         if stripped_chr not in ['X','Y']:
                                             monosomy_set.add(variation_string)
+                                            all_monosomy_set.add(variation_string)
                                             add_to_d(gb.MONOS, 1, variation_start, variation_end)
                                         if stripped_chr in all_chromosomes:   
                                             add_to_d('-' + stripped_chr, cell_count, variation_start, variation_end)
                                     # track other structural abnormalities for 
                                     # monosomal karyotype classificaiton
                                 else:
-                                    if z not in ['r','mar','add']:
+                                    if z not in ['r','mar','+ma','+mar','add']:
                                         other_structural_abnormalities_set.add(variation_string) 
-                                    abnormality_set.add(variation_string)
+                                    all_abnormality_set.add(variation_string) 
+                                    if z not in['mar','+ma','+mar']:
+                                        abnormality_set.add(variation_string)
                                 # specific salient translocations
                                 if z == 't' or 'dic' in z:
                                     if stripped_chr in specific_translocations:
@@ -193,20 +200,17 @@ def get(cell_list, karyotype_string, karyo_offset):
             else:
                 ## other sec chromosome abnormalities
                 add_to_d(gb.SEX_CHRM_ABN, cell_count, cell_offset, cell_offset + len(x['Chromosome']))
-
-         ## catch trouble with cell counts etc       
+            ## complex and monosomal karyotype classifications (no char offsets currently)
+            if len(abnormality_set) > 2:
+                abnormalities[gb.CMPX_TYPE] = True
+            if len(monosomy_set) > 1 or (len(monosomy_set) == 1 and \
+                len(other_structural_abnormalities_set)) > 0:
+                abnormalities[gb.MONO_TYPE] = True            
+        ## catch trouble with cell counts etc       
         except:
             abnormalities[gb.WARNING] = True; x[gb.WARNING] = True   
                       
-    abnormalities[gb.MUTS] = len(abnormality_set)    
-    abnormalities[gb.MONOS] = len(monosomy_set)
-    abnormalities[gb.TRIS] = len(trisomy_set)
-    ## complex and monosomal karyotype classifications (no char offsets currently)
-    if len(abnormality_set) > 2:
-        abnormalities[gb.CMPX_TYPE] = True
-    if len(monosomy_set) > 1 or (len(monosomy_set) == 1 and \
-        len(other_structural_abnormalities_set)) > 0:
-        abnormalities[gb.MONO_TYPE] = True
+
     #append all abnormality info to return_list
     for each_variation in abnormalities:
         confidence = 0.95

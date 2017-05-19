@@ -117,7 +117,6 @@ def main(arguments):
     ## create a list of output field dictionaries ##
     for mrn in cytogenetics_d:
         for acc in cytogenetics_d[mrn]:
-            #print acc
             ## write out cannonical version of text and tsv file            
             try:
                 with open(arguments.get('-f')[:arguments.get('-f').find('.nlp')] + \
