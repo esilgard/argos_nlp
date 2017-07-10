@@ -26,7 +26,7 @@ def get(karyotype_string, karyo_offset):
         d[gb.ABNORMALITIES] = []
         d[gb.POLY] = False
         d[gb.CELL_ORDER] = cell_type_order
-        cell_count = re.match(r'.*(\[c?C?p?P?([\d ]+)\]).*', each_cell_type)
+        cell_count = re.match(r'.*(\[ ?c?C?p?P? ?([\d ]+)\]).*', each_cell_type)
         if cell_count:
             try:
                 # strip off any trailing whitespace or "compositite" and cast as int
@@ -90,7 +90,8 @@ def get(karyotype_string, karyo_offset):
                         d[gb.WARNING] = True
 
             ## parse abnormalities into dictionaries of type of abnormality: (num/further abn type, arm loc)
-            for i in range(len(d[gb.ABNORMALITIES])):                
+            for i in range(len(d[gb.ABNORMALITIES])):  
+                #print d[gb.ABNORMALITIES][i]
                 if isinstance(d[gb.ABNORMALITIES][i], str):
                     # first group is the general type of abnormality 
                     # second group is the affected chromosome (sometimes involving a more complicated type of abnormality)                    
@@ -116,7 +117,7 @@ def get(karyotype_string, karyo_offset):
                             (abnormal_chromosome.group(1), abnormal_chromosome.group(2))}
                         else:                            
                             d[gb.WARNING] = True
-        
+                
         ## warning flag for error finding cell count
         else:
             d[gb.WARNING] = True
@@ -126,4 +127,4 @@ def get(karyotype_string, karyo_offset):
 
 
 if __name__ == '__main__':
-    get('39-44,XY,-5,add(5)(q11.2),add(11)(p11.2),?del(13)(qq12q14),-15,add(15)(p11.2),der(17)t(15;17)(q11.2; p11.2),-19,-21,i(21)(q10),-22,+1~3mar,1dmin,inc[cp6]/46,XY[14]', 0)
+    get('42-43,XY,t(2;12)(q23;q15),-5,add(5)(q11.2),add(6)(p23),-9,add(11)(p11.2),der(11)t(9;11)(q12;p11.2),a dd(13)(p12),-15,add(15)(p12),add(15)(p12),der(17)t(15;17) (q11.2;p11.2),-19,add(19)(p13.1),del(19)(p 13.1),-21,i(21)(q10),-22,+1-3mar,1-2dmin[cp19]/46,XY[1]', 0)

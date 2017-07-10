@@ -85,10 +85,11 @@ def get(cell_list, karyotype_string, karyo_offset):
             if x[gb.ABNORMALITIES]:               
                 for y in x[gb.ABNORMALITIES]:
                     try:  
-                        for z, zz in y.items():  
-                            #print cell_count, z, zz
+                        for z, zz in y.items(): 
+                            
                             variation_string = z + zz[0] + zz[1]
                             stripped_chr = zz[0].strip('(').strip(')')
+                            #print cell_count, z, zz, '....', stripped_chr
                             if cell_count >= 2: 
                                 variation_start = cell_offset + \
                                 (karyotype_string[cell_offset-karyo_offset:].find(variation_string))
@@ -98,32 +99,33 @@ def get(cell_list, karyotype_string, karyo_offset):
                                 add_to_d(gb.MUTS, None, variation_start, variation_end)
                                 ## all trisomies
                                 if z in ['+','-']:
-                                    abnormality_set.add(variation_string) 
-                                    if z == '+':
-                                        try:
-                                            # only add in "full" trisomies
-                                            int(stripped_chr)
-                                            trisomy_set.add(variation_string)
-                                            add_to_d(gb.TRIS, 1, variation_start, variation_end)
-                                        except:
-                                            pass                                    
-                                        if stripped_chr in all_chromosomes:  
-                                            add_to_d('+' + stripped_chr, cell_count, variation_start, variation_end)
-                                    ## all monosomies                            
-                                    elif z == '-' and cell_count >= 3:                                    
-                                        # track only autosomal monosomies for 
-                                        # monosomal karyotype classification
-                                        if stripped_chr not in ['X','Y']:
+                                    if re.search('[0-9]',variation_string):
+                                        abnormality_set.add(variation_string) 
+                                        if z == '+':
+                                            try:
+                                                # only add in "full" trisomies
+                                                int(stripped_chr)
+                                                trisomy_set.add(variation_string)
+                                                add_to_d(gb.TRIS, 1, variation_start, variation_end)
+                                            except:
+                                                pass                                    
+                                            if stripped_chr in all_chromosomes:  
+                                                add_to_d('+' + stripped_chr, cell_count, variation_start, variation_end)
+                                        ## all monosomies                            
+                                        elif z == '-' and cell_count >= 3:                                    
+                                            # track only autosomal monosomies for 
+                                            # monosomal karyotype classification
                                             monosomy_set.add(variation_string)
                                             add_to_d(gb.MONOS, 1, variation_start, variation_end)
-                                        if stripped_chr in all_chromosomes:   
-                                            add_to_d('-' + stripped_chr, cell_count, variation_start, variation_end)
+                                            if stripped_chr in all_chromosomes:   
+                                                add_to_d('-' + stripped_chr, cell_count, variation_start, variation_end)
                                     # track other structural abnormalities for 
                                     # monosomal karyotype classificaiton
                                 else:
                                     if z not in ['r','mar','add']:
                                         other_structural_abnormalities_set.add(variation_string) 
-                                    abnormality_set.add(variation_string)
+                                    if re.search('[0-9]',variation_string):
+                                        abnormality_set.add(variation_string)
                                 # specific salient translocations
                                 if z == 't' or z == '?t' or 'dic' in z:
                                     if stripped_chr in specific_translocations:
@@ -134,8 +136,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                                         for each in all_chromosomes:
                                             if each in other_chr_group and arm == 'p':
                                                 pass
-                                            else:
-                                                #if 'dic' in z: print z, zz
+                                            else:                                                
                                                 chr_list = stripped_chr.split(';')
                                                 if each in chr_list:
                                                     location = chr_list.index(each)
@@ -143,17 +144,17 @@ def get(cell_list, karyotype_string, karyo_offset):
                                                         add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
                                                         
                                 # derivative chromosomes (generally more complicated strings)
-                                elif 'der' in z:
+                                elif 'der' in z:     
                                     for arm in arm_list:
                                         for each in all_chromosomes:
                                             if each in other_chr_group and arm == 'p':
                                                 pass
                                             else:
-                                                chr_list = stripped_chr.split(';')                                        
+                                                chr_list = stripped_chr.split(';')                                               
                                                 # if der involves other abnormality, won't necessarily 
                                                 #split chromosomes cleanly e.g.  ['12)t(12','15']
                                                 for chr_part in chr_list:
-                                                    if each in chr_part:
+                                                    if  each in chr_part and not re.search('([0-9]' + each + ')|(' + each + '[0-9])', chr_part):
                                                         location = chr_list.index(chr_part)                                                       
                                                         # a derivitive from q10 on will mean a full loss of the p arm
                                                         other_arm = [a for a in arm_list if a!=arm][0]
@@ -162,7 +163,6 @@ def get(cell_list, karyotype_string, karyo_offset):
                                                         else:
                                                             if arm in  zz[1].split(';')[location]:
                                                                 add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
-
                                 ## isochromes - implicit deletion of p or q arms
                                 elif z == 'i' or z == '?i':
                                     if stripped_chr in all_chromosomes:
@@ -223,5 +223,4 @@ def get(cell_list, karyotype_string, karyo_offset):
     
     return_dictionary_list.append(aml_swog_classification.get(abnormalities, abnormality_set, offsets, cell_list))
     return_dictionary_list.append(eln_classification.get(abnormalities, abnormality_set, offsets, karyotype_string, karyo_offset))
-
     return return_dictionary_list, return_errors
