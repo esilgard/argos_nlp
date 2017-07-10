@@ -81,11 +81,12 @@ def get(cell_list, karyotype_string, karyo_offset):
                 add_to_d(gb.HYPO, None, cell_offset, cell_offset+2)
             if chromosome_number > 47: # and cell_count >= clone_minimum:
                 add_to_d(gb.HYPER, None, cell_offset, cell_offset+2)
-
+          
             if x[gb.ABNORMALITIES]:               
                 for y in x[gb.ABNORMALITIES]:
                     try:  
-                        for z, zz in y.items():                            
+                        for z, zz in y.items():  
+                            #print cell_count, z, zz
                             variation_string = z + zz[0] + zz[1]
                             stripped_chr = zz[0].strip('(').strip(')')
                             if cell_count >= 2: 
@@ -124,7 +125,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                                         other_structural_abnormalities_set.add(variation_string) 
                                     abnormality_set.add(variation_string)
                                 # specific salient translocations
-                                if z == 't' or 'dic' in z:
+                                if z == 't' or z == '?t' or 'dic' in z:
                                     if stripped_chr in specific_translocations:
                                         add_to_d('t(' + stripped_chr + ')', cell_count, variation_start, variation_end)\
                                     # general translocations involving p or q arms for encoding group
@@ -140,7 +141,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                                                     location = chr_list.index(each)
                                                     if arm in zz[1].split(';')[location]:
                                                         add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
-                                   
+                                                        
                                 # derivative chromosomes (generally more complicated strings)
                                 elif 'der' in z:
                                     for arm in arm_list:
@@ -166,14 +167,15 @@ def get(cell_list, karyotype_string, karyo_offset):
                                 elif z == 'i' or z == '?i':
                                     if stripped_chr in all_chromosomes:
                                         if 'p10' in zz[1]:
-                                            add_to_d('del(' + each + 'q)', cell_count, variation_start, variation_end)
+                                            add_to_d('del(' + stripped_chr + 'q)', cell_count, variation_start, variation_end)
+                                            add_to_d('dup(' + stripped_chr + 'p)', cell_count, variation_start, variation_end)
                                         elif 'q10' in zz[1]:  
-                                            add_to_d('del(' + each + 'p)', cell_count, variation_start, variation_end)
+                                            add_to_d('del(' + stripped_chr + 'p)', cell_count, variation_start, variation_end)
+                                            add_to_d('dup(' + stripped_chr + 'q)', cell_count, variation_start, variation_end)
                                 else:
                                     ## re.search allows for variants with '?'
                                     generic_abn_label = re.match('^.{0,5}(dup|trp|inv|ins|del|add).{0,5}$',z)
-                                    if generic_abn_label:
-                    
+                                    if generic_abn_label:                    
                                         label = generic_abn_label.group(1)                                        
                                         for arm in arm_list:
                                             if stripped_chr in all_chromosomes and arm in zz[1]:    
@@ -221,4 +223,5 @@ def get(cell_list, karyotype_string, karyo_offset):
     
     return_dictionary_list.append(aml_swog_classification.get(abnormalities, abnormality_set, offsets, cell_list))
     return_dictionary_list.append(eln_classification.get(abnormalities, abnormality_set, offsets, karyotype_string, karyo_offset))
+
     return return_dictionary_list, return_errors
