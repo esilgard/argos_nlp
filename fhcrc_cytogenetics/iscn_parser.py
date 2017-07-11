@@ -69,6 +69,8 @@ def get(karyotype_string, karyo_offset):
                     except ValueError:
                         d[gb.WARNING] = True
                         d[gb.CHROMOSOME] = 'UNK'
+                    # reference original abnormality string with offsets
+                    d[gb.REF_OFF] = return_list[0][gb.OFFSET]
                     d[gb.ABNORMALITIES] += return_list[0][gb.ABNORMALITIES]
 
                 ## catch this typo - where the XX and XY is included in the idem/sl reference
@@ -76,13 +78,16 @@ def get(karyotype_string, karyo_offset):
                 elif (d[gb.ABNORMALITIES][0] == 'sl' or 'idem' in d[gb.ABNORMALITIES][0])\
                 and len(seperate_cell_types) > 1:
                     d[gb.ABNORMALITIES] = return_list[0][gb.ABNORMALITIES] + d[gb.ABNORMALITIES][1:]
+                    d[gb.REF_OFF] = return_list[0][gb.OFFSET]
                 ## when sdl is used to refer back to sl
                 elif d[gb.CHROMOSOME] == 'sdl' and len(seperate_cell_types) > 2:
+                    d[gb.REF_OFF] = return_list[1][gb.REF_OFF]
                     d[gb.CHROMOSOME] = return_list[1][gb.CHROMOSOME]
                     d[gb.ABNORMALITIES] += return_list[1][gb.ABNORMALITIES]
                 ## catch the specific cell line references like sdl1 or sdl2 ##
                 elif 'sdl' in d[gb.CHROMOSOME]:
                     try:
+                        d[gb.REF_OFF] = return_list[cell_type_order-1][gb.REF_OFF]
                         d[gb.CHROMOSOME] = return_list[cell_type_order-1][gb.CHROMOSOME]
                         d[gb.ABNORMALITIES] = return_list[cell_type_order-1][gb.ABNORMALITIES]\
                         + d[gb.ABNORMALITIES]
@@ -127,4 +132,4 @@ def get(karyotype_string, karyo_offset):
 
 
 if __name__ == '__main__':
-    get('42-43,XY,t(2;12)(q23;q15),-5,add(5)(q11.2),add(6)(p23),-9,add(11)(p11.2),der(11)t(9;11)(q12;p11.2),a dd(13)(p12),-15,add(15)(p12),add(15)(p12),der(17)t(15;17) (q11.2;p11.2),-19,add(19)(p13.1),del(19)(p 13.1),-21,i(21)(q10),-22,+1-3mar,1-2dmin[cp19]/46,XY[1]', 0)
+    get('46,XX,inv(16)(p13.1q22),der(17)t(11;17)(q13;p11.2)[1]/47,sl,+8[5]/46,XX[14]', 0)

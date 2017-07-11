@@ -68,12 +68,12 @@ def get(cell_list, karyotype_string, karyo_offset):
     abnormalities[gb.WARNING] = False; offsets[gb.WARNING] = []
     
     ## start by counting cells with each type of pertinent aberration      
-    for x in cell_list:         
+    for x in cell_list:  
         if x[gb.WARNING]:
             abnormalities[gb.WARNING] = True            
         try:
-            cell_count = x[gb.CELL_COUNT]           
-            cell_offset = x['Offset']
+            cell_count = x[gb.CELL_COUNT]     
+            cell_offset = x[gb.OFFSET]
             ## NOTE - this only gets the lower limit of cells in cases of "43-47"
             chromosome_number = int(x['ChromosomeNumber'][:2])
             ## hyperploidy and hypoploidy - ASK MIN ABOUT THIS LOGIC
@@ -82,20 +82,23 @@ def get(cell_list, karyotype_string, karyo_offset):
             if chromosome_number > 47: # and cell_count >= clone_minimum:
                 add_to_d(gb.HYPER, None, cell_offset, cell_offset+2)
           
-            if x[gb.ABNORMALITIES]:               
+            if x[gb.ABNORMALITIES]:  
                 for y in x[gb.ABNORMALITIES]:
                     try:  
                         for z, zz in y.items(): 
-                            
                             variation_string = z + zz[0] + zz[1]
                             stripped_chr = zz[0].strip('(').strip(')')
-                            #print cell_count, z, zz, '....', stripped_chr
                             if cell_count >= 2: 
                                 variation_start = cell_offset + \
-                                (karyotype_string[cell_offset-karyo_offset:].find(variation_string))
-                                # note - this does NOT capture character offsets correctly
-                                # for 'idem', 'sl', references 
+                                (karyotype_string[cell_offset-karyo_offset:].find(variation_string))                                 
                                 variation_end = variation_start + len(variation_string)  
+                                # capture offsets for 'idem' and 'sl' references
+                                # but only for the non novel abnormalities in the cell line
+                                # NOTE - could also add in the extra cell counts here
+                                if x[gb.REF_OFF] and variation_string not in karyotype_string[cell_offset-karyo_offset:]:
+                                    variation_start = x[gb.REF_OFF] + \
+                                    (karyotype_string[x[gb.REF_OFF]-karyo_offset:].find(variation_string))
+                                    variation_end = variation_start + len(variation_string)                            
                                 add_to_d(gb.MUTS, None, variation_start, variation_end)
                                 ## all trisomies
                                 if z in ['+','-']:
