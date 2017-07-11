@@ -105,7 +105,7 @@ def get(karyotype_string, karyo_offset):
                     copy = re.match('[xX][\d]', d[gb.ABNORMALITIES][i][-2:])                    
                     if loss_gain:   
                         # this group is the p and or q arm location (if there is one)
-                        arm_location = re.match('.*([\(][pq][pq;\?\d\.]+[\)])',loss_gain.group(0))
+                        arm_location = re.match('.*([\(][\?pq]+[pq;\?\d\.]+[\)])',loss_gain.group(0))
                         if arm_location:
                             chromosomes = loss_gain.group(2)[:loss_gain.group(2).find(arm_location.group(1))]
                             d[gb.ABNORMALITIES][i] = {loss_gain.group(1): (chromosomes, arm_location.group(1))}                            
@@ -130,6 +130,6 @@ def get(karyotype_string, karyo_offset):
         cell_type_order += 1
     return return_list, None, list
 
-
+    
 if __name__ == '__main__':
-    get('46,XX,inv(16)(p13.1q22),der(17)t(11;17)(q13;p11.2)[1]/47,sl,+8[5]/46,XX[14]', 0)
+    get('46,XX,del(5)(q15q33),-7,add(11)(q22),der(17)t(1;17)(?p22;?p11.2),del(18)(q21),+r[18]/46,XX[2]', 0)

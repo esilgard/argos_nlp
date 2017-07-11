@@ -31,7 +31,6 @@ def get(abnormality_dictionary, abnormality_set, offsets, karyotype_string, kary
         'trp(17p)':'', 'del(17p)':'', 'add(17p)':'', 'del(7q)':'', 'add(5q)':'',
         'translocation(11q)':'q23[\.\d]*'}
     
-    
     # if FAVORABLE abnormality found: stop (this trumps all others)
     for fav_abn in set(favorable_abns.keys()).intersection(set(abnormality_dictionary.keys())):
         for off in offsets[fav_abn]:
@@ -68,4 +67,5 @@ def get(abnormality_dictionary, abnormality_set, offsets, karyotype_string, kary
     if not classification_found:
         eln_dictionary['Rationale'].append('Insufficient Cells, Normal Karyotype, or Other Abnormalities')
     eln_dictionary['Rationale'] = list(set(eln_dictionary['Rationale']))
+
     return eln_dictionary

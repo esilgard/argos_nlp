@@ -94,13 +94,13 @@ def get(cell_list, karyotype_string, karyo_offset):
                                 variation_end = variation_start + len(variation_string)  
                                 # capture offsets for 'idem' and 'sl' references
                                 # but only for the non novel abnormalities in the cell line
-                                # NOTE - could also add in the extra cell counts here
-                                if x[gb.REF_OFF] and variation_string not in karyotype_string[cell_offset-karyo_offset:]:
+                                # NOTE - could also add in the extra cell counts here                               
+                                if x.get(gb.REF_OFF) and variation_string not in karyotype_string[cell_offset-karyo_offset:]:
                                     variation_start = x[gb.REF_OFF] + \
                                     (karyotype_string[x[gb.REF_OFF]-karyo_offset:].find(variation_string))
-                                    variation_end = variation_start + len(variation_string)                            
+                                    variation_end = variation_start + len(variation_string)     
                                 add_to_d(gb.MUTS, None, variation_start, variation_end)
-                                ## all trisomies
+                                ## all trisomies and monosomies
                                 if z in ['+','-']:
                                     if re.search('[0-9]',variation_string):
                                         abnormality_set.add(variation_string) 
@@ -122,8 +122,8 @@ def get(cell_list, karyotype_string, karyo_offset):
                                             add_to_d(gb.MONOS, 1, variation_start, variation_end)
                                             if stripped_chr in all_chromosomes:   
                                                 add_to_d('-' + stripped_chr, cell_count, variation_start, variation_end)
-                                    # track other structural abnormalities for 
-                                    # monosomal karyotype classificaiton
+                                # track other structural abnormalities for 
+                                # monosomal karyotype classificaiton
                                 else:
                                     if z not in ['r','mar','add']:
                                         other_structural_abnormalities_set.add(variation_string) 
@@ -147,7 +147,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                                                         add_to_d('translocation(' + each + arm + ')', cell_count, variation_start, variation_end)
                                                         
                                 # derivative chromosomes (generally more complicated strings)
-                                elif 'der' in z:     
+                                elif 'der' in z:
                                     for arm in arm_list:
                                         for each in all_chromosomes:
                                             if each in other_chr_group and arm == 'p':
