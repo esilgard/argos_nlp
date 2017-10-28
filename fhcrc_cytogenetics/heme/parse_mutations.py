@@ -8,9 +8,14 @@
 import global_strings as gb
 import aml_swog_classification
 import eln_classification
+import dri_classification
 import re
 
 __version__='cytogenetics_mutation_parser1.0'
+
+# minimums for clonality check - default to 2 and 3 for monosomies
+min_abn = 0
+min_mono = 0
 
 def get(cell_list, karyotype_string, karyo_offset):
 
@@ -90,7 +95,8 @@ def get(cell_list, karyotype_string, karyo_offset):
                         for z, zz in y.items():                            
                             variation_string = z + zz[0] + zz[1]
                             stripped_chr = zz[0].strip('(').strip(')')
-                            if cell_count >= 2:
+                            
+                            if cell_count >= min_abn:
                                 variation_start = cell_offset + \
                                 (karyotype_string[cell_offset-karyo_offset:].find(variation_string))
                                 # note - this does NOT capture character offsets correctly
@@ -112,7 +118,7 @@ def get(cell_list, karyotype_string, karyo_offset):
                                         if stripped_chr in all_chromosomes:  
                                             add_to_d('+' + stripped_chr, cell_count, variation_start, variation_end)
                                     ## all monosomies                            
-                                    elif z == '-' and cell_count >= 3:                                    
+                                    elif z == '-' and cell_count >= min_mono:                                    
                                         # track only autosomal monosomies for 
                                         # monosomal karyotype classification
                                         if stripped_chr not in ['X','Y']:
@@ -224,4 +230,6 @@ def get(cell_list, karyotype_string, karyo_offset):
     
     return_dictionary_list.append(aml_swog_classification.get(abnormalities, abnormality_set, offsets, cell_list))
     return_dictionary_list.append(eln_classification.get(abnormalities, abnormality_set, offsets, karyotype_string, karyo_offset))
+    return_dictionary_list.append(dri_classification.get(abnormalities, abnormality_set, offsets, karyotype_string, karyo_offset))
+
     return return_dictionary_list, return_errors
