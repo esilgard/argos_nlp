@@ -1,5 +1,5 @@
 # argos_nlp
-=================================================================================================
+==============================================================================
 
 This is the primary directory for the Fred Hutch natural language processing engine for the parsing of clinical documents and the classification and automated extraction of clinical data elements
 ----------------------------------------------------------------------------------------------------------------
