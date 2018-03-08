@@ -23,18 +23,18 @@ def get(abnormality_dictionary, abnormality_set, offsets, karyotype_string, kary
     # NOTE *** right now there is not a specific enough check for arm locations
     # relative to the chromosome location in string (could over capture for 
     # complex 3-4 chromosome abnormalities)
-    favorable_abns = {'t(8;21)':'q22[\.\d]*;q22','inv(16p)':'p13[\.\d]*q22',
-        't(16;16)':'p13[\.\d]*;q22', 't(15;17)':''}
-    unfavorable_abns = {'t(6;9)':'p23[\.\d]*;q34','t(9;22)':'q34[\.\d]*;q11.2',
-        'inv(3q)':'q21[\.\d]*q26', 't(3;3)':'q21[\.\d]*;q26', '-7':'', '-17':'', '-5':'',
+    favorable_abns = {'t(8;21)':'q22[.\d; ]*q22','inv(16p)':'p13[.\d; ]*q22',
+        't(16;16)':'p13[.\d; ]*;q22', 't(15;17)':''}
+    unfavorable_abns = {'t(6;9)':'p23[.\d; ]*;q34','t(9;22)':'q34[.\d; ]*q11',
+        'inv(3q)':'q21[.\d; ]*q26', 't(3;3)':'q21[.\d; ]*;q26', '-7':'', '-17':'', '-5':'',
         'del(5q)':'', 'translocation(17p)':'', 'inv(17p)':'','dup(17p)':'', 
         'trp(17p)':'', 'del(17p)':'', 'add(17p)':'', 'del(7q)':'', 'add(5q)':'',
-        'translocation(11q)':'q23[\.\d]*'}
-    
+        'translocation(11q)':'q23[.\d]*'}
+
     # if FAVORABLE abnormality found: stop (this trumps all others)
     for fav_abn in set(favorable_abns.keys()).intersection(set(abnormality_dictionary.keys())):
+        
         for off in offsets[fav_abn]:
-            #print karyotype_string[off[0]-karyo_offset:off[1]-karyo_offset]
             if re.search(favorable_abns[fav_abn],karyotype_string[off[0]-karyo_offset:off[1]-karyo_offset]):
                 classification_found = True
                 eln_dictionary[gb.VALUE] = gb.FAVORABLE        
@@ -63,9 +63,15 @@ def get(abnormality_dictionary, abnormality_set, offsets, karyotype_string, kary
                 classification_found = True
                 eln_dictionary['Rationale'].append('Complex Or Monosomal Karyotype')
     
+    
     # insufficient cells or all other abnormalities will default to "INTERMEDIATE"
     if not classification_found:
-        eln_dictionary['Rationale'].append('Insufficient Cells, Normal Karyotype, or Other Abnormalities')
+        if abnormality_dictionary.get(gb.MUTS,0):
+            eln_dictionary['Rationale'].append('Other Abnormalities')
+        elif abnormality_dictionary.get(gb.NORMAL, 0) > 9:
+            eln_dictionary['Rationale'].append('Normal Karyotype')
+        else:
+            eln_dictionary['Rationale'].append('Insufficient Cells')
+    #print abnormality_dictionary.get(gb.NORMAL,0), len(abnormality_set), dri_dictionary['Rationale']
     eln_dictionary['Rationale'] = list(set(eln_dictionary['Rationale']))
-
     return eln_dictionary
