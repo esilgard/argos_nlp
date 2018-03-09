@@ -24,7 +24,7 @@ def get(abnormality_dictionary, abnormality_set, offsets, karyotype_string, kary
     # relative to the chromosome location in string (could over capture for 
     # complex 3-4 chromosome abnormalities)
     favorable_abns = {'t(8;21)':'q22[.\d; ]*q22','inv(16p)':'p13[.\d; ]*q22',
-        't(16;16)':'p13[.\d; ]*;q22', 't(15;17)':''}
+        't(16;16)':'p13[.\d; ]*;q22'}  # talk to Min about , 't(15;17)':''
     unfavorable_abns = {'t(6;9)':'p23[.\d; ]*;q34','t(9;22)':'q34[.\d; ]*q11',
         'inv(3q)':'q21[.\d; ]*q26', 't(3;3)':'q21[.\d; ]*;q26', '-7':'', '-17':'', '-5':'',
         'del(5q)':'', 'translocation(17p)':'', 'inv(17p)':'','dup(17p)':'', 

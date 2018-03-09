@@ -26,7 +26,7 @@ def get(karyotype_string, karyo_offset):
         d[gb.ABNORMALITIES] = []
         d[gb.POLY] = False
         d[gb.CELL_ORDER] = cell_type_order
-        cell_count = re.match(r'.*(\[ ?c?C?p?P? ?([\d ]+)\]).*', each_cell_type)
+        cell_count = re.match(r'.*(\[c?C?p?P?([\d ]+)\]).*', each_cell_type)
         if cell_count:
             try:
                 # strip off any trailing whitespace or "compositite" and cast as int
@@ -68,8 +68,6 @@ def get(karyotype_string, karyo_offset):
                     except ValueError:
                         d[gb.WARNING] = True
                         d[gb.CHROMOSOME] = 'UNK'
-                    # reference original abnormality string with offsets
-                    d[gb.REF_OFF] = return_list[0][gb.OFFSET]
                     d[gb.ABNORMALITIES] += return_list[0][gb.ABNORMALITIES]
 
                 ## catch this typo - where the XX and XY is included in the idem/sl reference
@@ -77,16 +75,13 @@ def get(karyotype_string, karyo_offset):
                 elif (d[gb.ABNORMALITIES][0] == 'sl' or 'idem' in d[gb.ABNORMALITIES][0])\
                 and len(seperate_cell_types) > 1:
                     d[gb.ABNORMALITIES] = return_list[0][gb.ABNORMALITIES] + d[gb.ABNORMALITIES][1:]
-                    d[gb.REF_OFF] = return_list[0][gb.OFFSET]
                 ## when sdl is used to refer back to sl
                 elif d[gb.CHROMOSOME] == 'sdl' and len(seperate_cell_types) > 2:
-                    d[gb.REF_OFF] = return_list[1][gb.REF_OFF]
                     d[gb.CHROMOSOME] = return_list[1][gb.CHROMOSOME]
                     d[gb.ABNORMALITIES] += return_list[1][gb.ABNORMALITIES]
                 ## catch the specific cell line references like sdl1 or sdl2 ##
                 elif 'sdl' in d[gb.CHROMOSOME]:
                     try:
-                        d[gb.REF_OFF] = return_list[cell_type_order-1][gb.REF_OFF]
                         d[gb.CHROMOSOME] = return_list[cell_type_order-1][gb.CHROMOSOME]
                         d[gb.ABNORMALITIES] = return_list[cell_type_order-1][gb.ABNORMALITIES]\
                         + d[gb.ABNORMALITIES]
@@ -94,8 +89,7 @@ def get(karyotype_string, karyo_offset):
                         d[gb.WARNING] = True
 
             ## parse abnormalities into dictionaries of type of abnormality: (num/further abn type, arm loc)
-            for i in range(len(d[gb.ABNORMALITIES])):  
-                #print d[gb.ABNORMALITIES][i]
+            for i in range(len(d[gb.ABNORMALITIES])):                
                 if isinstance(d[gb.ABNORMALITIES][i], str):
                     # first group is the general type of abnormality 
                     # second group is the affected chromosome (sometimes involving a more complicated type of abnormality)                    
@@ -104,7 +98,8 @@ def get(karyotype_string, karyo_offset):
                     copy = re.match('[xX][\d]', d[gb.ABNORMALITIES][i][-2:])                    
                     if loss_gain:   
                         # this group is the p and or q arm location (if there is one)
-                        arm_location = re.match('.*([\(][\?pq]+[pq;\?\d\.]+[\)])',loss_gain.group(0))
+                        arm_location = re.match('.*([\(][\?]?[pq][pq;\?\d\.]+[\)])',loss_gain.group(0))
+                        #print loss_gain.group(0)
                         if arm_location:
                             chromosomes = loss_gain.group(2)[:loss_gain.group(2).find(arm_location.group(1))]
                             d[gb.ABNORMALITIES][i] = {loss_gain.group(1): (chromosomes, arm_location.group(1))}                            
@@ -122,16 +117,15 @@ def get(karyotype_string, karyo_offset):
                             (abnormal_chromosome.group(1), abnormal_chromosome.group(2))}
                         else:                            
                             d[gb.WARNING] = True
-                
+        
         ## warning flag for error finding cell count
         else:
             d[gb.WARNING] = True
         return_list.append(d)
         cell_type_order += 1
-
-    return return_list, None, list
-
     
+    return return_list, None, list
+    
+
 if __name__ == '__main__':
-    get('46,XX,del(5)(q15q33),-7,add(11)(q22),der(17)t(1;17)(?p22;?p11.2),del(18)(q21),+r[18]/46,XX[2]', 0)
-    get('45,X,-X,del(2)(q33),inv(3)(p21q27),add(4)(q35),add(6)(q23),add(7)(q32)x2,add(8)(q24.1),t(8;21)   (q22;q22),add(9)(q34),add(10)(q24),add(12)(q22),del(16)(q22),add(18)(q11.2),add(22)(q13)[17]   //46,XY[3]', 0)
+    get('46,XX,?der(5)t(5;9)(p13;q34)t(6;9)(p22;q34),?der(6)t(6;9)(p22;q34),?der(9)t(6;9)(p22;q34)(5;9)(p13;q34)[20]', 0)
